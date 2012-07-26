@@ -7,8 +7,9 @@
 //
 
 #import "NoneAdultAppDelegate.h"
-#import "NewPathViewController.h"
 #import "NewCommonViewController.h"
+#import "NewWeiboViewController.h"
+#import "NewPathViewController.h"
 #import "HistoryPathViewController.h"
 
 #import "ChannelViewController.h"
@@ -229,6 +230,9 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                                  withCid:[[NoneAdultAppDelegate sharedAppDelegate] getNewTabCid]];
     UINavigationController *newCommonNavViewController = [[UINavigationController alloc] initWithRootViewController:newCommonViewController];
     
+    UIViewController *newWeiboViewController = [[NewWeiboViewController alloc] initWithNibName:@"NewWeiboViewController" bundle:nil withTitle:@"微博"];
+    UINavigationController *newWeiboNavViewController = [[UINavigationController alloc] initWithRootViewController:newWeiboViewController];
+    
     UIViewController *newPathViewController = [[NewPathViewController alloc] init];
     UINavigationController *newPathNavViewController = [[UINavigationController alloc] initWithRootViewController:newPathViewController];
     
@@ -262,7 +266,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     PFUser *user = [PFUser currentUser];
     if (user && [user.username isEqualToString:@"drawinghelper@gmail.com"]) {
         self.tabBarController.viewControllers = [NSArray arrayWithObjects:
-                                                 newCommonNavViewController, 
+                                                 newCommonNavViewController,
+                                                 newWeiboNavViewController,
                                                  newPathNavViewController,
                                                  historyTopNavViewController,
                                                  channelNavViewController,

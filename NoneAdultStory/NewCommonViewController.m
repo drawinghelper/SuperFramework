@@ -549,12 +549,11 @@
             [self checkDing:dic];
 /*
             [originalNewDuanZiList addObject:dic];
-
-            NSString *weiboContent = [dic objectForKey:@"content"];
-            if (weiboContent.length < minWordCount) {
+ */
+            NSString *largeUrl = [dic objectForKey:@"large_url"];
+            if ([largeUrl isEqualToString:@""]) {
                 continue;
             }
- */
             [searchDuanZiList addObject:dic];
         }
     } else {
@@ -566,11 +565,11 @@
 
 /*
             [originalNewDuanZiList insertObject:dic atIndex:0];
-            NSString *weiboContent = [dic objectForKey:@"content"];
-            if (weiboContent.length < minWordCount) {
+ */
+            NSString *largeUrl = [dic objectForKey:@"large_url"];
+            if ([largeUrl isEqualToString:@""]) {
                 continue;
             }
- */
             [searchDuanZiList insertObject:dic atIndex:0];
         }
     }
