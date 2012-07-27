@@ -17,8 +17,6 @@
     
     UIBarButtonItem *logoutBarItem;
     UIBarButtonItem *loginBarItem;
-    NSMutableArray *timeLine;
-
 }
 @property (nonatomic, retain) WBEngine *weiBoEngine;
 

@@ -71,8 +71,7 @@
 
     [self checkLeftBarButton];
     if ([weiBoEngine isLoggedIn] && ![weiBoEngine isAuthorizeExpired]) {
-        [self refreshTimeline];
-        [indicatorView startAnimating];
+        [self performRefresh];
     }
 }
 
@@ -85,9 +84,8 @@
     if ([result isKindOfClass:[NSDictionary class]])
     {
         NSDictionary *dict = (NSDictionary *)result;
-        [timeLine addObjectsFromArray:[dict objectForKey:@"statuses"]];
-        //NSLog(@"timeLine: %d", [timeLine count]);
-        [self performSelectorOnMainThread:@selector(appendTableWith:) withObject:timeLine waitUntilDone:NO];
+        NSArray *statuses = [dict objectForKey:@"statuses"];
+        [self performSelectorOnMainThread:@selector(appendTableWith:) withObject:statuses waitUntilDone:NO];
     }
 }
 
@@ -97,18 +95,26 @@
     NSLog(@"requestDidFailWithError: %@", error);
 }
 
-- (void)refreshTimeline
+- (void)requestResultFromServer
 {
-    timeLine = [[NSMutableArray alloc] init];
-    NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:2];
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:3];
     [params setObject:[NSString stringWithFormat:@"%d",1] forKey:@"feature"];//只显示原创微博
-    [params setObject:[NSString stringWithFormat:@"%d",1] forKey:@"page"];
-    [params setObject:[NSString stringWithFormat:@"%d",100] forKey:@"count"];
+    [params setObject:[NSString stringWithFormat:@"%d",20] forKey:@"count"];
+    
+    if (loadOld && [searchDuanZiList count] > 0 ) {
+        NSDictionary *lastDuanZi = [searchDuanZiList objectAtIndex:([searchDuanZiList count] - 1)];
+        NSNumber *lastIdNum = [lastDuanZi objectForKey:@"id"];
+        long long lastId = [lastIdNum longLongValue];
+        [params setObject:[NSString stringWithFormat:@"%lld", lastId - 1] forKey:@"max_id"];
+    }
+    
     [weiBoEngine loadRequestWithMethodName:@"statuses/home_timeline.json"
                            httpMethod:@"GET"
                                params:params
                          postDataType:kWBRequestPostDataTypeNone
                      httpHeaderFields:nil];
+    
+    [indicatorView startAnimating];
 }
 
 - (void)checkLeftBarButton {
@@ -234,7 +240,6 @@
 
 //从微博接口格式适配到腾讯微频道接口格式
 - (void)adaptDic:(NSMutableDictionary *)dic {
-    NSString *idString = [self autoCorrectNull:[dic objectForKey:@"idstr"]];
     NSString *weiboContent = [self autoCorrectNull:[dic objectForKey:@"text"]];
     
     NSDictionary *user = [dic objectForKey:@"user"];
