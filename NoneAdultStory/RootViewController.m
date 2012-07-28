@@ -67,27 +67,80 @@
     return 2;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return kTableViewCellHeight;
+}
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    static NSString *CellIdentifier = @"Cell";
-    
+    // Configure the cell.
+	static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    
+    //清除已有数据，防止文字重叠
+    for(UIView *view in cell.contentView.subviews){
+        if ([view isKindOfClass:[UIView class]]) {
+            [view removeFromSuperview];
+        }
     }
     
-	// Configure the cell.
-	if( indexPath.row == 0 ) {
-		cell.textLabel.text = @"附赠杂志";
-	}
-    else if( indexPath.row == 1 ) {
-        cell.textLabel.text = @"我的杂志";
-	}
-
-
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier];
+    }
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
+    CGRect backgroundViewFrame = cell.contentView.frame;
+    backgroundViewFrame.size.height = kTableViewCellHeight;
+    backgroundViewFrame.size.width = kTableViewCellWidth;
+    cell.backgroundView = [[UIView alloc] initWithFrame:backgroundViewFrame];
+    [cell.backgroundView addLinearUniformGradient:[NSArray arrayWithObjects:
+                                                   (id)[[UIColor whiteColor] CGColor],
+                                                   (id)[
+                                                        [UIColor colorWithRed:225.0f/255.0f green:225.0f/255.0f blue:225.0f/255.0f alpha:1.0f]
+                                                        CGColor], nil]];
+    
+    // Configure the cell...
+    int row = [indexPath row];
+    //标题
+    UILabel *channelTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(TOP_SECTION_HEIGHT, 20, 320 - TOP_SECTION_HEIGHT, 35)];
+    channelTitleLabel.textAlignment = UITextAlignmentLeft;
+    channelTitleLabel.text = @"附赠杂志";
+    channelTitleLabel.font = [UIFont fontWithName:@"Helvetica" size:20];
+    channelTitleLabel.textColor = [UIColor blackColor];
+    channelTitleLabel.backgroundColor = [UIColor clearColor];
+    [cell.contentView addSubview:channelTitleLabel];
+    
+    //副标题
+    UILabel *channelSubtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(TOP_SECTION_HEIGHT, 35+20, 320 - TOP_SECTION_HEIGHT, 35)];
+    channelSubtitleLabel.textAlignment = UITextAlignmentLeft;    
+    channelSubtitleLabel.text = @"图解最新款的潮流发型";   
+    channelSubtitleLabel.font = [UIFont fontWithName:@"Helvetica" size:14];
+    channelSubtitleLabel.textColor = [UIColor darkGrayColor];
+    channelSubtitleLabel.backgroundColor = [UIColor clearColor];
+    [cell.contentView addSubview:channelSubtitleLabel];
+    
+    //内含图片数
+    UILabel *channelSumLabel = [[UILabel alloc] initWithFrame:CGRectMake(TOP_SECTION_HEIGHT, 35*2+20, 320 - TOP_SECTION_HEIGHT, 35)];
+    channelSumLabel.textAlignment = UITextAlignmentLeft;    
+    channelSumLabel.text = @"20款";   
+    channelSumLabel.font = [UIFont fontWithName:@"Helvetica" size:14];
+    channelSumLabel.textColor = [UIColor darkGrayColor];
+    channelSumLabel.backgroundColor = [UIColor clearColor];
+    [cell.contentView addSubview:channelSumLabel];
+    
+    //频道图标
+    SWSnapshotStackView *channelLogoImageView = [[SWSnapshotStackView alloc] initWithFrame:
+                                                 CGRectMake(5, 5, kTableViewCellHeight-15, kTableViewCellHeight-15)];
+    channelLogoImageView.displayAsStack = YES;
+    if (row == 0) {
+        channelLogoImageView.image = [UIImage imageNamed:@"h1_thumb.jpg"];
+    } else {
+        channelLogoImageView.image = [UIImage imageNamed:@"meijia.png"];
+    }
+    [cell.contentView addSubview:channelLogoImageView];
+    
     return cell;
+
 }
 
 
@@ -191,6 +244,8 @@
     // For example: self.myOutlet = nil;
     [super viewDidLoad];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav_bg.png"] forBarMetrics:UIBarMetricsDefault]; 
+    self.tableView.separatorColor = [UIColor clearColor];
+    self.tableView.backgroundColor = [UIColor colorWithRed:245.0f/255.0f green:245.0f/255.0f blue:245.0f/255.0f alpha:1.0f];
 }
 
 
