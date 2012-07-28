@@ -36,22 +36,41 @@
     return self;
 }
 
-- (void)loadView {
-	[super loadView];
-    
-    //self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-    
-	localCaptions = [[NSMutableArray alloc] init];
+- (void)loadLocalData {
+    localCaptions = [[NSMutableArray alloc] init];
     localImages = [[NSMutableArray alloc] init];
     localThumbnailImages = [[NSMutableArray alloc] init];
-    for (int i=1; i<=26; i++) {
+    for (int i=1; i<=kPresetNum; i++) {
         [localCaptions addObject:[NSString stringWithFormat:@"编发图解%d",i]];
         [localImages addObject:[NSString stringWithFormat:@"h%d.JPG",i]];
         [localThumbnailImages addObject:[NSString stringWithFormat:@"h%d_thumb.jpg",i]];
     }
+}
+
+- (void)loadNetworkData {
+    networkCaptions = [[NSMutableArray alloc] init];
+    networkImages = [[NSMutableArray alloc] init];
     
-    networkCaptions = [[NSArray alloc] initWithObjects:@"Happy New Year!",@"Frosty Web",nil];
-    networkImages = [[NSArray alloc] initWithObjects:@"http://farm6.static.flickr.com/5042/5323996646_9c11e1b2f6_b.jpg", @"http://farm6.static.flickr.com/5007/5311573633_3cae940638.jpg",nil];
+    //从数据库中取出收藏图
+    FMDatabase *db= [FMDatabase databaseWithPath:[[NoneAdultAppDelegate sharedAppDelegate] getDbPath]] ;  
+    if (![db open]) {  
+        NSLog(@"Could not open db."); 
+        return ;  
+    } 
+    
+    FMResultSet *rs=[db executeQuery:@"SELECT * FROM collected ORDER BY collect_time DESC"];
+    while ([rs next]){
+        [networkCaptions addObject:[rs stringForColumn:@"content"]];
+        [networkImages addObject:[rs stringForColumn:@"large_url"]];
+    }
+}
+- (void)loadView {
+	[super loadView];
+    
+    //self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+    [self loadLocalData];
+	    
+    [self loadNetworkData];
 }
 
 #pragma mark - Table view data source
@@ -113,7 +132,7 @@
     //副标题
     UILabel *channelSubtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(TOP_SECTION_HEIGHT, 35+20, 320 - TOP_SECTION_HEIGHT, 35)];
     channelSubtitleLabel.textAlignment = UITextAlignmentLeft;    
-    channelSubtitleLabel.text = @"图解最新款的潮流发型";   
+    channelSubtitleLabel.text = @"图解最火爆的潮流发型";   
     channelSubtitleLabel.font = [UIFont fontWithName:@"Helvetica" size:14];
     channelSubtitleLabel.textColor = [UIColor darkGrayColor];
     channelSubtitleLabel.backgroundColor = [UIColor clearColor];
@@ -122,7 +141,7 @@
     //内含图片数
     UILabel *channelSumLabel = [[UILabel alloc] initWithFrame:CGRectMake(TOP_SECTION_HEIGHT, 35*2+20, 320 - TOP_SECTION_HEIGHT, 35)];
     channelSumLabel.textAlignment = UITextAlignmentLeft;    
-    channelSumLabel.text = @"20款";   
+    channelSumLabel.text = [NSString stringWithFormat:@"%d款发型", kPresetNum];   
     channelSumLabel.font = [UIFont fontWithName:@"Helvetica" size:14];
     channelSumLabel.textColor = [UIColor darkGrayColor];
     channelSumLabel.backgroundColor = [UIColor clearColor];
@@ -132,17 +151,48 @@
     SWSnapshotStackView *channelLogoImageView = [[SWSnapshotStackView alloc] initWithFrame:
                                                  CGRectMake(5, 5, kTableViewCellHeight-15, kTableViewCellHeight-15)];
     channelLogoImageView.displayAsStack = YES;
-    if (row == 0) {
-        channelLogoImageView.image = [UIImage imageNamed:@"h1_thumb.jpg"];
-    } else {
-        channelLogoImageView.image = [UIImage imageNamed:@"meijia.png"];
-    }
+    channelLogoImageView.image = [UIImage imageNamed:@"h1_thumb.jpg"];
     [cell.contentView addSubview:channelLogoImageView];
     
-    return cell;
+    if (row == 1) {
+        channelTitleLabel.text = @"姐的杂志";
+        channelSubtitleLabel.text = @"您收藏的发型全在这里";   
+        if (networkImages != nil) {
+            SDWebImageManager *manager = [SDWebImageManager sharedManager];
+            UIImage *networkImage = [manager imageWithURL:
+                                          [NSURL URLWithString:[networkImages objectAtIndex:0]]
+                                     ];
+            int width = networkImage.size.width;
+            int height = networkImage.size.height;
+            
+            int cropLength = 0;
+            int x = 0, y = 0;
+            if (width > height) { // -
+                cropLength = height;
+                x = (width - cropLength)/2;
+            } else { // |
+                cropLength = width;
+                y = (height - cropLength)/2;
+            }
+            
+            //裁减一下呗
+            CGRect cropRect = CGRectMake(x, y, cropLength, cropLength);
+            CGImageRef imageRef = CGImageCreateWithImageInRect([networkImage CGImage], cropRect);
+            networkImage = [UIImage imageWithCGImage:imageRef]; 
+            CGImageRelease(imageRef);
+            
+            channelLogoImageView.image = networkImage;
+            channelSumLabel.text = [NSString stringWithFormat:@"%d款发型", [networkImages count]];   
 
+        }
+    }
+    return cell;
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [self loadNetworkData];
+    [self.tableView reloadData];// performRefresh];
+}
 
 #pragma mark - FGalleryViewControllerDelegate Methods
 
