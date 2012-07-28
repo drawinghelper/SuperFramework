@@ -273,13 +273,13 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     PFUser *user = [PFUser currentUser];
     if (user && [user.username isEqualToString:@"drawinghelper@gmail.com"]) {
         self.tabBarController.viewControllers = [NSArray arrayWithObjects:
-                                                 collectGalleryNavViewController,
 //                                                 newCommonNavViewController,
                                                  newWeiboNavViewController,
                                                  newPathNavViewController,
                                                  historyTopNavViewController,
-                                                 channelNavViewController,
-                                                 collectNavViewController,
+                                                 collectGalleryNavViewController,
+                                                 //channelNavViewController,
+                                                 //collectNavViewController,
                                                  settingNavViewController,
                                                  nil];
     } else {

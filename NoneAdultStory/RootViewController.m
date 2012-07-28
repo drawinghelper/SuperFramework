@@ -244,32 +244,31 @@
     return [networkImages objectAtIndex:index];
 }
 
-- (void)handleTrashButtonTouch:(id)sender {
+- (void)handleLikeButtonTouch:(id)sender {
     // here we could remove images from our local array storage and tell the gallery to remove that image
     // ex:
     //[localGallery removeImageAtIndex:[localGallery currentIndex]];
 }
 
 
-- (void)handleEditCaptionButtonTouch:(id)sender {
+- (void)handleShareButtonTouch:(id)sender {
     // here we could implement some code to change the caption for a stored image
 }
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    UIImage *likeIcon = [UIImage imageNamed:@"photo-gallery-collect.png"];
+    UIImage *shareIcon = [UIImage imageNamed:@"photo-gallery-share.png"];
+    UIBarButtonItem *likeButton = [[UIBarButtonItem alloc] initWithImage:likeIcon style:UIBarButtonItemStylePlain target:self action:@selector(handleLikeButtonTouch:)];
+    UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithImage:shareIcon style:UIBarButtonItemStylePlain target:self action:@selector(handleShareButtonTouch:)];
+    NSArray *barItems = [NSArray arrayWithObjects:likeButton, shareButton, nil];
     
 	if( indexPath.row == 0 ) {
-		UIImage *trashIcon = [UIImage imageNamed:@"photo-gallery-trashcan.png"];
-		UIImage *captionIcon = [UIImage imageNamed:@"photo-gallery-edit-caption.png"];
-		UIBarButtonItem *trashButton = [[UIBarButtonItem alloc] initWithImage:trashIcon style:UIBarButtonItemStylePlain target:self action:@selector(handleTrashButtonTouch:)];
-		UIBarButtonItem *editCaptionButton = [[UIBarButtonItem alloc] initWithImage:captionIcon style:UIBarButtonItemStylePlain target:self action:@selector(handleEditCaptionButtonTouch:)];
-		NSArray *barItems = [NSArray arrayWithObjects:editCaptionButton, trashButton, nil];
-		
 		localGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItems];
         [self.navigationController pushViewController:localGallery animated:YES];
 	} else if( indexPath.row == 1 ) {
-		networkGallery = [[FGalleryViewController alloc] initWithPhotoSource:self];
+		networkGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItems];
         [self.navigationController pushViewController:networkGallery animated:YES];
     }
 }

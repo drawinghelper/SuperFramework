@@ -493,7 +493,7 @@
     _useThumbnailView = useThumbnailView;
     if( self.navigationController ) {
         if (_useThumbnailView) {
-            UIBarButtonItem *btn = [[[UIBarButtonItem alloc] initWithTitle:@"缩略图" style:UIBarButtonItemStylePlain target:self action:@selector(handleSeeAllTouch:)] autorelease];
+            UIBarButtonItem *btn = [[[UIBarButtonItem alloc] initWithTitle:@"全部发型" style:UIBarButtonItemStylePlain target:self action:@selector(handleSeeAllTouch:)] autorelease];
             [btn setTintColor:[UIColor colorWithRed:142.0f/255.0f green:203.0f/255.0f blue:203.0f/255.0f alpha:1.0f]];
             [self.navigationItem setRightBarButtonItem:btn animated:YES];
         }
@@ -840,7 +840,7 @@
 - (void)hideThumbnailViewWithAnimation:(BOOL)animation
 {
     _isThumbViewShowing = NO;
-    [self.navigationItem.rightBarButtonItem setTitle:@"缩略图"];
+    [self.navigationItem.rightBarButtonItem setTitle:@"全部发型"];
     
     if (animation) {
         // do curl animation
