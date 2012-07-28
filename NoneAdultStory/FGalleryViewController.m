@@ -241,7 +241,20 @@
     [self reloadGallery];
 }
 
+-(void)back {
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+     UIImage *buttonImage = [UIImage imageNamed:@"custombackbutton.png"];
+     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+     [button setImage:buttonImage forState:UIControlStateNormal];
+     button.frame = CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height);
+     [button addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+     UIBarButtonItem *customBarItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+     self.navigationItem.leftBarButtonItem = customBarItem;
+}
 - (void)viewDidUnload {
     
     [self destroyViews];
@@ -336,7 +349,7 @@
 	[self layoutViews];
 	
 	// update status bar to be see-through
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:animated];
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:animated];
 	
 	// init with next on first run.
 	if( _currentIndex == -1 ) [self next];
@@ -473,14 +486,15 @@
 - (void)setUseThumbnailView:(BOOL)useThumbnailView
 {
     
-    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"Back", @"") style: UIBarButtonItemStyleBordered target: nil action: nil];
+    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithTitle:@"退出" style: UIBarButtonItemStyleBordered target: nil action: nil];
     [[self navigationItem] setBackBarButtonItem: newBackButton];
     [newBackButton release];
     
     _useThumbnailView = useThumbnailView;
     if( self.navigationController ) {
         if (_useThumbnailView) {
-            UIBarButtonItem *btn = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"See all", @"") style:UIBarButtonItemStylePlain target:self action:@selector(handleSeeAllTouch:)] autorelease];
+            UIBarButtonItem *btn = [[[UIBarButtonItem alloc] initWithTitle:@"缩略图" style:UIBarButtonItemStylePlain target:self action:@selector(handleSeeAllTouch:)] autorelease];
+            [btn setTintColor:[UIColor colorWithRed:142.0f/255.0f green:203.0f/255.0f blue:203.0f/255.0f alpha:1.0f]];
             [self.navigationItem setRightBarButtonItem:btn animated:YES];
         }
         else {
@@ -681,11 +695,22 @@
 
 - (void)updateTitle
 {
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    label.backgroundColor = [UIColor clearColor];
+    label.font = [UIFont boldSystemFontOfSize:20.0];
+    label.shadowColor = [UIColor colorWithRed:219.0f/255 green:241.0f/225 blue:241.0f/255 alpha:1];     
+    label.textAlignment = UITextAlignmentCenter;
+    label.textColor = [UIColor colorWithRed:37.0f/255 green:149.0f/225 blue:149.0f/255 alpha:1];        
+    [label setShadowOffset:CGSizeMake(0, 1.0)];
+    
     if (!_hideTitle){
-        [self setTitle:[NSString stringWithFormat:@"%i %@ %i", _currentIndex+1, NSLocalizedString(@"of", @"") , [_photoSource numberOfPhotosForPhotoGallery:self]]];
+        [label setText:[NSString stringWithFormat:@"%i %@ %i", _currentIndex+1, @"/" , [_photoSource numberOfPhotosForPhotoGallery:self]]];
     }else{
-        [self setTitle:@""];
+        [label setText:@""];
     }
+    
+    self.navigationItem.titleView = label;
+    [label sizeToFit];
 }
 
 
@@ -796,7 +821,7 @@
     _isThumbViewShowing = YES;
     
     [self arrangeThumbs];
-    [self.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Close", @"")];
+    [self.navigationItem.rightBarButtonItem setTitle:@"退出"];
     
     if (animation) {
         // do curl animation
@@ -815,7 +840,7 @@
 - (void)hideThumbnailViewWithAnimation:(BOOL)animation
 {
     _isThumbViewShowing = NO;
-    [self.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"See all", @"")];
+    [self.navigationItem.rightBarButtonItem setTitle:@"缩略图"];
     
     if (animation) {
         // do curl animation

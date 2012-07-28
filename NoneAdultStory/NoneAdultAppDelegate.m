@@ -250,9 +250,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     //Gallery形式的收藏
     UIViewController *collectGalleryViewController = [[RootViewController alloc] init];
     UINavigationController *collectGalleryNavViewController = [[UINavigationController alloc] initWithRootViewController:collectGalleryViewController];
-    [collectGalleryNavViewController.navigationBar setTintColor:[UIColor darkGrayColor]];
-
-    
+    [collectGalleryNavViewController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
+    //[collectGalleryNavViewController.navigationBar setTintColor:[UIColor darkGrayColor]];
     
     UIViewController *settingViewController = [[NoneAdultSettingViewController alloc] initWithNibName:@"NoneAdultSettingViewController" bundle:nil];
     UINavigationController *settingNavViewController = [[UINavigationController alloc] initWithRootViewController:settingViewController];

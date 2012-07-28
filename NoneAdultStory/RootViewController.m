@@ -13,15 +13,42 @@
 
 
 #pragma mark - View lifecycle
+- (id)initWithStyle:(UITableViewStyle)style
+{
+    self = [super initWithStyle:style];
+    if (self) {
+        self.title = NSLocalizedString(@"杂志", @"Second");
+        self.tabBarItem.image = [UIImage imageNamed:@"tab_zazhi"];
+        
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+        label.backgroundColor = [UIColor clearColor];
+        label.font = [UIFont boldSystemFontOfSize:20.0];
+        label.shadowColor = [UIColor colorWithRed:219.0f/255 green:241.0f/225 blue:241.0f/255 alpha:1];     
+        label.textAlignment = UITextAlignmentCenter;
+        label.textColor = [UIColor colorWithRed:37.0f/255 green:149.0f/225 blue:149.0f/255 alpha:1];        
+        [label setShadowOffset:CGSizeMake(0, 1.0)];
+        
+        self.navigationItem.titleView = label;
+        label.text = NSLocalizedString(@"杂志", @"");
+        [label sizeToFit];
+        
+    }
+    return self;
+}
 
 - (void)loadView {
 	[super loadView];
     
-	self.title = @"FGallery";
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+    //self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     
-	localCaptions = [[NSArray alloc] initWithObjects:@"Lava", @"Hawaii", @"Audi", @"Happy New Year!",@"Frosty Web",nil];
-    localImages = [[NSArray alloc] initWithObjects: @"lava.jpeg", @"hawaii.jpeg", @"audi.jpg",nil];
+	localCaptions = [[NSMutableArray alloc] init];
+    localImages = [[NSMutableArray alloc] init];
+    localThumbnailImages = [[NSMutableArray alloc] init];
+    for (int i=1; i<=26; i++) {
+        [localCaptions addObject:[NSString stringWithFormat:@"编发图解%d",i]];
+        [localImages addObject:[NSString stringWithFormat:@"h%d.JPG",i]];
+        [localThumbnailImages addObject:[NSString stringWithFormat:@"h%d_thumb.jpg",i]];
+    }
     
     networkCaptions = [[NSArray alloc] initWithObjects:@"Happy New Year!",@"Frosty Web",nil];
     networkImages = [[NSArray alloc] initWithObjects:@"http://farm6.static.flickr.com/5042/5323996646_9c11e1b2f6_b.jpg", @"http://farm6.static.flickr.com/5007/5311573633_3cae940638.jpg",nil];
@@ -37,7 +64,7 @@
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 3;
+    return 2;
 }
 
 
@@ -53,14 +80,12 @@
     
 	// Configure the cell.
 	if( indexPath.row == 0 ) {
-		cell.textLabel.text = @"Local Images";
+		cell.textLabel.text = @"附赠杂志";
 	}
     else if( indexPath.row == 1 ) {
-		cell.textLabel.text = @"Network Images";
+        cell.textLabel.text = @"我的杂志";
 	}
-	else if( indexPath.row == 2 ) {
-		cell.textLabel.text = @"Custom Controls";
-	}
+
 
     return cell;
 }
@@ -105,7 +130,11 @@
 
 
 - (NSString*)photoGallery:(FGalleryViewController*)gallery filePathForPhotoSize:(FGalleryPhotoSize)size atIndex:(NSUInteger)index {
-    return [localImages objectAtIndex:index];
+    if (size == FGalleryPhotoSizeThumbnail) {
+        return [localThumbnailImages objectAtIndex:index];
+    } else {// if ( size == FGalleryPhotoSizeFullsize) 
+        return [localImages objectAtIndex:index];
+    }
 }
 
 - (NSString*)photoGallery:(FGalleryViewController *)gallery urlForPhotoSize:(FGalleryPhotoSize)size atIndex:(NSUInteger)index {
@@ -128,14 +157,6 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
 	if( indexPath.row == 0 ) {
-		localGallery = [[FGalleryViewController alloc] initWithPhotoSource:self];
-        [self.navigationController pushViewController:localGallery animated:YES];
-	}
-    else if( indexPath.row == 1 ) {
-		networkGallery = [[FGalleryViewController alloc] initWithPhotoSource:self];
-        [self.navigationController pushViewController:networkGallery animated:YES];
-    }
-	else if( indexPath.row == 2 ) {
 		UIImage *trashIcon = [UIImage imageNamed:@"photo-gallery-trashcan.png"];
 		UIImage *captionIcon = [UIImage imageNamed:@"photo-gallery-edit-caption.png"];
 		UIBarButtonItem *trashButton = [[UIBarButtonItem alloc] initWithImage:trashIcon style:UIBarButtonItemStylePlain target:self action:@selector(handleTrashButtonTouch:)];
@@ -144,7 +165,10 @@
 		
 		localGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItems];
         [self.navigationController pushViewController:localGallery animated:YES];
-	}
+	} else if( indexPath.row == 1 ) {
+		networkGallery = [[FGalleryViewController alloc] initWithPhotoSource:self];
+        [self.navigationController pushViewController:networkGallery animated:YES];
+    }
 }
 
 
@@ -161,6 +185,14 @@
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
     // For example: self.myOutlet = nil;
 }
+
+- (void)viewDidLoad {
+    // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
+    // For example: self.myOutlet = nil;
+    [super viewDidLoad];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav_bg.png"] forBarMetrics:UIBarMetricsDefault]; 
+}
+
 
 
 @end
