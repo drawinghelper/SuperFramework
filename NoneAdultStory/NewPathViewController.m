@@ -651,6 +651,7 @@
                        placeholderImage:[UIImage imageNamed:@"defaultCover.png"]];
         
         [cell.contentView addSubview:coverImageView];
+        [coverImageView setTag:row];
     }
     
     //【底部】

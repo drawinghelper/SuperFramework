@@ -632,6 +632,9 @@
 -(void)goCollect:(id)sender{  
     //这个sender其实就是UIButton，因此通过sender.tag就可以拿到刚才的参数  
     int i = [sender tag] - 2000;
+    
+    //得到网络图片的实际大小
+    
     currentDuanZi = [searchDuanZiList objectAtIndex:i];
     
     BOOL tag = YES;
@@ -644,8 +647,12 @@
         [currentDuanZi setObject:@"YES" forKey:@"collected_tag"];
     }
     [self toggleCollect:tag withSender:sender];
-    [self collectDuanZi:tag];
     [self collectHUDMessage:tag]; 
+    [self collectDuanZi:tag];
+    [self sendToParseDB:tag];
+}
+
+- (void)sendToParseDB:(BOOL)tag {
     //初期用于提纯内容的，和审核的
     PFUser *user = [PFUser currentUser];
     if (user && [user.username isEqualToString:@"drawinghelper@gmail.com"]
@@ -772,6 +779,12 @@
     }
     if (tag) {
         NSDate *nowDate = [[NSDate alloc] init];
+        NSNumber *imageWidth = [currentDuanZi objectForKey:@"width"];
+        NSNumber *imageHeight = [currentDuanZi objectForKey:@"height"];
+        if ([self.title isEqualToString:@"微博"]) {
+            imageWidth = [currentDuanZi objectForKey:@"width_weibo"];
+            imageHeight = [currentDuanZi objectForKey:@"height_weibo"];
+        }
         NSArray *dataArray = [NSArray arrayWithObjects:
                               [currentDuanZi objectForKey:@"id"], 
                               [currentDuanZi objectForKey:@"profile_image_url"], 
@@ -780,8 +793,8 @@
                               [currentDuanZi objectForKey:@"content"],
                               
                               [currentDuanZi objectForKey:@"large_url"], 
-                              [currentDuanZi objectForKey:@"width"],
-                              [currentDuanZi objectForKey:@"height"],
+                              imageWidth,
+                              imageHeight,
                               [[NSNumber alloc] initWithInt:0],
                               
                               [currentDuanZi objectForKey:@"favorite_count"], 
@@ -902,11 +915,23 @@
     return rect;
 }
 
+- (void)fadeInLayer:(CALayer *)l
+{
+    CABasicAnimation *fadeInAnimate   = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    fadeInAnimate.duration            = 0.5;
+    fadeInAnimate.repeatCount         = 1;
+    fadeInAnimate.autoreverses        = NO;
+    fadeInAnimate.fromValue           = [NSNumber numberWithFloat:0.0];
+    fadeInAnimate.toValue             = [NSNumber numberWithFloat:1.0];
+    fadeInAnimate.removedOnCompletion = YES;
+    [l addAnimation:fadeInAnimate forKey:@"animateOpacity"];
+    return;
+}
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     int row = [indexPath row];
-    NSDictionary *duanZi = [searchDuanZiList objectAtIndex:row];
+    NSMutableDictionary *duanZi = [searchDuanZiList objectAtIndex:row];
     
     static NSString *CellIdentifier = @"OffenceCustomCellIdentifier";
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -997,7 +1022,18 @@
     NSString *largeUrl = [duanZi objectForKey:@"large_url"];
     if ( largeUrl != nil && ![largeUrl isEqualToString:@""]) {
         [coverImageView setImageWithURL:[NSURL URLWithString:largeUrl] 
-                       placeholderImage:[UIImage imageNamed:@"defaultCover.png"]];
+                       placeholderImage:[UIImage imageNamed:@"defaultCover.png"] 
+                                success:^(UIImage *image) {
+                                    // do something with image
+                                    [self fadeInLayer:coverImageView.layer];
+                                    if ([self.title isEqualToString:@"微博"]) {
+                                        //NSLog(@"width: %f, height: %f", image.size.width, image.size.height);
+                                        [duanZi setObject:[NSString stringWithFormat:@"%f", image.size.width] forKey:@"width_weibo"];
+                                        [duanZi setObject:[NSString stringWithFormat:@"%f", image.size.height] forKey:@"height_weibo"];
+                                    }
+                                } 
+                                failure:nil
+         ];
         
         [cell.contentView addSubview:coverImageView];
     }

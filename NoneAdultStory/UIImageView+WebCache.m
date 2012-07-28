@@ -70,19 +70,7 @@
 - (void)webImageManager:(SDWebImageManager *)imageManager didFinishWithImage:(UIImage *)image
 {
     self.image = image;
-    [self fadeInLayer:self.layer];
 }
-- (void)fadeInLayer:(CALayer *)l
-{
-    CABasicAnimation *fadeInAnimate   = [CABasicAnimation animationWithKeyPath:@"opacity"];
-    fadeInAnimate.duration            = 0.5;
-    fadeInAnimate.repeatCount         = 1;
-    fadeInAnimate.autoreverses        = NO;
-    fadeInAnimate.fromValue           = [NSNumber numberWithFloat:0.0];
-    fadeInAnimate.toValue             = [NSNumber numberWithFloat:1.0];
-    fadeInAnimate.removedOnCompletion = YES;
-    [l addAnimation:fadeInAnimate forKey:@"animateOpacity"];
-    return;
-}
+
 
 @end

@@ -14,6 +14,7 @@
 
 #import "ChannelViewController.h"
 #import "CollectedViewController.h"
+#import "RootViewController.h"
 #import "NoneAdultSettingViewController.h"
 
 @implementation NoneAdultAppDelegate
@@ -246,6 +247,13 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     UINavigationController *collectNavViewController = [[UINavigationController alloc] initWithRootViewController:collectViewController];
     [collectNavViewController.navigationBar setTintColor:[UIColor darkGrayColor]];
 
+    //Gallery形式的收藏
+    UIViewController *collectGalleryViewController = [[RootViewController alloc] init];
+    UINavigationController *collectGalleryNavViewController = [[UINavigationController alloc] initWithRootViewController:collectGalleryViewController];
+    [collectGalleryNavViewController.navigationBar setTintColor:[UIColor darkGrayColor]];
+
+    
+    
     UIViewController *settingViewController = [[NoneAdultSettingViewController alloc] initWithNibName:@"NoneAdultSettingViewController" bundle:nil];
     UINavigationController *settingNavViewController = [[UINavigationController alloc] initWithRootViewController:settingViewController];
     [settingNavViewController.navigationBar setTintColor:[UIColor darkGrayColor]];
@@ -266,7 +274,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     PFUser *user = [PFUser currentUser];
     if (user && [user.username isEqualToString:@"drawinghelper@gmail.com"]) {
         self.tabBarController.viewControllers = [NSArray arrayWithObjects:
-                                                 newCommonNavViewController,
+                                                 collectGalleryNavViewController,
+//                                                 newCommonNavViewController,
                                                  newWeiboNavViewController,
                                                  newPathNavViewController,
                                                  historyTopNavViewController,
