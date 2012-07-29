@@ -656,8 +656,8 @@
     //初期用于提纯内容的，和审核的
     PFUser *user = [PFUser currentUser];
     if (user && [user.username isEqualToString:@"drawinghelper@gmail.com"]
-        && [self.title isEqualToString:@"最新"]) {
-        [self storeIntoParseDB:tag withClassName:@"historytop"];
+        && ([self.title isEqualToString:@"最新"] || [self.title isEqualToString:@"微博"])) {
+        [self storeIntoParseDB:tag withClassName:@"newfiltered"];
     }
 }
 
@@ -697,8 +697,15 @@
     [newFiltered setObject:[currentDuanZi objectForKey:@"timestamp"] forKey:@"timestamp"];
 
     [newFiltered setObject:[currentDuanZi objectForKey:@"large_url"] forKey:@"large_url"];
-    [newFiltered setObject:[currentDuanZi objectForKey:@"width"] forKey:@"width"];
-    [newFiltered setObject:[currentDuanZi objectForKey:@"height"] forKey:@"height"];
+    NSNumber *imageWidth = [currentDuanZi objectForKey:@"width"];
+    NSNumber *imageHeight = [currentDuanZi objectForKey:@"height"];
+    if ([self.title isEqualToString:@"微博"]) {
+        imageWidth = [currentDuanZi objectForKey:@"width_weibo"];
+        imageHeight = [currentDuanZi objectForKey:@"height_weibo"];
+    }
+
+    [newFiltered setObject:imageWidth forKey:@"width"];
+    [newFiltered setObject:imageHeight forKey:@"height"];
     [newFiltered setObject:[[NSNumber alloc] initWithInt:0] forKey:@"gif_mark"];
     
     [newFiltered saveEventually];
@@ -1027,9 +1034,8 @@
                                     // do something with image
                                     [self fadeInLayer:coverImageView.layer];
                                     if ([self.title isEqualToString:@"微博"]) {
-                                        //NSLog(@"width: %f, height: %f", image.size.width, image.size.height);
-                                        [duanZi setObject:[NSString stringWithFormat:@"%f", image.size.width] forKey:@"width_weibo"];
-                                        [duanZi setObject:[NSString stringWithFormat:@"%f", image.size.height] forKey:@"height_weibo"];
+                                        [duanZi setObject:[NSNumber numberWithInt:image.size.width] forKey:@"width_weibo"];
+                                        [duanZi setObject:[NSNumber numberWithInt:image.size.height] forKey:@"height_weibo"];
                                     }
                                 } 
                                 failure:nil
