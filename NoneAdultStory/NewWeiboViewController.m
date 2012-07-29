@@ -67,7 +67,10 @@
     [self.view addSubview:indicatorView];
     
     logoutBarItem = [[UIBarButtonItem alloc] initWithTitle:@"注销" style:UIBarButtonItemStyleBordered target:self action:@selector(onLogOutButtonPressed)];
+    [logoutBarItem setTintColor:[UIColor colorWithRed:142.0f/255.0f green:203.0f/255.0f blue:203.0f/255.0f alpha:1.0f]];
+
     loginBarItem = [[UIBarButtonItem alloc] initWithTitle:@"登录" style:UIBarButtonItemStyleBordered target:self action:@selector(onLogInOAuthButtonPressed)];
+    [loginBarItem setTintColor:[UIColor colorWithRed:142.0f/255.0f green:203.0f/255.0f blue:203.0f/255.0f alpha:1.0f]];
 
     [self checkLeftBarButton];
     if ([weiBoEngine isLoggedIn] && ![weiBoEngine isAuthorizeExpired]) {

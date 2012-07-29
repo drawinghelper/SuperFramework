@@ -68,21 +68,21 @@
 	<key>NewTabCid</key>
 	<string>37</string>
 	<key>UmengAppKey</key>
-	<string>500c049d5270154272000043</string>
+	<string>5014e8855270150aa0000014</string>
 	<key>ParseConfig</key>
 	<dict>
 		<key>applicationId</key>
-		<string>hBQigugAvQZoDf2QisBwe65aCQ0yAZwbTGR6GWIj</string>
+		<string>I0ZK27VfSJWLhfztjy3gkxGfXFowWQAYYzb4PCFD</string>
 		<key>clientKey</key>
-		<string>QFTqOU4DThYwI0fQbObpDXkSSQ1mTETnh0m0ihOn</string>
+		<string>8gcnhS7JtaRHuA6pHqwHc2kml0wcwZQV5FFa8oae</string>
 	</dict>
 	<key>AlertKeyword</key>
-	<string>美容锦囊</string>
+	<string>发型图解</string>
 	<key>AppStoreId</key>
-	<string>547098068</string>
+	<string>547954277</string>
 	<key>AppChannelTag</key>
 	<string>App Store</string>
 	<key>MoGoAppKey</key>
-	<string>07bc0ad5df754278b8578a287a0af1f4</string>
+	<string>5102450e0b1148f28ca09d089c46238c</string>
 </dict>
 </plist>
