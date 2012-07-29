@@ -17,7 +17,7 @@
 #define TOP_SECTION_HEIGHT 150.0f
 #define kTableViewCellHeight 150.0f
 #define kTableViewCellWidth 320.0f
-#define kPresetNum 26
+#define kPresetNum 10
 
 @interface RootViewController : UITableViewController <FGalleryViewControllerDelegate> {
 	NSMutableArray *localCaptions;

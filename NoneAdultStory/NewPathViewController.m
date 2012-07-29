@@ -308,6 +308,42 @@
     }
 }
 
+
+#pragma mark - FGalleryViewControllerDelegate Methods
+
+- (int)numberOfPhotosForPhotoGallery:(FGalleryViewController *)gallery
+{
+	return 1;
+}
+
+- (FGalleryPhotoSourceType)photoGallery:(FGalleryViewController *)gallery sourceTypeForPhotoAtIndex:(NSUInteger)index
+{
+	return FGalleryPhotoSourceTypeNetwork;
+}
+
+- (NSString*)photoGallery:(FGalleryViewController *)gallery captionForPhotoAtIndex:(NSUInteger)index
+{
+	return @"";
+}
+
+- (NSString*)photoGallery:(FGalleryViewController *)gallery urlForPhotoSize:(FGalleryPhotoSize)size atIndex:(NSUInteger)index {
+    return [currentDuanZi objectForKey:@"large_url"];
+}
+
+#pragma mark - User Action Methods
+
+-(void)goGallery:(UITapGestureRecognizer *)sender{  
+    //这个sender其实就是UIButton，因此通过sender.tag就可以拿到刚才的参数  
+    int i = [sender.view tag];
+    NSIndexPath *currentIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
+    currentDuanZi = [self objectAtIndex:currentIndexPath];
+    FGalleryViewController *localGallery = [[FGalleryViewController alloc] initWithPhotoSource:self];
+    [localGallery setUseThumbnailView:NO];
+    [localGallery setHideTitle:YES];
+    [self.navigationController pushViewController:localGallery animated:YES];
+}
+
+
 -(void)goShare:(id)sender{  
     //这个sender其实就是UIButton，因此通过sender.tag就可以拿到刚才的参数  
     int i = [sender tag] - 1000;
@@ -652,6 +688,11 @@
         
         [cell.contentView addSubview:coverImageView];
         [coverImageView setTag:row];
+        coverImageView.userInteractionEnabled = YES;
+        UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goGallery:)];
+        [coverImageView addGestureRecognizer:singleTap];
+        
+        //[coverImageView addTarget:self action:@selector(goGallery:) forControlEvents:UIControlEventTouchUpInside];
     }
     
     //【底部】
