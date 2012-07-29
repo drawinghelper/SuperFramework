@@ -334,7 +334,7 @@
 
 -(void)goGallery:(UITapGestureRecognizer *)sender{  
     //这个sender其实就是UIButton，因此通过sender.tag就可以拿到刚才的参数  
-    int i = [sender.view tag];
+    int i = [sender.view tag] - 5000;
     NSIndexPath *currentIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
     currentDuanZi = [self objectAtIndex:currentIndexPath];
     FGalleryViewController *localGallery = [[FGalleryViewController alloc] initWithPhotoSource:self];
@@ -576,6 +576,7 @@
     rect.origin.y = imageDisplayTop;
     rect.size.width = imageDisplayWidth; 
     rect.size.height = imageDisplayHeight;
+    //NSLog(@"x: %d, y: %d, width: %d, height: %d", imageDisplayLeft, imageDisplayTop, imageDisplayWidth, imageDisplayHeight);
     return rect;
 }
 
@@ -649,7 +650,7 @@
     [layer setBorderWidth:1.0];  
     [layer setBorderColor:[[UIColor clearColor] CGColor]];  
     
-    //分享的按钮
+    //分享的按钮+1000
     UIButton *btnTwo = [UIButton buttonWithType:UIButtonTypeCustom]; 
     btnTwo.frame = CGRectMake(320 - 15 - 35, 10, 40, 40);
     [btnTwo setTitle:@"" forState:UIControlStateNormal];
@@ -679,15 +680,20 @@
     [cell.contentView addSubview:label];
     [cell.contentView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"duanzi_bg_middle.png"]]];
     
-    //微博图
+    //微博图 + 5000
     UIImageView *coverImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"defaultCover.png"]];
     NSString *imageUrl = [duanZi objectForKey:@"large_url"];
     if ( imageUrl != nil && ![imageUrl isEqualToString:@""]) {
         [coverImageView setImageWithURL:[NSURL URLWithString:imageUrl] 
-                       placeholderImage:[UIImage imageNamed:@"defaultCover.png"]];
+                       placeholderImage:[UIImage imageNamed:@"defaultCover.png"]
+                                success:^(UIImage *image) {
+                                    [self fadeInLayer:coverImageView.layer];
+                                } 
+                                failure:nil
+         ];
         
         [cell.contentView addSubview:coverImageView];
-        [coverImageView setTag:row];
+        [coverImageView setTag:(row + 5000)];
         coverImageView.userInteractionEnabled = YES;
         UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goGallery:)];
         [coverImageView addGestureRecognizer:singleTap];
@@ -700,7 +706,7 @@
     [cell.contentView addSubview:bottomBgView];
     //[bottomBgView setBackgroundColor:[UIColor lightGrayColor]];
     [bottomBgView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"duanzi_bg_bottom.png"]]];
-    bottomBgView.tag = 1000;
+    //bottomBgView.tag = 1000;
     
     //顶踩评
     UILabel *dingLabel = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -731,7 +737,7 @@
     [cell.contentView addSubview:pingLabel];
     pingLabel.tag = 4;
     
-    //收藏按钮
+    //收藏按钮 +2000
     UIButton *btnStar = [UIButton buttonWithType:UIButtonTypeCustom]; 
     [btnStar setTitle:@"" forState:UIControlStateNormal];
     [btnStar setTag:(row + 2000)];
@@ -782,6 +788,20 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
 	return cell;
+}
+
+
+- (void)fadeInLayer:(CALayer *)l
+{
+    CABasicAnimation *fadeInAnimate   = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    fadeInAnimate.duration            = 0.5;
+    fadeInAnimate.repeatCount         = 1;
+    fadeInAnimate.autoreverses        = NO;
+    fadeInAnimate.fromValue           = [NSNumber numberWithFloat:0.0];
+    fadeInAnimate.toValue             = [NSNumber numberWithFloat:1.0];
+    fadeInAnimate.removedOnCompletion = YES;
+    [l addAnimation:fadeInAnimate forKey:@"animateOpacity"];
+    return;
 }
 
 #pragma mark -

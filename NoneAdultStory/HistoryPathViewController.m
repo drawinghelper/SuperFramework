@@ -552,7 +552,12 @@
     NSString *imageUrl = [duanZi objectForKey:@"large_url"];
     if ( imageUrl != nil && ![imageUrl isEqualToString:@""]) {
         [coverImageView setImageWithURL:[NSURL URLWithString:imageUrl] 
-                       placeholderImage:[UIImage imageNamed:@"defaultCover.png"]];
+                       placeholderImage:[UIImage imageNamed:@"defaultCover.png"]
+                                success:^(UIImage *image) {
+                                    [self fadeInLayer:coverImageView.layer];
+                                } 
+                                failure:nil
+         ];
         
         [cell.contentView addSubview:coverImageView];
     }
@@ -643,6 +648,19 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
 	return cell;
+}
+
+- (void)fadeInLayer:(CALayer *)l
+{
+    CABasicAnimation *fadeInAnimate   = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    fadeInAnimate.duration            = 0.5;
+    fadeInAnimate.repeatCount         = 1;
+    fadeInAnimate.autoreverses        = NO;
+    fadeInAnimate.fromValue           = [NSNumber numberWithFloat:0.0];
+    fadeInAnimate.toValue             = [NSNumber numberWithFloat:1.0];
+    fadeInAnimate.removedOnCompletion = YES;
+    [l addAnimation:fadeInAnimate forKey:@"animateOpacity"];
+    return;
 }
 
 #pragma mark -
