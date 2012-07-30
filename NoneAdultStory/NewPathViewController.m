@@ -468,7 +468,7 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (buttonIndex != actionSheet.cancelButtonIndex) {
-        NSString *statusContent = nil;
+        /*NSString *statusContent = nil;
         NSString *weiboContent = [currentDuanZi objectForKey:@"content"];
         NSString *cuttedContent = [[NSString alloc] initWithString:weiboContent];
         int cuttedLength = 136;
@@ -476,13 +476,19 @@
             cuttedContent = [weiboContent substringToIndex:cuttedLength];
         }
         statusContent = [NSString stringWithString:cuttedContent];
+        */
+        NSString *statusContent = nil;
+        
         NSString *largeUrl = [currentDuanZi objectForKey:@"large_url"];
         SDWebImageManager *manager = [SDWebImageManager sharedManager];
         currentImage = [manager imageWithURL:[NSURL URLWithString:largeUrl]];
         
-        
         if (buttonIndex == actionSheet.firstOtherButtonIndex) {
             NSLog(@"custom event share_sina_budong!");
+            statusContent = [NSString stringWithFormat:@"今儿偶然在网上发现了一个超喜欢的新发型[爱你]￼，看看，编起来还挺简单的 %@ [兔子]。O(∩_∩)O还有很多更漂亮的，都是从这个神器中找到的￼ %@ [good]。", 
+                             @"http://weibo.com/1763902053/yuIa1Ehf3", //微博详情页
+                             @"http://t.cn/zW9uGV9"]; //appstore下载页
+            
             /*[MobClick event:@"share_sina_budong"];*/
             [UMSNSService presentSNSInController:self 
                                           appkey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey] 
@@ -493,7 +499,11 @@
             [UMSNSService setDataSendDelegate:self];
             return;
         } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
-            NSLog(@"custom event share_sina_haoxiao!");            
+            NSLog(@"custom event share_sina_haoxiao!");     
+            statusContent = [NSString stringWithFormat:@"今儿偶然在网上发现了一个超喜欢的新发型 /爱心￼，看看，编起来还挺简单的 %@ /猪头。O(∩_∩)O还有很多更漂亮的，都是从这个神器中找到的￼ %@ /强。", 
+                             @"http://weibo.com/1763902053/yuIa1Ehf3", //微博详情页
+                             @"http://t.cn/zW9uGV9"]; //appstore下载页
+            
             [UMSNSService presentSNSInController:self 
                                           appkey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey] 
                                           status:statusContent 
