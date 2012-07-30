@@ -319,7 +319,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     }
         
     self.window.rootViewController = self.tabBarController;
-    [NSThread sleepForTimeInterval:1.0];
+    //[NSThread sleepForTimeInterval:1.0];
     [self.window makeKeyAndVisible];
     [self animateSplashScreen];
 

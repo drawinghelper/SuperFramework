@@ -480,13 +480,14 @@
         SDWebImageManager *manager = [SDWebImageManager sharedManager];
         currentImage = [manager imageWithURL:[NSURL URLWithString:largeUrl]];
         
+        
         if (buttonIndex == actionSheet.firstOtherButtonIndex) {
             NSLog(@"custom event share_sina_budong!");
             /*[MobClick event:@"share_sina_budong"];*/
             [UMSNSService presentSNSInController:self 
                                           appkey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey] 
                                           status:statusContent 
-                                           image:currentImage 
+                                           image:[self getCropImage:currentImage] 
                                         platform:UMShareToTypeSina];
             
             [UMSNSService setDataSendDelegate:self];
@@ -496,7 +497,7 @@
             [UMSNSService presentSNSInController:self 
                                           appkey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey] 
                                           status:statusContent 
-                                           image:currentImage 
+                                           image:[self getCropImage:currentImage] 
                                         platform:UMShareToTypeTenc];
             
             [UMSNSService setDataSendDelegate:self];
@@ -508,6 +509,30 @@
             return;  
         }
     }
+}
+
+//截取编发图解的正方形缩略图
+- (UIImage *)getCropImage:(UIImage *)networkImage {
+    int width = networkImage.size.width;
+    int height = networkImage.size.height;
+    
+    int cropLength = 0;
+    int x = 0, y = 0;
+    if (width > height) { // -
+        cropLength = height;
+        //居中裁减的代码
+        //x = (width - cropLength)/2; 
+    } else { // |
+        cropLength = width;
+        //居中裁减的代码
+        //y = (height - cropLength)/2; 
+    }
+    CGRect cropRect = CGRectMake(x, y, cropLength, cropLength);
+    CGImageRef imageRef = CGImageCreateWithImageInRect([networkImage CGImage], cropRect);
+    networkImage = [UIImage imageWithCGImage:imageRef]; 
+    CGImageRelease(imageRef);
+    
+    return networkImage;
 }
 
 #pragma mark - Save Photo Action
