@@ -27,6 +27,7 @@
 
     MBProgressHUD *HUD;
     PFObject *currentDuanZi;
+    UIImage *currentImage;
     
     NSMutableDictionary *collectedIdsDic;
     NSMutableArray *newObjectArray;

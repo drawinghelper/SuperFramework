@@ -323,11 +323,23 @@
 
 - (NSString*)photoGallery:(FGalleryViewController *)gallery captionForPhotoAtIndex:(NSUInteger)index
 {
-	return @"";
+	return [currentDuanZi objectForKey:@"content"];
 }
 
 - (NSString*)photoGallery:(FGalleryViewController *)gallery urlForPhotoSize:(FGalleryPhotoSize)size atIndex:(NSUInteger)index {
     return [currentDuanZi objectForKey:@"large_url"];
+}
+
+
+- (void)handleLikeButtonTouch:(id)sender {
+    // here we could remove images from our local array storage and tell the gallery to remove that image
+    // ex:
+    //[localGallery removeImageAtIndex:[localGallery currentIndex]];
+}
+
+
+- (void)handleShareButtonTouch:(id)sender {
+    // here we could implement some code to change the caption for a stored image
 }
 
 #pragma mark - User Action Methods
@@ -337,12 +349,19 @@
     int i = [sender.view tag] - 5000;
     NSIndexPath *currentIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
     currentDuanZi = [self objectAtIndex:currentIndexPath];
-    FGalleryViewController *localGallery = [[FGalleryViewController alloc] initWithPhotoSource:self];
+    
+    //底部工具栏操作项
+    UIImage *likeIcon = [UIImage imageNamed:@"photo-gallery-collect.png"];
+    UIImage *shareIcon = [UIImage imageNamed:@"photo-gallery-share.png"];
+    UIBarButtonItem *likeButton = [[UIBarButtonItem alloc] initWithImage:likeIcon style:UIBarButtonItemStylePlain target:self action:@selector(handleLikeButtonTouch:)];
+    UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithImage:shareIcon style:UIBarButtonItemStylePlain target:self action:@selector(handleShareButtonTouch:)];
+    NSArray *barItems = [NSArray arrayWithObjects:likeButton, shareButton, nil];
+    
+    FGalleryViewController *localGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItems];
     [localGallery setUseThumbnailView:NO];
-    [localGallery setHideTitle:YES];
+    //[localGallery setHideTitle:YES];
     [self.navigationController pushViewController:localGallery animated:YES];
 }
-
 
 -(void)goShare:(id)sender{  
     //这个sender其实就是UIButton，因此通过sender.tag就可以拿到刚才的参数  
@@ -377,7 +396,7 @@
                                                              delegate:self
                                                     cancelButtonTitle:@"取消" 
                                                destructiveButtonTitle:nil
-                                                    otherButtonTitles:@"新浪微博",@"腾讯微博",@"复制文本", nil];     
+                                                    otherButtonTitles:@"新浪微博",@"腾讯微博",@"保存至相册", nil];     
     [actionSheet showInView:[UIApplication sharedApplication].keyWindow];
 }
 
@@ -459,7 +478,7 @@
         statusContent = [NSString stringWithString:cuttedContent];
         NSString *largeUrl = [currentDuanZi objectForKey:@"large_url"];
         SDWebImageManager *manager = [SDWebImageManager sharedManager];
-        UIImage *shareImage = [manager imageWithURL:[NSURL URLWithString:largeUrl]];
+        currentImage = [manager imageWithURL:[NSURL URLWithString:largeUrl]];
         
         if (buttonIndex == actionSheet.firstOtherButtonIndex) {
             NSLog(@"custom event share_sina_budong!");
@@ -467,7 +486,7 @@
             [UMSNSService presentSNSInController:self 
                                           appkey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey] 
                                           status:statusContent 
-                                           image:shareImage 
+                                           image:currentImage 
                                         platform:UMShareToTypeSina];
             
             [UMSNSService setDataSendDelegate:self];
@@ -477,28 +496,48 @@
             [UMSNSService presentSNSInController:self 
                                           appkey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey] 
                                           status:statusContent 
-                                           image:shareImage 
+                                           image:currentImage 
                                         platform:UMShareToTypeTenc];
             
             [UMSNSService setDataSendDelegate:self];
             return;
         } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2) {
             NSLog(@"custom event share_email!");
-            /*[MobClick event:@"share_email"];
-             [self emailPhoto]; 
-             */
-            UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-            pasteboard.string = weiboContent;
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"文字内容已成功复制到剪贴板"
-                                                                message:nil
-                                                               delegate:self
-                                                      cancelButtonTitle:@"确定"
-                                                      otherButtonTitles:nil];
-            [alertView show];
+            [self savePhoto];
             
             return;  
         }
     }
+}
+
+#pragma mark - Save Photo Action
+- (void)savePhoto {
+    if (currentImage) {
+        [self showProgressHUDCompleteMessage:[NSString stringWithFormat:@"%@\u2026" , NSLocalizedString(@"正在保存", @"Displayed with ellipsis as 'Saving...' when an item is in the process of being saved")]];
+    }
+}
+
+- (void)showProgressHUDCompleteMessage:(NSString *)message {
+    HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+	[self.navigationController.view addSubview:HUD];
+	
+	HUD.delegate = self;
+	HUD.labelText = message;
+	
+	[HUD showWhileExecuting:@selector(actuallySavePhoto:) onTarget:self withObject:currentImage animated:YES];
+    //self.navigationController.navigationBar.userInteractionEnabled = YES;
+}
+
+- (void)actuallySavePhoto:(UIImage *)photo {
+    if (photo) {
+        sleep(1);
+        UIImageWriteToSavedPhotosAlbum(photo, self, 
+                                       @selector(image:didFinishSavingWithError:contextInfo:), nil);
+    }
+}
+
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+    //[self showProgressHUDCompleteMessage: error ? NSLocalizedString(@"Failed", @"Informing the user a process has failed") : NSLocalizedString(@"Saved", @"Informing the user an item has been saved")];
 }
 
 #pragma mark - Action Sheet Delegate

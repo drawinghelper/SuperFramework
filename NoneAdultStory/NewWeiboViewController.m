@@ -264,7 +264,7 @@
     NSDate *createAt = [dateTimeFormatter dateFromString:createAtStr];
     NSDecimalNumber *timestamp = [NSDecimalNumber numberWithDouble:
                                   [createAt timeIntervalSince1970]];
-    NSLog(@"timestamp: %@, createAtStr: %@, createAt: %@", timestamp, createAtStr, createAt);
+    //NSLog(@"timestamp: %@, createAtStr: %@, createAt: %@", timestamp, createAtStr, createAt);
     
     [dic setObject:screenName forKey:@"screen_name"];
     [dic setObject:profileImageUrl forKey:@"profile_image_url"];
