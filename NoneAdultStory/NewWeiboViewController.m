@@ -82,14 +82,68 @@
 
 - (void)engine:(WBEngine *)engine requestDidSucceedWithResult:(id)result
 {
-    [indicatorView stopAnimating];
     NSLog(@"requestDidSucceedWithResult: %@", result);
-    if ([result isKindOfClass:[NSDictionary class]])
-    {
-        NSDictionary *dict = (NSDictionary *)result;
-        NSArray *statuses = [dict objectForKey:@"statuses"];
+    
+    //[weiBoEngine loadRequestWithMethodName:@"statuses/home_timeline.json"
+    NSString *requestUrl = [[engine request] url];
+    if ([requestUrl rangeOfString:@"statuses/home_timeline.json"].length > 0) {
+        NSLog(@"statuses/home_timeline.json...");
+        
+        NSString *statusIdArrayStr = [[NSString alloc] initWithString:@""];
+        if ([result isKindOfClass:[NSDictionary class]])
+        {
+            NSDictionary *dict = (NSDictionary *)result;
+            statuses = [dict objectForKey:@"statuses"];
+            
+            NSDictionary *status = nil;
+            for (int i=0; i< [statuses count]; i++) {
+                status = [statuses objectAtIndex:i];
+                statusIdArrayStr = [statusIdArrayStr stringByAppendingFormat:@"%@,", 
+                                    [status objectForKey:@"idstr"]];
+            }
+            int statusIdArrayStrLength = statusIdArrayStr.length;
+            statusIdArrayStr = [statusIdArrayStr substringToIndex:(statusIdArrayStrLength-1)];//去掉尾巴上的,
+        }
+        
+        //批量请求微博的mid，用于拼凑shareurl
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:2];
+        [params setObject:[NSString stringWithFormat:@"%d",1] forKey:@"is_batch"];//是否使用批量模式
+        [params setObject:[NSString stringWithFormat:@"%d",1] forKey:@"type"];//获取类型，1：微博、2：评论、3：私信，默认为1。
+        [params setObject:statusIdArrayStr forKey:@"id"];  //带转换mid的微博id      
+        [weiBoEngine loadRequestWithMethodName:@"statuses/querymid.json"
+                                    httpMethod:@"GET"
+                                        params:params
+                                  postDataType:kWBRequestPostDataTypeNone
+                              httpHeaderFields:nil];
+    } else {
+        [indicatorView stopAnimating];
+        NSMutableDictionary *statusesId2MidDic = [[NSMutableDictionary alloc] init];
+        NSLog(@"statuses/querymid.json... %@", result);
+        if ([result isKindOfClass:[NSArray class]]){
+            NSArray *statusesId2MidArray = (NSArray *)result;
+            for (int i=0; i < [statusesId2MidArray count]; i++) {
+                NSDictionary *dic = [statusesId2MidArray objectAtIndex:i];
+                NSArray *keys = [dic allKeys];
+                for (int j = 0; j < [keys count]; j++) {
+                    NSString *key = [keys objectAtIndex:j];
+                    [statusesId2MidDic setObject:[dic objectForKey:key]
+                                          forKey:key];
+                }
+            }
+        }
+        
+        NSMutableDictionary *status = nil;
+        for (int i=0; i< [statuses count]; i++) {
+            status = [statuses objectAtIndex:i];
+            NSString *idStr = [status objectForKey:@"idstr"];
+            [status setObject:[statusesId2MidDic objectForKey:idStr]
+                       forKey:@"mid"];
+        }
+        
+        //NSLog(@"%@", statusesId2MidDic);
         [self performSelectorOnMainThread:@selector(appendTableWith:) withObject:statuses waitUntilDone:NO];
     }
+    
 }
 
 - (void)engine:(WBEngine *)engine requestDidFailWithError:(NSError *)error
@@ -138,6 +192,11 @@
     {
         [indicatorView setCenter:CGPointMake(160, 240)];
     }
+}
+
+#pragma mark - UIAlertViewDelegate Methods
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 }
 
 #pragma mark - WBLogInAlertViewDelegate Methods
@@ -282,6 +341,13 @@
         [dic setObject:[NSNumber numberWithInt:400] forKey:@"height"];//图片内容的height
     }
     
+    //拼凑shareurl
+    NSDictionary *userInfo = [dic objectForKey:@"user"];
+    [dic setObject:[NSString stringWithFormat:@"http://weibo.com/%@/%@", 
+                    [userInfo objectForKey:@"id"],
+                    [dic objectForKey:@"mid"]] 
+            forKey:@"shareurl"];
+    NSLog(@"shareurl: %@", [dic objectForKey:@"shareurl"]);
 }
 
 - (NSString *)autoCorrectNull:(NSString *)input {

@@ -182,7 +182,11 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                [[NSBundle mainBundle] pathForResource:@"AppConfig" ofType:@"plist"]];
     return [appConfig objectForKey:@"AppStoreId"];
 }
-
+- (NSString *)getAppStoreShortUrl {
+    NSDictionary *appConfig = [[NSDictionary alloc] initWithContentsOfFile:
+                               [[NSBundle mainBundle] pathForResource:@"AppConfig" ofType:@"plist"]];
+    return [appConfig objectForKey:@"AppStoreShortUrl"];
+}
 - (NSString *)getAppChannelTag {
     NSDictionary *appConfig = [[NSDictionary alloc] initWithContentsOfFile:
                                [[NSBundle mainBundle] pathForResource:@"AppConfig" ofType:@"plist"]];

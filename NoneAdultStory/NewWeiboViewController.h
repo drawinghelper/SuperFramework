@@ -17,6 +17,8 @@
     
     UIBarButtonItem *logoutBarItem;
     UIBarButtonItem *loginBarItem;
+    
+    NSArray *statuses;
 }
 @property (nonatomic, retain) WBEngine *weiBoEngine;
 

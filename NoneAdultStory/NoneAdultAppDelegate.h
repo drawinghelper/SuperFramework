@@ -26,5 +26,6 @@
 - (NSString *)getMogoAppKey;
 - (NSString *)getUmengAppKey;
 - (NSString *)getAppStoreId;
+- (NSString *)getAppStoreShortUrl;
 - (NSString *)getAppChannelTag;
 @end

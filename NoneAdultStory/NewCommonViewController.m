@@ -707,6 +707,7 @@
     [newFiltered setObject:imageWidth forKey:@"width"];
     [newFiltered setObject:imageHeight forKey:@"height"];
     [newFiltered setObject:[[NSNumber alloc] initWithInt:0] forKey:@"gif_mark"];
+    [newFiltered setObject:[currentDuanZi objectForKey:@"shareurl"] forKey:@"shareurl"];
     
     [newFiltered saveEventually];
 }
