@@ -347,7 +347,7 @@
                     [userInfo objectForKey:@"id"],
                     [dic objectForKey:@"mid"]] 
             forKey:@"shareurl"];
-    NSLog(@"shareurl: %@", [dic objectForKey:@"shareurl"]);
+    //NSLog(@"shareurl: %@", [dic objectForKey:@"shareurl"]);
 }
 
 - (NSString *)autoCorrectNull:(NSString *)input {

@@ -158,11 +158,16 @@
         channelTitleLabel.text = @"姐的杂志";
         channelSubtitleLabel.text = @"您收藏的发型全在这里";   
         if (networkImages != nil) {
-            SDWebImageManager *manager = [SDWebImageManager sharedManager];
-            UIImage *networkImage = [manager imageWithURL:
-                                          [NSURL URLWithString:[networkImages objectAtIndex:0]]
-                                     ];
-            channelLogoImageView.image = [self getCropImage:networkImage];
+            if ([networkImages count] != 0) {
+                SDWebImageManager *manager = [SDWebImageManager sharedManager];
+                UIImage *networkImage = [manager imageWithURL:
+                                         [NSURL URLWithString:[networkImages objectAtIndex:0]]
+                                         ];
+                channelLogoImageView.image = [self getCropImage:networkImage];
+            } else {
+                channelLogoImageView.image = [UIImage imageNamed:@"Icon.png"];
+            }
+            
             channelSumLabel.text = [NSString stringWithFormat:@"%d款发型", [networkImages count]];   
         }
     }
