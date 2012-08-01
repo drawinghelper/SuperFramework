@@ -82,7 +82,7 @@
 
 - (void)engine:(WBEngine *)engine requestDidSucceedWithResult:(id)result
 {
-    NSLog(@"requestDidSucceedWithResult: %@", result);
+    //NSLog(@"requestDidSucceedWithResult: %@", result);
     
     //[weiBoEngine loadRequestWithMethodName:@"statuses/home_timeline.json"
     NSString *requestUrl = [[engine request] url];
@@ -118,7 +118,7 @@
     } else {
         [indicatorView stopAnimating];
         NSMutableDictionary *statusesId2MidDic = [[NSMutableDictionary alloc] init];
-        NSLog(@"statuses/querymid.json... %@", result);
+        //NSLog(@"statuses/querymid.json... %@", result);
         if ([result isKindOfClass:[NSArray class]]){
             NSArray *statusesId2MidArray = (NSArray *)result;
             for (int i=0; i < [statusesId2MidArray count]; i++) {

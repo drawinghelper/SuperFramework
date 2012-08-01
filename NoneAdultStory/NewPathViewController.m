@@ -293,6 +293,22 @@
     NSLog(@"开始加载...");
 }
 
+// Override to customize what kind of query to perform on the class. The default is to query for
+// all objects ordered by createdAt descending.
+- (PFQuery *)queryForTable {
+    PFQuery *query = [PFQuery queryWithClassName:self.className];
+    
+    // If no objects are loaded in memory, we look to the cache first to fill the table
+    // and then subsequently do a query against the network.
+    if ([self.objects count] == 0) {
+        query.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    }
+    
+    [query orderByDescending:@"timestamp"];
+    
+    return query;
+}
+
 - (void)loadCollectedIds {
     FMDatabase *db= [FMDatabase databaseWithPath:[[NoneAdultAppDelegate sharedAppDelegate] getDbPath]] ;  
     if (![db open]) {  
@@ -572,21 +588,6 @@
     [viewController dismissModalViewControllerAnimated:YES];
 }
 
-// Override to customize what kind of query to perform on the class. The default is to query for
-// all objects ordered by createdAt descending.
-- (PFQuery *)queryForTable {
-    PFQuery *query = [PFQuery queryWithClassName:self.className];
-    
-    // If no objects are loaded in memory, we look to the cache first to fill the table
-    // and then subsequently do a query against the network.
-    if ([self.objects count] == 0) {
-        query.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    }
-    
-    [query orderByDescending:@"timestamp"];
-    
-    return query;
-}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [self tableView:self.tableView cellForRowAtIndexPath:indexPath];
@@ -652,12 +653,15 @@
     int row = [indexPath row];
     
     //打上是否收藏过的标记
-    NSString *idString = [duanZi objectForKey:@"weiboId"];
+    NSNumber *weiboId = [duanZi objectForKey:@"weiboId"];
+    NSString *idString = [weiboId stringValue];
+    //NSString *idString = [duanZi objectForKey:@"weiboId"];
+    NSLog(@"collectedIdsDic: %@", collectedIdsDic);
     if ([collectedIdsDic objectForKey:idString] != nil) {
-        //NSLog(@"idString YES: %@", idString);
+        NSLog(@"idString YES: %@", idString);
         [duanZi setObject:@"YES" forKey:@"collected_tag"];
     } else {
-        //NSLog(@"idString NO: %@", idString);
+        NSLog(@"idString NO: %@", idString);
         [duanZi setObject:@"NO" forKey:@"collected_tag"];
     }
     

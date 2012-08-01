@@ -277,8 +277,10 @@
 		localGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItems];
         [self.navigationController pushViewController:localGallery animated:YES];
 	} else if( indexPath.row == 1 ) {
-		networkGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItems];
-        [self.navigationController pushViewController:networkGallery animated:YES];
+        if ([networkImages count] != 0) {
+            networkGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItems];
+            [self.navigationController pushViewController:networkGallery animated:YES];
+        }
     }
 }
 
