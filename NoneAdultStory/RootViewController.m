@@ -257,6 +257,7 @@
     // here we could remove images from our local array storage and tell the gallery to remove that image
     // ex:
     //[localGallery removeImageAtIndex:[localGallery currentIndex]];
+    NSLog(@"handleLikeButtonTouch...");
 }
 
 

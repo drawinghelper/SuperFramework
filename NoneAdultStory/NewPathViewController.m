@@ -351,11 +351,26 @@
     // here we could remove images from our local array storage and tell the gallery to remove that image
     // ex:
     //[localGallery removeImageAtIndex:[localGallery currentIndex]];
+    NSLog(@"handleLikeButtonTouch...");
+    
+    NSString *collectedTag = [currentDuanZi objectForKey:@"collected_tag"];
+    if ([collectedTag isEqual:@"YES"]) {
+        [currentDuanZi setObject:@"NO" forKey:@"collected_tag"];
+    } else {
+        [currentDuanZi setObject:@"YES" forKey:@"collected_tag"];
+    }
+
+    UIButton *button = (UIButton *)sender;
+    button.selected = !button.selected;
+    
+    [self collectDuanZi:button.selected];
+    [self collectHUDMessage:button.selected];   
 }
 
 
 - (void)handleShareButtonTouch:(id)sender {
     // here we could implement some code to change the caption for a stored image
+    [self shareDuanZi];
 }
 
 #pragma mark - User Action Methods
@@ -367,9 +382,22 @@
     currentDuanZi = [self objectAtIndex:currentIndexPath];
     
     //底部工具栏操作项
-    UIImage *likeIcon = [UIImage imageNamed:@"photo-gallery-collect.png"];
+    UIImage *likeIcon = [UIImage imageNamed:@"photo-gallery-collect-noselect.png"];
+    UIImage *likeIconSelected = [UIImage imageNamed:@"photo-gallery-collect.png"];
+    NSString *collectedTag = [currentDuanZi objectForKey:@"collected_tag"];
+    
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = CGRectMake(0, 0, 20, 20);
+    [btn addTarget:self action:@selector(handleLikeButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
+    [btn setImage:likeIcon forState:UIControlStateNormal];
+    [btn setImage:likeIconSelected forState:UIControlStateSelected];
+    UIBarButtonItem *likeButton = [[UIBarButtonItem alloc] initWithCustomView:btn];
+    
+    if ([collectedTag isEqualToString:@"YES"]) {
+        [btn setSelected:YES];
+    }
+
     UIImage *shareIcon = [UIImage imageNamed:@"photo-gallery-share.png"];
-    UIBarButtonItem *likeButton = [[UIBarButtonItem alloc] initWithImage:likeIcon style:UIBarButtonItemStylePlain target:self action:@selector(handleLikeButtonTouch:)];
     UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithImage:shareIcon style:UIBarButtonItemStylePlain target:self action:@selector(handleShareButtonTouch:)];
     NSArray *barItems = [NSArray arrayWithObjects:likeButton, shareButton, nil];
     
