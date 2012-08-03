@@ -68,8 +68,11 @@
 	[super loadView];
     
     //self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+    [self loadDataForGallery];
+}
+
+- (void)loadDataForGallery {
     [self loadLocalData];
-	    
     [self loadNetworkData];
 }
 
@@ -253,13 +256,46 @@
     return [networkImages objectAtIndex:index];
 }
 
-- (void)handleLikeButtonTouch:(id)sender {
+- (void)handleTrashButtonTouch:(id)sender {
     // here we could remove images from our local array storage and tell the gallery to remove that image
     // ex:
     //[localGallery removeImageAtIndex:[localGallery currentIndex]];
-    NSLog(@"handleLikeButtonTouch...");
+    NSLog(@"handleTrashButtonTouch...:%d", [networkGallery currentIndex]);
+    int currentImageIndex = [networkGallery currentIndex];
+    [self deleteFromDB:currentImageIndex];
+    [self collectHUDMessage:NO];   
+
+    [self loadDataForGallery];
+    [networkGallery reloadGallery];
+    [networkGallery gotoImageByIndex:currentImageIndex animated:NO];
 }
 
+-(void)collectHUDMessage:(BOOL)tag{
+    HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+	HUD.mode = MBProgressHUDModeText;
+    if (tag) {
+        HUD.labelText = @"收藏成功";
+    } else {
+        HUD.labelText = @"取消收藏";
+    }
+	HUD.margin = 10.f;
+	HUD.yOffset = 150.f;
+	HUD.removeFromSuperViewOnHide = YES;
+	[HUD hide:YES afterDelay:1];
+}
+
+- (void)deleteFromDB:(int)currentIndex {
+    NSString *imageUrl = [networkImages objectAtIndex:currentIndex];
+    //从数据库中取出收藏图
+    FMDatabase *db= [FMDatabase databaseWithPath:[[NoneAdultAppDelegate sharedAppDelegate] getDbPath]] ;  
+    if (![db open]) {  
+        NSLog(@"Could not open db."); 
+        return ;  
+    } 
+    
+    NSArray *dataArray = [NSArray arrayWithObjects:imageUrl, nil];
+    [db executeUpdate:@"DELETE FROM collected WHERE large_url = ?" withArgumentsInArray:dataArray];
+}
 
 - (void)handleShareButtonTouch:(id)sender {
     // here we could implement some code to change the caption for a stored image
@@ -268,18 +304,23 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    UIImage *likeIcon = [UIImage imageNamed:@"photo-gallery-collect.png"];
+    UIImage *trashIcon = [UIImage imageNamed:@"photo-gallery-trashcan.png"];
     UIImage *shareIcon = [UIImage imageNamed:@"photo-gallery-share.png"];
-    UIBarButtonItem *likeButton = [[UIBarButtonItem alloc] initWithImage:likeIcon style:UIBarButtonItemStylePlain target:self action:@selector(handleLikeButtonTouch:)];
+    UIBarButtonItem *trashButtonPreset = [[UIBarButtonItem alloc] initWithImage:trashIcon style:UIBarButtonItemStylePlain target:self action:@selector(handleTrashButtonTouch:)];
+    [trashButtonPreset setEnabled:NO];
+
+    UIBarButtonItem *trashButtonCollect = [[UIBarButtonItem alloc] initWithImage:trashIcon style:UIBarButtonItemStylePlain target:self action:@selector(handleTrashButtonTouch:)];
+    
     UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithImage:shareIcon style:UIBarButtonItemStylePlain target:self action:@selector(handleShareButtonTouch:)];
-    NSArray *barItems = [NSArray arrayWithObjects:likeButton, shareButton, nil];
+    NSArray *barItemsPreset = [NSArray arrayWithObjects:trashButtonPreset, shareButton, nil];
+    NSArray *barItemsCollect = [NSArray arrayWithObjects:trashButtonCollect, shareButton, nil];
     
 	if( indexPath.row == 0 ) {
-		localGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItems];
+		localGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItemsPreset];
         [self.navigationController pushViewController:localGallery animated:YES];
 	} else if( indexPath.row == 1 ) {
         if ([networkImages count] != 0) {
-            networkGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItems];
+            networkGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItemsCollect];
             [self.navigationController pushViewController:networkGallery animated:YES];
         }
     }

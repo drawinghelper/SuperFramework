@@ -13,6 +13,8 @@
 #import "SWSnapshotStackView.h"
 #import "NoneAdultAppDelegate.h"
 #import "SDWebImageManager.h"
+#import "MBProgressHUD.h"
+
 
 #define TOP_SECTION_HEIGHT 150.0f
 #define kTableViewCellHeight 150.0f
@@ -28,6 +30,8 @@
     
 	FGalleryViewController *localGallery;
     FGalleryViewController *networkGallery;
+    
+    MBProgressHUD *HUD;
 }
 
 @end
