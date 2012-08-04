@@ -14,24 +14,28 @@
 #import "NoneAdultAppDelegate.h"
 #import "SDWebImageManager.h"
 #import "MBProgressHUD.h"
-
+#import "UMSNSService.h"
 
 #define TOP_SECTION_HEIGHT 150.0f
 #define kTableViewCellHeight 150.0f
 #define kTableViewCellWidth 320.0f
 #define kPresetNum 10
 
-@interface RootViewController : UITableViewController <FGalleryViewControllerDelegate> {
+@interface RootViewController : UITableViewController <UIActionSheetDelegate, MBProgressHUDDelegate, UMSNSDataSendDelegate, FGalleryViewControllerDelegate> {
 	NSMutableArray *localCaptions;
     NSMutableArray *localImages;
     NSMutableArray *localThumbnailImages;
+    
     NSMutableArray *networkCaptions;
     NSMutableArray *networkImages;
+    NSMutableArray *networkShareUrl;
     
 	FGalleryViewController *localGallery;
     FGalleryViewController *networkGallery;
     
     MBProgressHUD *HUD;
+    UIImage *currentImage;
+    PFObject *currentDuanZi;
 }
 
 @end

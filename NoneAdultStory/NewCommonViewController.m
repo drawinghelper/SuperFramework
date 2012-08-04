@@ -793,6 +793,7 @@
             imageWidth = [currentDuanZi objectForKey:@"width_weibo"];
             imageHeight = [currentDuanZi objectForKey:@"height_weibo"];
         }
+        
         NSArray *dataArray = [NSArray arrayWithObjects:
                               [currentDuanZi objectForKey:@"id"], 
                               [currentDuanZi objectForKey:@"profile_image_url"], 
@@ -809,10 +810,10 @@
                               [currentDuanZi objectForKey:@"bury_count"],
                               [currentDuanZi objectForKey:@"comments_count"],
                               [[NSNumber alloc] initWithLongLong:[nowDate timeIntervalSince1970]],
-                              //[currentDuanZi objectForKey:@"collect_time"],
+                              [currentDuanZi objectForKey:@"shareurl"],
                               nil
                               ];
-        [db executeUpdate:@"replace into collected(weiboId, profile_image_url, screen_name, timestamp, content, large_url, width, height, gif_mark, favorite_count, bury_count, comments_count, collect_time) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:dataArray];
+        [db executeUpdate:@"replace into collected(weiboId, profile_image_url, screen_name, timestamp, content, large_url, width, height, gif_mark, favorite_count, bury_count, comments_count, collect_time, share_url) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:dataArray];
     } else {
         NSArray *dataArray = [NSArray arrayWithObjects:[currentDuanZi objectForKey:@"id"], nil];
         [db executeUpdate:@"delete from collected where weiboId = ?" withArgumentsInArray:dataArray];

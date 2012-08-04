@@ -177,30 +177,6 @@
     return cell;
 }
 
-//截取编发图解的正方形缩略图
-- (UIImage *)getCropImage:(UIImage *)networkImage {
-    int width = networkImage.size.width;
-    int height = networkImage.size.height;
-    
-    int cropLength = 0;
-    int x = 0, y = 0;
-    if (width > height) { // -
-        cropLength = height;
-        //居中裁减的代码
-        //x = (width - cropLength)/2; 
-    } else { // |
-        cropLength = width;
-        //居中裁减的代码
-        //y = (height - cropLength)/2; 
-    }
-    CGRect cropRect = CGRectMake(x, y, cropLength, cropLength);
-    CGImageRef imageRef = CGImageCreateWithImageInRect([networkImage CGImage], cropRect);
-    networkImage = [UIImage imageWithCGImage:imageRef]; 
-    CGImageRelease(imageRef);
-    
-    return networkImage;
-}
-
 - (void)viewDidAppear:(BOOL)animated{
     [self loadNetworkData];
     [self.tableView reloadData];// performRefresh];
@@ -299,6 +275,113 @@
 
 - (void)handleShareButtonTouch:(id)sender {
     // here we could implement some code to change the caption for a stored image
+    //currentDuanZi = [self 
+    [self shareDuanZi];
+}
+
+- (void)shareDuanZi {
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"分享到" 
+                                                             delegate:self
+                                                    cancelButtonTitle:@"取消" 
+                                               destructiveButtonTitle:nil
+                                                    otherButtonTitles:@"新浪微博",@"腾讯微博",@"保存至相册", nil];     
+    [actionSheet showInView:[UIApplication sharedApplication].keyWindow];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if (buttonIndex != actionSheet.cancelButtonIndex) {
+        NSString *statusContent = nil;
+        NSString *largeUrl = [currentDuanZi objectForKey:@"large_url"];
+        NSString *shareurl = [currentDuanZi objectForKey:@"shareurl"];
+        NSString *appstoreurl = [[NoneAdultAppDelegate sharedAppDelegate] getAppStoreShortUrl];
+        SDWebImageManager *manager = [SDWebImageManager sharedManager];
+        currentImage = [manager imageWithURL:[NSURL URLWithString:largeUrl]];
+        
+        if (buttonIndex == actionSheet.firstOtherButtonIndex) {
+            NSLog(@"custom event share_sina_budong!");
+            statusContent = [NSString stringWithFormat:@"今儿偶然在网上发现了一个超喜欢的新发型[爱你]￼，看看，编起来还挺简单的 %@ [兔子]。O(∩_∩)O还有很多更漂亮的，都是从这个神器中找到的￼ %@ [good]。", 
+                             shareurl, //微博详情页
+                             appstoreurl]; //appstore下载页
+            
+            /*[MobClick event:@"share_sina_budong"];*/
+            [UMSNSService presentSNSInController:self 
+                                          appkey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey] 
+                                          status:statusContent 
+                                           image:[self getCropImage:currentImage] 
+                                        platform:UMShareToTypeSina];
+            
+            [UMSNSService setDataSendDelegate:self];
+            return;
+        } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
+            NSLog(@"custom event share_sina_haoxiao!");     
+            statusContent = [NSString stringWithFormat:@"今儿偶然在网上发现了一个超喜欢的新发型 /爱心￼，看看，编起来还挺简单的 %@ /猪头。O(∩_∩)O还有很多更漂亮的，都是从这个神器中找到的￼ %@ /强。", 
+                             shareurl, //微博详情页
+                             appstoreurl]; //appstore下载页
+            
+            [UMSNSService presentSNSInController:self 
+                                          appkey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey] 
+                                          status:statusContent 
+                                           image:[self getCropImage:currentImage] 
+                                        platform:UMShareToTypeTenc];
+            
+            [UMSNSService setDataSendDelegate:self];
+            return;
+        } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2) {
+            NSLog(@"custom event share_email!");
+            [self savePhoto];
+            
+            return;  
+        }
+    }
+}
+//截取编发图解的正方形缩略图
+- (UIImage *)getCropImage:(UIImage *)networkImage {
+    int width = networkImage.size.width;
+    int height = networkImage.size.height;
+    
+    int cropLength = 0;
+    int x = 0, y = 0;
+    if (width > height) { // -
+        cropLength = height;
+        //居中裁减的代码
+        //x = (width - cropLength)/2; 
+    } else { // |
+        cropLength = width;
+        //居中裁减的代码
+        //y = (height - cropLength)/2; 
+    }
+    CGRect cropRect = CGRectMake(x, y, cropLength, cropLength);
+    CGImageRef imageRef = CGImageCreateWithImageInRect([networkImage CGImage], cropRect);
+    networkImage = [UIImage imageWithCGImage:imageRef]; 
+    CGImageRelease(imageRef);
+    
+    return networkImage;
+}
+
+#pragma mark - Save Photo Action
+- (void)savePhoto {
+    if (currentImage) {
+        [self showProgressHUDCompleteMessage:[NSString stringWithFormat:@"%@\u2026" , NSLocalizedString(@"正在保存", @"Displayed with ellipsis as 'Saving...' when an item is in the process of being saved")]];
+    }
+}
+
+- (void)showProgressHUDCompleteMessage:(NSString *)message {
+    HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+	[self.navigationController.view addSubview:HUD];
+	
+	HUD.delegate = self;
+	HUD.labelText = message;
+	
+	[HUD showWhileExecuting:@selector(actuallySavePhoto:) onTarget:self withObject:currentImage animated:YES];
+    //self.navigationController.navigationBar.userInteractionEnabled = YES;
+}
+
+- (void)actuallySavePhoto:(UIImage *)photo {
+    if (photo) {
+        sleep(1);
+        UIImageWriteToSavedPhotosAlbum(photo, self, 
+                                       @selector(image:didFinishSavingWithError:contextInfo:), nil);
+    }
 }
 
 #pragma mark - Table view delegate

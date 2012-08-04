@@ -152,7 +152,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     createSQL = [createSQL stringByAppendingString:@" bury_count INTEGER,"];//
     createSQL = [createSQL stringByAppendingString:@" comments_count INTEGER,"];//
     
-    createSQL = [createSQL stringByAppendingString:@" collect_time INTEGER"];
+    createSQL = [createSQL stringByAppendingString:@" collect_time INTEGER,"];
+    createSQL = [createSQL stringByAppendingString:@" share_url TEXT"];
     createSQL = [createSQL stringByAppendingString:@");"];
 
     [db executeUpdate:createSQL];
