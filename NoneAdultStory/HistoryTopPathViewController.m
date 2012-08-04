@@ -17,6 +17,7 @@
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
+    newChannel = NO;
     if (self) {
         self.title = NSLocalizedString(@"最热", @"Second");
         self.tabBarItem.image = [UIImage imageNamed:@"historyhot"];

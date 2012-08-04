@@ -14,6 +14,7 @@
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
+    newChannel = YES;
     if (self) {
         self.title = NSLocalizedString(@"精选", @"Second");
         self.tabBarItem.image = [UIImage imageNamed:@"new"];
@@ -380,6 +381,14 @@
     int i = [sender.view tag] - 5000;
     NSIndexPath *currentIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
     currentDuanZi = [self objectAtIndex:currentIndexPath];
+    NSString *shareurl = [currentDuanZi objectForKey:@"shareurl"];
+    
+    //查看详情时记分
+    if (newChannel) {
+        [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrl:shareurl channel:UIChannelNew action:UIActionView];
+    } else {
+        [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrl:shareurl channel:UIChannelHistory action:UIActionView];
+    }
     
     //底部工具栏操作项
     UIImage *likeIcon = [UIImage imageNamed:@"photo-gallery-collect-noselect.png"];
@@ -429,6 +438,7 @@
     } else {
         tag = YES;
         [currentDuanZi setObject:@"YES" forKey:@"collected_tag"];
+                
     }
     [self toggleCollect:tag withSender:sender];
     [self collectDuanZi:tag];
@@ -490,6 +500,16 @@
         NSArray *dataArray = [NSArray arrayWithObjects:[currentDuanZi objectForKey:@"weiboId"], nil];
         [db executeUpdate:@"delete from collected where weiboId = ?" withArgumentsInArray:dataArray];
     }
+    
+    if (tag) {
+        NSString *shareurl = [currentDuanZi objectForKey:@"shareurl"];
+        //收藏时记分
+        if (newChannel) {
+            [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrl:shareurl channel:UIChannelNew action:UIActionCollect];
+        } else {
+            [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrl:shareurl channel:UIChannelHistory action:UIActionCollect];
+        }
+    }
 }
 
 /*
@@ -520,8 +540,12 @@
         SDWebImageManager *manager = [SDWebImageManager sharedManager];
         currentImage = [manager imageWithURL:[NSURL URLWithString:largeUrl]];
         //记分
-        [[NoneAdultAppDelegate sharedAppDelegate] 
-            scoreForShareUrl:shareurl channel:UIChannelNew action:UIActionShare];        
+        if (newChannel) {
+            [[NoneAdultAppDelegate sharedAppDelegate] 
+                scoreForShareUrl:shareurl channel:UIChannelNew action:UIActionShare];
+        } else {
+            [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrl:shareurl channel:UIChannelHistory action:UIActionShare];
+        }
         if (buttonIndex == actionSheet.firstOtherButtonIndex) {
             NSLog(@"custom event share_sina_budong!");
             statusContent = [NSString stringWithFormat:@"今儿偶然在网上发现了一个超喜欢的新发型[爱你]￼，看看，编起来还挺简单的 %@ [兔子]。O(∩_∩)O还有很多更漂亮的，都是从这个神器中找到的￼ %@ [good]。", 

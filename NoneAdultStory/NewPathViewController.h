@@ -31,6 +31,8 @@
     NSMutableDictionary *collectedIdsDic;
     NSMutableArray *newObjectArray;
     NSDictionary *pullmessageInfo;
+    
+    BOOL newChannel;
 }
 @property (nonatomic, retain) AdMoGoView *adView;
 
