@@ -10,7 +10,8 @@
 #import "NewCommonViewController.h"
 #import "NewWeiboViewController.h"
 #import "NewPathViewController.h"
-#import "HistoryPathViewController.h"
+//#import "HistoryPathViewController.h"
+#import "HistoryTopPathViewController.h"
 
 #import "ChannelViewController.h"
 #import "CollectedViewController.h"
@@ -89,35 +90,20 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     return dbPath;
 }
 
-- (void)createDingTable {
+- (void)createScoreTable {
     FMDatabase *db= [FMDatabase databaseWithPath:[self getDbPath]] ;  
     if (![db open]) {  
         NSLog(@"Could not open db."); 
         return ;  
     }
     
-    //[db executeUpdate:@"DROP TABLE collected"];
+    //[db executeUpdate:@"DROP TABLE score"];
     
     //创建一个名为User的表，有两个字段分别为string类型的Name，integer类型的 Age
-    NSString *createSQL = @"CREATE TABLE IF NOT EXISTS ding (";
+    NSString *createSQL = @"CREATE TABLE IF NOT EXISTS score (";
 	createSQL = [createSQL stringByAppendingString:@" ID INTEGER PRIMARY KEY AUTOINCREMENT,"];
-    
-    createSQL = [createSQL stringByAppendingString:@" weiboId INTEGER UNIQUE,"];//微博的id
-	createSQL = [createSQL stringByAppendingString:@" profile_image_url TEXT,"];//博主头像图片地址
-    createSQL = [createSQL stringByAppendingString:@" screen_name TEXT,"];//微博名
-    createSQL = [createSQL stringByAppendingString:@" timestamp INTEGER,"];//微博发表时间
-    
-	createSQL = [createSQL stringByAppendingString:@" content TEXT,"];//文字内容
-    createSQL = [createSQL stringByAppendingString:@" large_url TEXT,"];//图片内容
-    createSQL = [createSQL stringByAppendingString:@" width INTEGER,"];//图片宽度
-    createSQL = [createSQL stringByAppendingString:@" height INTEGER,"];//图片高度
-    createSQL = [createSQL stringByAppendingString:@" gif_mark INTEGER,"];//图片是否为gif，0为不是gif，1是gif
-    
-    createSQL = [createSQL stringByAppendingString:@" favorite_count INTEGER,"];
-    createSQL = [createSQL stringByAppendingString:@" bury_count INTEGER,"];//
-    createSQL = [createSQL stringByAppendingString:@" comments_count INTEGER,"];//
-    
-    createSQL = [createSQL stringByAppendingString:@" collect_time INTEGER"];
+    createSQL = [createSQL stringByAppendingString:@" share_url TEXT UNIQUE,"];//微博的id
+    createSQL = [createSQL stringByAppendingString:@" score_to_send INTEGER"];
     createSQL = [createSQL stringByAppendingString:@");"];
     
     [db executeUpdate:createSQL];
@@ -223,7 +209,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     [MobClick checkUpdate];
     [MobClick updateOnlineConfig];
     
-    [self createDingTable];
+    [self createScoreTable];
     [self createCollectTable];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -242,7 +228,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     UIViewController *newPathViewController = [[NewPathViewController alloc] init];
     UINavigationController *newPathNavViewController = [[UINavigationController alloc] initWithRootViewController:newPathViewController];
     
-    HistoryPathViewController *historyTopController = [[HistoryPathViewController alloc] init];
+    //HistoryPathViewController *historyTopController = [[HistoryPathViewController alloc] init];
+    HistoryTopPathViewController *historyTopController = [[HistoryTopPathViewController alloc] init];
     UINavigationController *historyTopNavViewController = [[UINavigationController alloc] initWithRootViewController:historyTopController];
     
     ChannelViewController *channelController = [[ChannelViewController alloc] init];
@@ -403,6 +390,60 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     }
 }
 
+//为对应记录加分
+- (void)scoreForShareUrl:(NSString *)shareurl channel:(UIChannel)channel action:(UIAction)action {
+    int actionFactor, channelFactor;
+    switch (action) {
+        case UIActionShare:
+            actionFactor = 5;
+            break;
+        case UIActionCollect:
+            actionFactor = 3;
+            break;
+        case UIActionView:
+            actionFactor = 1;
+            break;
+        default:
+            break;
+    }
+    switch (channel) {
+        case UIChannelNew:
+            channelFactor = 3;
+            break;
+        case UIChannelMagzine:
+            channelFactor = 2;
+            break;
+        case UIChannelHistory:
+            channelFactor = 1;
+        default:
+            break;
+    }
+    int score = actionFactor * channelFactor;
+    
+    FMDatabase *db= [FMDatabase databaseWithPath:[[NoneAdultAppDelegate sharedAppDelegate] getDbPath]] ;  
+    if (![db open]) {  
+        NSLog(@"Could not open db."); 
+        return ;  
+    } 
+    
+    NSString *sql = [[NSString alloc] initWithFormat:@"SELECT * FROM score WHERE share_url = '%@'", shareurl];
+    FMResultSet *rs=[db executeQuery:sql];
+    NSArray *dataArray = [NSArray arrayWithObjects:
+                                      [[NSNumber alloc] initWithInt:score],
+                                      shareurl,
+                                      nil
+                                      ];
+    if ([rs next]){    
+        //score表中如果有shareurl的记录，就直接加分
+        [db executeUpdate:@"update score set score_to_send = score_to_send + ? where share_url = ?" withArgumentsInArray:dataArray];
+    } else {    
+        //score表中如果没有shareurl的记录，就为此shareurl建立分数档案
+        [db executeUpdate:@"replace into score(score_to_send, share_url) values (?, ?)" withArgumentsInArray:dataArray];
+        
+    }
+
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -424,6 +465,9 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    NSLog(@"applicationDidBecomeActive...");
+    //1. 按照score表中的分数上传parse
+    //2. 清空score表
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

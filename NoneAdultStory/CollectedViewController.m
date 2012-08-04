@@ -41,7 +41,6 @@
     //[HUD hide:YES afterDelay:0];
     
     FMDatabase *db= [FMDatabase databaseWithPath:[[NoneAdultAppDelegate sharedAppDelegate] getDbPath]] ;  
-    NSMutableSet *resultSet = [[NSMutableSet alloc] init];
     if (![db open]) {  
         NSLog(@"Could not open db."); 
         return ;  

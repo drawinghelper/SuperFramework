@@ -14,6 +14,18 @@
 #import <Parse/Parse.h>
 #import "FMDatabase.h"
 
+typedef enum {
+    UIActionShare  = 0,
+    UIActionCollect  = 1,
+    UIActionView  = 2,
+} UIAction;
+
+typedef enum {
+    UIChannelNew  = 0,
+    UIChannelMagzine  = 1,
+    UIChannelHistory  = 2,
+} UIChannel;
+
 @interface NoneAdultAppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>{
 }
 
@@ -28,4 +40,6 @@
 - (NSString *)getAppStoreId;
 - (NSString *)getAppStoreShortUrl;
 - (NSString *)getAppChannelTag;
+- (void)scoreForShareUrl:(NSString *)shareurl channel:(UIChannel)channel action:(UIAction)action;
+
 @end
