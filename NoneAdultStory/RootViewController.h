@@ -22,20 +22,20 @@
 #define kPresetNum 10
 
 @interface RootViewController : UITableViewController <UIActionSheetDelegate, MBProgressHUDDelegate, UMSNSDataSendDelegate, FGalleryViewControllerDelegate> {
-	NSMutableArray *localCaptions;
-    NSMutableArray *localImages;
-    NSMutableArray *localThumbnailImages;
-    
-    NSMutableArray *networkCaptions;
-    NSMutableArray *networkImages;
-    NSMutableArray *networkShareUrl;
     
 	FGalleryViewController *localGallery;
+	NSMutableArray *localCaptions;
+    NSMutableArray *localImages;
+    NSMutableArray *localThumbnailImages;//缩略图数组
+    
     FGalleryViewController *networkGallery;
+    NSMutableArray *networkCaptions;
+    NSMutableArray *networkImages;
+    NSMutableArray *networkShareUrl;//对应微博url数组
     
     MBProgressHUD *HUD;
     UIImage *currentImage;
-    PFObject *currentDuanZi;
+    FGalleryViewController *currentGallery;
 }
 
 @end

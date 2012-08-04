@@ -50,6 +50,7 @@
 - (void)loadNetworkData {
     networkCaptions = [[NSMutableArray alloc] init];
     networkImages = [[NSMutableArray alloc] init];
+    networkShareUrl = [[NSMutableArray alloc] init];
     
     //从数据库中取出收藏图
     FMDatabase *db= [FMDatabase databaseWithPath:[[NoneAdultAppDelegate sharedAppDelegate] getDbPath]] ;  
@@ -62,6 +63,7 @@
     while ([rs next]){
         [networkCaptions addObject:[rs stringForColumn:@"content"]];
         [networkImages addObject:[rs stringForColumn:@"large_url"]];
+        [networkShareUrl addObject:[rs stringForColumn:@"share_url"]];
     }
 }
 - (void)loadView {
@@ -275,7 +277,6 @@
 
 - (void)handleShareButtonTouch:(id)sender {
     // here we could implement some code to change the caption for a stored image
-    //currentDuanZi = [self 
     [self shareDuanZi];
 }
 
@@ -291,12 +292,17 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (buttonIndex != actionSheet.cancelButtonIndex) {
         NSString *statusContent = nil;
-        NSString *largeUrl = [currentDuanZi objectForKey:@"large_url"];
-        NSString *shareurl = [currentDuanZi objectForKey:@"shareurl"];
         NSString *appstoreurl = [[NoneAdultAppDelegate sharedAppDelegate] getAppStoreShortUrl];
-        SDWebImageManager *manager = [SDWebImageManager sharedManager];
-        currentImage = [manager imageWithURL:[NSURL URLWithString:largeUrl]];
-        
+        int currentImageIndex = [networkGallery currentIndex];   
+        //情况一：网络收藏图片的分享，默认
+        NSString *shareurl = [networkShareUrl objectAtIndex:currentImageIndex];
+        currentImage = networkGallery.currentPhoto.fullsize;
+        currentImage = [self getCropImage:currentImage];
+        //情况二：本地收藏图片的分享
+        if (currentGallery == localGallery) {
+            shareurl = @"";
+            currentImage = localGallery.currentPhoto.fullsize;
+        }
         if (buttonIndex == actionSheet.firstOtherButtonIndex) {
             NSLog(@"custom event share_sina_budong!");
             statusContent = [NSString stringWithFormat:@"今儿偶然在网上发现了一个超喜欢的新发型[爱你]￼，看看，编起来还挺简单的 %@ [兔子]。O(∩_∩)O还有很多更漂亮的，都是从这个神器中找到的￼ %@ [good]。", 
@@ -307,7 +313,7 @@
             [UMSNSService presentSNSInController:self 
                                           appkey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey] 
                                           status:statusContent 
-                                           image:[self getCropImage:currentImage] 
+                                           image:currentImage
                                         platform:UMShareToTypeSina];
             
             [UMSNSService setDataSendDelegate:self];
@@ -321,7 +327,7 @@
             [UMSNSService presentSNSInController:self 
                                           appkey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey] 
                                           status:statusContent 
-                                           image:[self getCropImage:currentImage] 
+                                           image:currentImage 
                                         platform:UMShareToTypeTenc];
             
             [UMSNSService setDataSendDelegate:self];
@@ -400,10 +406,12 @@
     
 	if( indexPath.row == 0 ) {
 		localGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItemsPreset];
+        currentGallery = localGallery;
         [self.navigationController pushViewController:localGallery animated:YES];
 	} else if( indexPath.row == 1 ) {
         if ([networkImages count] != 0) {
             networkGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItemsCollect];
+            currentGallery = networkGallery;
             [self.navigationController pushViewController:networkGallery animated:YES];
         }
     }
