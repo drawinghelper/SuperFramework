@@ -7,8 +7,14 @@
 //
 
 #import "NewPathViewController.h"
+#import "UITabBarController+hidable.h"
 
 @implementation NewPathViewController
+{
+    CGFloat startContentOffset;
+    CGFloat lastContentOffset;
+    BOOL hidden;
+}
 @synthesize adView;
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -17,6 +23,7 @@
     newChannel = YES;
     if (self) {
         self.title = NSLocalizedString(@"每日精选", @"Second");
+        hidden = NO;
         self.tabBarItem.image = [UIImage imageNamed:@"new"];
         
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -213,11 +220,88 @@
 {
     [super viewWillAppear:animated];
     [self loadCollectedIds];
+    [self.navigationController setNavigationBarHidden:hidden 
+                                             animated:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self.tabBarController setTabBarHidden:hidden 
+                                  animated:NO];
+}
+
+#pragma mark - The Magic!
+
+-(void)expand
+{
+    if(hidden)
+        return;
+    
+    hidden = YES;
+    
+    [self.tabBarController setTabBarHidden:YES 
+                                  animated:YES];
+    
+    [self.navigationController setNavigationBarHidden:YES 
+                                             animated:YES];
+}
+
+-(void)contract
+{
+    if(!hidden)
+        return;
+    
+    hidden = NO;
+    
+    [self.tabBarController setTabBarHidden:NO 
+                                  animated:YES];
+    
+    [self.navigationController setNavigationBarHidden:NO 
+                                             animated:YES];
+}
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate Methods
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    startContentOffset = lastContentOffset = scrollView.contentOffset.y;
+    //NSLog(@"scrollViewWillBeginDragging: %f", scrollView.contentOffset.y);
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView 
+{
+    CGFloat currentOffset = scrollView.contentOffset.y;
+    CGFloat differenceFromStart = startContentOffset - currentOffset;
+    CGFloat differenceFromLast = lastContentOffset - currentOffset;
+    lastContentOffset = currentOffset;
+        
+    if((differenceFromStart) < 0)
+    {
+        // scroll up
+        if(scrollView.isTracking && (abs(differenceFromLast)>1))
+            [self expand];
+    }
+    else {
+        if(scrollView.isTracking && (abs(differenceFromLast)>1))
+            [self contract];
+    }
+    
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+}
+
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
+{
+    [self contract];
+    return YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -380,8 +464,8 @@
 
 #pragma mark - User Action Methods
 -(void)goGallery:(UITapGestureRecognizer *)sender{  
-//    NSString *okUrl = @"http://v.youku.com/v_show/id_XNDAyMTM3OTgw.html";    
-//    okUrl = @"http://my.tv.sohu.com/u/vw/28703434";
+    //点击进入详情页，隐藏的工具栏和Tab栏需要显示出来，要不就退不出来了
+    [self contract];
     
     //这个sender其实就是UIButton，因此通过sender.tag就可以拿到刚才的参数  
     int i = [sender.view tag] - 5000;
