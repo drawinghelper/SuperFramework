@@ -84,13 +84,13 @@
     [super viewDidLoad];
     [self processPullMessage];
 
-    NSString *showAd = [MobClick getConfigParams:@"showAd"];
-    if (showAd == nil || showAd == [NSNull null]  || [showAd isEqualToString:@""]) {
-        showAd = @"off";
+    NSString *showAdList = [MobClick getConfigParams:@"showAdList"];
+    if (showAdList == nil || showAdList == [NSNull null]  || [showAdList isEqualToString:@""]) {
+        showAdList = @"NO";
     }
     //总：AudioToolbox、CoreLocation、CoreTelephony、MessageUI、SystemConfiguration、QuartzCore、EventKit、MapKit、libxml2
 
-    if ([showAd isEqualToString:@"on"]) {
+    if ([showAdList isEqualToString:@"YES"]) {
         //增加广告条显示
         self.adView = [AdMoGoView requestAdMoGoViewWithDelegate:self AndAdType:AdViewTypeNormalBanner
                                                     ExpressMode:NO];

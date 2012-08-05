@@ -10,7 +10,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import "FGalleryPhotoView.h"
 #import "FGalleryPhoto.h"
-
+#import "NoneAdultAppDelegate.h"
+#import "AdMoGoView.h"
 
 typedef enum
 {
@@ -26,7 +27,7 @@ typedef enum
 
 @protocol FGalleryViewControllerDelegate;
 
-@interface FGalleryViewController : UIViewController <UIScrollViewDelegate,FGalleryPhotoDelegate,FGalleryPhotoViewDelegate> {
+@interface FGalleryViewController : UIViewController <UIScrollViewDelegate,FGalleryPhotoDelegate,FGalleryPhotoViewDelegate, AdMoGoDelegate> {
 	
 	BOOL _isActive;
 	BOOL _isFullscreen;
@@ -56,7 +57,11 @@ typedef enum
     
 	UIBarButtonItem *_nextButton;
 	UIBarButtonItem *_prevButton;
+    
+    AdMoGoView *adView;
 }
+
+@property (nonatomic, retain) AdMoGoView *adView;
 
 - (id)initWithPhotoSource:(NSObject<FGalleryViewControllerDelegate>*)photoSrc;
 - (id)initWithPhotoSource:(NSObject<FGalleryViewControllerDelegate>*)photoSrc barItems:(NSArray*)items;

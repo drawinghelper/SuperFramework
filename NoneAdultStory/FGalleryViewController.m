@@ -75,6 +75,7 @@
 @synthesize startingIndex = _startingIndex;
 @synthesize beginsInThumbnailView = _beginsInThumbnailView;
 @synthesize hideTitle = _hideTitle;
+@synthesize adView;
 
 #pragma mark - Public Methods
 
@@ -254,7 +255,67 @@
      [button addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
      UIBarButtonItem *customBarItem = [[UIBarButtonItem alloc] initWithCustomView:button];
      self.navigationItem.leftBarButtonItem = customBarItem;
+    
+    //增加广告条显示
+    NSString *showAdDetail = [MobClick getConfigParams:@"showAdDetail"];
+    if (showAdDetail == nil || showAdDetail == [NSNull null]  || [showAdDetail isEqualToString:@""]) {
+        showAdDetail = @"NO";
+    }
+    
+    if ([showAdDetail isEqualToString:@"YES"]) {
+        self.adView = [AdMoGoView requestAdMoGoViewWithDelegate:self AndAdType:AdViewTypeNormalBanner
+                                                    ExpressMode:NO];
+        [adView setFrame:CGRectZero];
+        [self.view addSubview:adView];
+    }
 }
+
+//广告
+- (NSString *)adMoGoApplicationKey{
+    return [[NoneAdultAppDelegate sharedAppDelegate] getMogoAppKey];
+}
+
+-(UIViewController *)viewControllerForPresentingModalView{
+    return self;//返回的对象为 adView 的父视图控制器
+}
+
+- (void)adjustAdSize {	
+	[UIView beginAnimations:@"AdResize" context:nil];
+	[UIView setAnimationDuration:0.7];
+	CGSize adSize = [adView actualAdSize];
+	CGRect newFrame = adView.frame;
+	newFrame.size.height = adSize.height;
+	newFrame.size.width = adSize.width;
+	newFrame.origin.x = (self.view.bounds.size.width - adSize.width)/2;
+    //newFrame.origin.y = self.view.bounds.size.height - adSize.height;
+    if (_isFullscreen) {
+        newFrame.origin.y = 480 - adSize.height;
+    } else {
+        newFrame.origin.y = 480 - adSize.height - 20;
+    }
+	adView.frame = newFrame;
+    
+	[UIView commitAnimations];
+} 
+
+- (void)adMoGoDidReceiveAd:(AdMoGoView *)adMoGoView {
+	//广告成功展示时调用
+    [self adjustAdSize];
+}
+
+- (void)adMoGoDidFailToReceiveAd:(AdMoGoView *)adMoGoView 
+                     usingBackup:(BOOL)yesOrNo {
+    //请求广告失败
+}
+
+- (void)adMoGoWillPresentFullScreenModal {
+    //点击广告后打开内置浏览器时调用
+}
+
+- (void)adMoGoDidDismissFullScreenModal {
+    //关闭广告内置浏览器时调用 
+}
+
 - (void)viewDidUnload {
     
     [self destroyViews];
@@ -537,14 +598,15 @@
 {
 	CGRect screenFrame = [[UIScreen mainScreen] bounds];
 	CGRect scrollerRect;
-	
+    CGSize adSize = [adView actualAdSize];
+
 	if( self.interfaceOrientation == UIInterfaceOrientationPortrait || self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown )
 	{//portrait
-		scrollerRect = CGRectMake( 0, 0, screenFrame.size.width, screenFrame.size.height );
+		scrollerRect = CGRectMake( 0, 0, screenFrame.size.width, screenFrame.size.height - adSize.height );
 	}
 	else
 	{//landscape
-		scrollerRect = CGRectMake( 0, 0, screenFrame.size.height, screenFrame.size.width );
+		scrollerRect = CGRectMake( 0, 0, screenFrame.size.height, screenFrame.size.width - adSize.height);
 	}
 	
 	_scroller.frame = scrollerRect;
@@ -590,6 +652,8 @@
 	_toolbar.alpha = 0.0;
 	_captionContainer.alpha = 0.0;
 	[UIView commitAnimations];
+    
+    [self adjustAdSize];
 }
 
 
@@ -617,6 +681,8 @@
 	_toolbar.alpha = 1.0;
 	_captionContainer.alpha = 1.0;
 	[UIView commitAnimations];
+    
+    [self adjustAdSize];
 }
 
 

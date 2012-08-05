@@ -10,7 +10,7 @@
 
 
 @implementation RootViewController
-
+@synthesize adView;
 
 #pragma mark - View lifecycle
 - (id)initWithStyle:(UITableViewStyle)style
@@ -431,7 +431,17 @@
     
     // Relinquish ownership any cached data, images, etc that aren't in use.
 }
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [adView setHidden:NO];
+}
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [adView setHidden:YES];
+}
 - (void)viewDidUnload {
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
     // For example: self.myOutlet = nil;
@@ -444,9 +454,64 @@
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav_bg.png"] forBarMetrics:UIBarMetricsDefault]; 
     self.tableView.separatorColor = [UIColor clearColor];
     self.tableView.backgroundColor = [UIColor colorWithRed:245.0f/255.0f green:245.0f/255.0f blue:245.0f/255.0f alpha:1.0f];
+    
+    NSString *showAdList = [MobClick getConfigParams:@"showAdList"];
+    if (showAdList == nil || showAdList == [NSNull null]  || [showAdList isEqualToString:@""]) {
+        showAdList = @"NO";
+    }
+    //总：AudioToolbox、CoreLocation、CoreTelephony、MessageUI、SystemConfiguration、QuartzCore、EventKit、MapKit、libxml2
+    
+    if ([showAdList isEqualToString:@"YES"]) {
+        //增加广告条显示
+        self.adView = [AdMoGoView requestAdMoGoViewWithDelegate:self AndAdType:AdViewTypeNormalBanner
+                                                    ExpressMode:NO];
+        [adView setFrame:CGRectZero];
+        [self.navigationController.view addSubview:adView];
+    }
 }
 
+#pragma mark -
+#pragma mark AdMogo Methods
+- (NSString *)adMoGoApplicationKey{
+    return [[NoneAdultAppDelegate sharedAppDelegate] getMogoAppKey];
+}
 
+-(UIViewController *)viewControllerForPresentingModalView{
+    return self;//返回的对象为 adView 的父视图控制器
+}
+
+- (void)adjustAdSize {	
+	[UIView beginAnimations:@"AdResize" context:nil];
+	[UIView setAnimationDuration:0.7];
+	CGSize adSize = [adView actualAdSize];
+	CGRect newFrame = adView.frame;
+	newFrame.size.height = adSize.height;
+	newFrame.size.width = adSize.width;
+	newFrame.origin.x = (self.view.bounds.size.width - adSize.width)/2;
+    newFrame.origin.y = self.navigationController.view.bounds.size.height - adSize.height;
+    //newFrame.origin.y = 480 - adSize.height;
+	adView.frame = newFrame;
+    
+	[UIView commitAnimations];
+} 
+
+- (void)adMoGoDidReceiveAd:(AdMoGoView *)adMoGoView {
+	//广告成功展示时调用
+    [self adjustAdSize];
+}
+
+- (void)adMoGoDidFailToReceiveAd:(AdMoGoView *)adMoGoView 
+                     usingBackup:(BOOL)yesOrNo {
+    //请求广告失败
+}
+
+- (void)adMoGoWillPresentFullScreenModal {
+    //点击广告后打开内置浏览器时调用
+}
+
+- (void)adMoGoDidDismissFullScreenModal {
+    //关闭广告内置浏览器时调用 
+}
 
 @end
 

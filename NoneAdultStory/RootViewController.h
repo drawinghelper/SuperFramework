@@ -15,14 +15,16 @@
 #import "SDWebImageManager.h"
 #import "MBProgressHUD.h"
 #import "UMSNSService.h"
+#import "AdMoGoView.h"
 
 #define TOP_SECTION_HEIGHT 150.0f
 #define kTableViewCellHeight 150.0f
 #define kTableViewCellWidth 320.0f
 #define kPresetNum 10
 
-@interface RootViewController : UITableViewController <UIActionSheetDelegate, MBProgressHUDDelegate, UMSNSDataSendDelegate, FGalleryViewControllerDelegate> {
-    
+@interface RootViewController : UITableViewController <UIActionSheetDelegate, MBProgressHUDDelegate, UMSNSDataSendDelegate, AdMoGoDelegate, FGalleryViewControllerDelegate> {
+    AdMoGoView *adView;
+
 	FGalleryViewController *localGallery;
 	NSMutableArray *localCaptions;
     NSMutableArray *localImages;
@@ -37,5 +39,7 @@
     UIImage *currentImage;
     FGalleryViewController *currentGallery;
 }
+
+@property (nonatomic, retain) AdMoGoView *adView;
 
 @end
