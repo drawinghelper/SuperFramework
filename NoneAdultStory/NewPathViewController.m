@@ -379,8 +379,15 @@
 }
 
 #pragma mark - User Action Methods
-
 -(void)goGallery:(UITapGestureRecognizer *)sender{  
+    NSString *okUrl = @"http://v.youku.com/v_show/id_XNDAyMTM3OTgw.html";    
+    SVWebViewController *webViewController = [[SVWebViewController alloc] 
+                                              initWithURL:[NSURL URLWithString:okUrl]];
+    webViewController.hidesBottomBarWhenPushed = YES;
+    webViewController.title = @"视频详情";
+	[self.navigationController pushViewController:webViewController animated:YES];
+    return;
+    
     //这个sender其实就是UIButton，因此通过sender.tag就可以拿到刚才的参数  
     int i = [sender.view tag] - 5000;
     NSIndexPath *currentIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
