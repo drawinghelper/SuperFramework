@@ -305,7 +305,11 @@
         query.cachePolicy = kPFCachePolicyCacheThenNetwork;
     }
     
-    [query orderByDescending:@"timestamp"];
+    if (newChannel) {//最新精选栏目排序字段
+        [query orderByDescending:@"timestamp"];
+    } else {//历史最热栏目排序字段
+        [query orderByDescending:@"score"];
+    }
     
     return query;
 }

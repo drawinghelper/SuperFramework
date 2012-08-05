@@ -467,7 +467,41 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     NSLog(@"applicationDidBecomeActive...");
     //1. 按照score表中的分数上传parse
-    //2. 清空score表
+    //1.1 找到需要更新的parseobject
+    //1.2 使用incrementKey:byAmount:为新的score
+    FMDatabase *db= [FMDatabase databaseWithPath:[[NoneAdultAppDelegate sharedAppDelegate] getDbPath]] ;  
+    if (![db open]) {  
+        NSLog(@"Could not open db."); 
+        return ;  
+    } 
+    
+    //collectedIdsDic = [[NSMutableDictionary alloc] init];
+    FMResultSet *rs=[db executeQuery:@"SELECT * FROM score"];
+    while ([rs next]){
+        //NSString *shareUrl = [NSString stringWithFormat:@"%lld", [rs longLongIntForColumn:@"share_url"]];
+        NSString *shareUrl = [rs stringForColumn:@"share_url"];
+        int scoreToSend = [rs intForColumn:@"score_to_send"];
+        NSLog(@"shareUrl: %@, score to send: %d", shareUrl, scoreToSend);
+        
+        PFQuery *query = [PFQuery queryWithClassName:@"newfiltered"];
+        [query whereKey:@"shareurl" equalTo:shareUrl];
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                // The find succeeded.
+                NSLog(@"Successfully retrieved %d scores.", objects.count);
+                if (objects.count > 0) {
+                    PFObject *object = [objects objectAtIndex:0];
+                    [object incrementKey:@"score" byAmount:[NSNumber numberWithInt:scoreToSend]];
+                    [object saveInBackground];
+                }
+            } else {
+                // Log details of the failure
+                NSLog(@"Error: %@ %@", error, [error userInfo]);
+            }
+        }];    
+    }
+    //2. 清空本地score表中的已有记录
+    [db executeUpdate:@"delete from score"];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
