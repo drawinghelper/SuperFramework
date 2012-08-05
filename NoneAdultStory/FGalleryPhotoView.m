@@ -32,7 +32,7 @@
 	self.clipsToBounds = YES;
 	self.delegate = self;
 	self.contentMode = UIViewContentModeCenter;
-	self.maximumZoomScale = 3.0;
+	self.maximumZoomScale = 5.0;
 	self.minimumZoomScale = 1.0;
 	self.decelerationRate = .85;
 	self.contentSize = CGSizeMake(frame.size.width, frame.size.height);

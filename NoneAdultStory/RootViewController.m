@@ -17,7 +17,7 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        self.title = NSLocalizedString(@"杂志", @"Second");
+        self.title = NSLocalizedString(@"杂志收藏", @"Second");
         self.tabBarItem.image = [UIImage imageNamed:@"tab_zazhi"];
         
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -29,7 +29,7 @@
         [label setShadowOffset:CGSizeMake(0, 1.0)];
         
         self.navigationItem.titleView = label;
-        label.text = NSLocalizedString(@"杂志", @"");
+        label.text = NSLocalizedString(@"杂志收藏", @"");
         [label sizeToFit];
         
     }

@@ -19,7 +19,7 @@
     self = [super initWithStyle:style];
     newChannel = NO;
     if (self) {
-        self.title = NSLocalizedString(@"最热", @"Second");
+        self.title = NSLocalizedString(@"历史最热", @"Second");
         self.tabBarItem.image = [UIImage imageNamed:@"historyhot"];
         
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -31,7 +31,7 @@
         [label setShadowOffset:CGSizeMake(0, 1.0)];
         
         self.navigationItem.titleView = label;
-        label.text = NSLocalizedString(@"最热", @"");
+        label.text = NSLocalizedString(@"历史最热", @"");
         [label sizeToFit];
         
         // Custom the table
