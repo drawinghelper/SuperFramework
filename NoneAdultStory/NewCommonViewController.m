@@ -706,6 +706,9 @@
 
     [newFiltered setObject:imageWidth forKey:@"width"];
     [newFiltered setObject:imageHeight forKey:@"height"];
+    //feature 媒体类型ID，0：图片、1：视频、2：音乐，默认为0。
+    [newFiltered setObject:[[NSNumber alloc] initWithInt:0] forKey:@"feature"];
+    //是否动态图，feature为0时有意义
     [newFiltered setObject:[[NSNumber alloc] initWithInt:0] forKey:@"gif_mark"];
     [newFiltered setObject:[currentDuanZi objectForKey:@"shareurl"] forKey:@"shareurl"];
     [newFiltered setObject:[[NSNumber alloc] initWithInt:0] forKey:@"score"];

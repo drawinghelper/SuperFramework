@@ -82,7 +82,7 @@
 
 - (void)engine:(WBEngine *)engine requestDidSucceedWithResult:(id)result
 {
-    //NSLog(@"requestDidSucceedWithResult: %@", result);
+    NSLog(@"requestDidSucceedWithResult: %@", result);
     
     //[weiBoEngine loadRequestWithMethodName:@"statuses/home_timeline.json"
     NSString *requestUrl = [[engine request] url];

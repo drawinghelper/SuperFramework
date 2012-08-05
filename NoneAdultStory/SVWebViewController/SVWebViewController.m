@@ -102,12 +102,12 @@
             [pageActionSheet addButtonWithTitle:NSLocalizedString(@"Copy Link", @"")];
         
         if((self.availableActions & SVWebViewControllerAvailableActionsOpenInSafari) == SVWebViewControllerAvailableActionsOpenInSafari)
-            [pageActionSheet addButtonWithTitle:NSLocalizedString(@"Open in Safari", @"")];
+            [pageActionSheet addButtonWithTitle:NSLocalizedString(@"在Safari中打开", @"")];
         
         if([MFMailComposeViewController canSendMail] && (self.availableActions & SVWebViewControllerAvailableActionsMailLink) == SVWebViewControllerAvailableActionsMailLink)
-            [pageActionSheet addButtonWithTitle:NSLocalizedString(@"Mail Link to this Page", @"")];
+            [pageActionSheet addButtonWithTitle:NSLocalizedString(@"邮件发送此网址", @"")];
         
-        [pageActionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+        [pageActionSheet addButtonWithTitle:NSLocalizedString(@"取消", @"")];
         pageActionSheet.cancelButtonIndex = [self.pageActionSheet numberOfButtons]-1;
     }
     
@@ -336,7 +336,7 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	NSString *title = [actionSheet buttonTitleAtIndex:buttonIndex];
     
-	if([title isEqualToString:NSLocalizedString(@"Open in Safari", @"")])
+	if([title isEqualToString:NSLocalizedString(@"在Safari中打开", @"")])
         [[UIApplication sharedApplication] openURL:self.mainWebView.request.URL];
     
     if([title isEqualToString:NSLocalizedString(@"Copy Link", @"")]) {
@@ -344,7 +344,7 @@
         pasteboard.string = self.mainWebView.request.URL.absoluteString;
     }
     
-    else if([title isEqualToString:NSLocalizedString(@"Mail Link to this Page", @"")]) {
+    else if([title isEqualToString:NSLocalizedString(@"邮件发送此网址", @"")]) {
         
 		MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
         

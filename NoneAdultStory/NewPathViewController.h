@@ -21,6 +21,7 @@
 #define TOP_SECTION_HEIGHT 52.0f
 #define BOTTOM_SECTION_HEIGHT 34.0f
 #define HORIZONTAL_PADDING 16.0f
+#define PLAYBUTTON_WIDTH 30.0f
 
 @interface NewPathViewController : PFQueryTableViewController<MBProgressHUDDelegate, UMSNSDataSendDelegate, UIActionSheetDelegate, AdMoGoDelegate, FGalleryViewControllerDelegate> {
     AdMoGoView *adView;

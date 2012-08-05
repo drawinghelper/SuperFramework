@@ -380,18 +380,16 @@
 
 #pragma mark - User Action Methods
 -(void)goGallery:(UITapGestureRecognizer *)sender{  
-    NSString *okUrl = @"http://v.youku.com/v_show/id_XNDAyMTM3OTgw.html";    
-    SVWebViewController *webViewController = [[SVWebViewController alloc] 
-                                              initWithURL:[NSURL URLWithString:okUrl]];
-    webViewController.hidesBottomBarWhenPushed = YES;
-    webViewController.title = @"视频详情";
-	[self.navigationController pushViewController:webViewController animated:YES];
-    return;
+//    NSString *okUrl = @"http://v.youku.com/v_show/id_XNDAyMTM3OTgw.html";    
+//    okUrl = @"http://my.tv.sohu.com/u/vw/28703434";
     
     //这个sender其实就是UIButton，因此通过sender.tag就可以拿到刚才的参数  
     int i = [sender.view tag] - 5000;
     NSIndexPath *currentIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
     currentDuanZi = [self objectAtIndex:currentIndexPath];
+    // shareurl的含义
+    // -对于图片，是图解微博的url;
+    // -对于视频，是优酷上的详情页url;
     NSString *shareurl = [currentDuanZi objectForKey:@"shareurl"];
     
     //查看详情时记分
@@ -401,30 +399,40 @@
         [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrl:shareurl channel:UIChannelHistory action:UIActionView];
     }
     
-    //底部工具栏操作项
-    UIImage *likeIcon = [UIImage imageNamed:@"photo-gallery-collect-noselect.png"];
-    UIImage *likeIconSelected = [UIImage imageNamed:@"photo-gallery-collect.png"];
-    NSString *collectedTag = [currentDuanZi objectForKey:@"collected_tag"];
-    
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = CGRectMake(0, 0, 20, 20);
-    [btn addTarget:self action:@selector(handleLikeButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
-    [btn setImage:likeIcon forState:UIControlStateNormal];
-    [btn setImage:likeIconSelected forState:UIControlStateSelected];
-    UIBarButtonItem *likeButton = [[UIBarButtonItem alloc] initWithCustomView:btn];
-    
-    if ([collectedTag isEqualToString:@"YES"]) {
-        [btn setSelected:YES];
+    NSNumber *feature = [currentDuanZi objectForKey:@"feature"];
+    if ([feature intValue] == 0) {
+        //底部工具栏操作项
+        UIImage *likeIcon = [UIImage imageNamed:@"photo-gallery-collect-noselect.png"];
+        UIImage *likeIconSelected = [UIImage imageNamed:@"photo-gallery-collect.png"];
+        NSString *collectedTag = [currentDuanZi objectForKey:@"collected_tag"];
+        
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.frame = CGRectMake(0, 0, 20, 20);
+        [btn addTarget:self action:@selector(handleLikeButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
+        [btn setImage:likeIcon forState:UIControlStateNormal];
+        [btn setImage:likeIconSelected forState:UIControlStateSelected];
+        UIBarButtonItem *likeButton = [[UIBarButtonItem alloc] initWithCustomView:btn];
+        
+        if ([collectedTag isEqualToString:@"YES"]) {
+            [btn setSelected:YES];
+        }
+        
+        UIImage *shareIcon = [UIImage imageNamed:@"photo-gallery-share.png"];
+        UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithImage:shareIcon style:UIBarButtonItemStylePlain target:self action:@selector(handleShareButtonTouch:)];
+        NSArray *barItems = [NSArray arrayWithObjects:likeButton, shareButton, nil];
+        
+        FGalleryViewController *localGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItems];
+        [localGallery setUseThumbnailView:NO];
+        //[localGallery setHideTitle:YES];
+        [self.navigationController pushViewController:localGallery animated:YES];
+    } else {
+        SVWebViewController *webViewController = [[SVWebViewController alloc] 
+                                                  initWithURL:[NSURL URLWithString:shareurl]];
+        webViewController.hidesBottomBarWhenPushed = YES;
+        webViewController.title = @"视频详情";
+        [self.navigationController pushViewController:webViewController animated:YES];
     }
-
-    UIImage *shareIcon = [UIImage imageNamed:@"photo-gallery-share.png"];
-    UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithImage:shareIcon style:UIBarButtonItemStylePlain target:self action:@selector(handleShareButtonTouch:)];
-    NSArray *barItems = [NSArray arrayWithObjects:likeButton, shareButton, nil];
     
-    FGalleryViewController *localGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItems];
-    [localGallery setUseThumbnailView:NO];
-    //[localGallery setHideTitle:YES];
-    [self.navigationController pushViewController:localGallery animated:YES];
 }
 
 -(void)goShare:(id)sender{  
@@ -837,6 +845,10 @@
         //[coverImageView addTarget:self action:@selector(goGallery:) forControlEvents:UIControlEventTouchUpInside];
     }
     
+    //叠加播放按钮
+    UIImageView *playImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"feedvideoplay.png"]];
+    [cell.contentView addSubview:playImageView];
+    
     //【底部】
     UIView *bottomBgView = [[UIView alloc] initWithFrame:CGRectZero];
     [cell.contentView addSubview:bottomBgView];
@@ -894,6 +906,15 @@
     imageDisplayRect.origin.y = imageDisplayRect.origin.y + 5;
     [coverImageView setFrame:imageDisplayRect];
     
+    int imageX = imageDisplayRect.origin.x;
+    int imageY = imageDisplayRect.origin.y;
+    int imageWidth = imageDisplayRect.size.width;
+    int imageHeight = imageDisplayRect.size.height;
+    CGRect playDisplayRect = CGRectMake(imageX + (imageWidth - PLAYBUTTON_WIDTH)/2,
+                                        imageY + (imageHeight - PLAYBUTTON_WIDTH)/2,
+                                        PLAYBUTTON_WIDTH, PLAYBUTTON_WIDTH);
+    [playImageView setFrame:playDisplayRect];
+    
     //content内容自适应
     label = (UILabel *)[cell viewWithTag:1];
     CGRect cellFrame = [cell frame];
@@ -918,6 +939,13 @@
     [pingLabel setFrame:CGRectMake(165, cellFrame.size.height + TOP_SECTION_HEIGHT - 3 + imageDisplayRect.size.height, 75, BOTTOM_SECTION_HEIGHT)];
     
     [btnStar setFrame:CGRectMake(260, cellFrame.size.height + TOP_SECTION_HEIGHT - 3 + imageDisplayRect.size.height, 320-260, BOTTOM_SECTION_HEIGHT)];
+    
+    //视频资源暂不支持收藏
+    if ([[duanZi objectForKey:@"feature"] intValue] == 1) {
+        [btnStar setHidden:YES];
+    } else {
+        [playImageView setHidden:YES];
+    }
     
     [cell setFrame:cellFrame];
     cell.accessoryType = UITableViewCellAccessoryNone;
