@@ -279,34 +279,16 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
             self.tabBarController.viewControllers = [NSArray arrayWithObjects:
                                                          newPathNavViewController,
                                                          historyTopNavViewController,
-                                                         channelNavViewController,
-                                                         collectNavViewController,
+                                                         collectGalleryNavViewController,
                                                          settingNavViewController,
                                                          nil];
-            if ([showChannel isEqualToString:@"NO"]) {
-                self.tabBarController.viewControllers = [NSArray arrayWithObjects:
-                                                         newPathNavViewController,
-                                                         historyTopNavViewController,
-                                                         collectNavViewController,
-                                                         settingNavViewController,
-                                                         nil];
-            }
         } else {
             self.tabBarController.viewControllers = [NSArray arrayWithObjects:
-                                                     newCommonNavViewController, 
+                                                     newWeiboNavViewController, 
                                                      historyTopNavViewController,
-                                                     channelNavViewController,
-                                                     collectNavViewController,
+                                                     collectGalleryNavViewController,
                                                      settingNavViewController,
                                                      nil];
-            if ([showChannel isEqualToString:@"NO"]) {
-                self.tabBarController.viewControllers = [NSArray arrayWithObjects:
-                                                         newCommonNavViewController, 
-                                                         historyTopNavViewController,
-                                                         collectNavViewController,
-                                                         settingNavViewController,
-                                                         nil];
-            }
         }
     }
         

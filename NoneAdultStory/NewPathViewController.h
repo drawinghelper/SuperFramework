@@ -23,7 +23,7 @@
 #define HORIZONTAL_PADDING 16.0f
 #define PLAYBUTTON_WIDTH 30.0f
 
-@interface NewPathViewController : PFQueryTableViewController<MBProgressHUDDelegate, UMSNSDataSendDelegate, UIActionSheetDelegate, AdMoGoDelegate, FGalleryViewControllerDelegate> {
+@interface NewPathViewController : PFQueryTableViewController<MBProgressHUDDelegate, UMSNSDataSendDelegate, UIActionSheetDelegate, UIAlertViewDelegate, AdMoGoDelegate, FGalleryViewControllerDelegate> {
     AdMoGoView *adView;
 
     MBProgressHUD *HUD;

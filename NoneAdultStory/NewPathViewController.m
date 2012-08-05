@@ -549,6 +549,29 @@
 	[HUD hide:YES afterDelay:1];
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    switch (buttonIndex) {
+        case 0:
+        {          
+            NSString *okUrl = [pullmessageInfo objectForKey:@"okurl"];
+            if (![okUrl isEqualToString:@""]) {
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:okUrl]];
+            }
+            break;
+        }
+        case 1:
+        {
+            // they want to rate it
+            NSString *cancelUrl = [pullmessageInfo objectForKey:@"cancelurl"];
+            if (![cancelUrl isEqualToString:@""]) {
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:cancelUrl]];
+            }
+            break;
+        }
+        default:
+            break;
+    }
+}
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (buttonIndex != actionSheet.cancelButtonIndex) {
