@@ -7,12 +7,19 @@
 //
 
 #import "NewCommonViewController.h"
+#import "UITabBarController+hidable.h"
 
 @interface NewCommonViewController ()
 
 @end
 
 @implementation NewCommonViewController
+{
+    CGFloat startContentOffset;
+    CGFloat lastContentOffset;
+    BOOL hidden;
+}
+
 @synthesize tableView;
 @synthesize adView;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withTitle:(NSString *)title withCid:(NSString *)cid
@@ -152,6 +159,95 @@
     
 }
 
+#pragma mark - The Magic!
+
+-(void)expand
+{
+    if(hidden)
+        return;
+    
+    hidden = YES;
+    
+    [self.tabBarController setTabBarHidden:YES 
+                                  animated:YES];
+    
+    [self.navigationController setNavigationBarHidden:YES 
+                                             animated:YES];
+}
+
+-(void)contract
+{
+    if(!hidden)
+        return;
+    
+    hidden = NO;
+    
+    [self.tabBarController setTabBarHidden:NO 
+                                  animated:YES];
+    
+    [self.navigationController setNavigationBarHidden:NO 
+                                             animated:YES];
+}
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate Methods
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    startContentOffset = lastContentOffset = scrollView.contentOffset.y;
+    //NSLog(@"scrollViewWillBeginDragging: %f", scrollView.contentOffset.y);
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView 
+{
+    CGFloat currentOffset = scrollView.contentOffset.y;
+    CGFloat differenceFromStart = startContentOffset - currentOffset;
+    CGFloat differenceFromLast = lastContentOffset - currentOffset;
+    lastContentOffset = currentOffset;
+    
+    if((differenceFromStart) < 0)
+    {
+        // scroll up
+        if(scrollView.isTracking && (abs(differenceFromLast)>1))
+            [self expand];
+    }
+    else {
+        if(scrollView.isTracking && (abs(differenceFromLast)>1))
+            [self contract];
+    }
+    
+    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    
+    if (canLoadOld) {
+        CGPoint contentOffsetPoint = tableView.contentOffset;
+        CGRect frame = tableView.frame;
+        if (contentOffsetPoint.y == tableView.contentSize.height - frame.size.height || tableView.contentSize.height < frame.size.height) 
+        {
+            NSLog(@"scroll to the end");
+            if (!_reloading) {
+                loadOld = YES;
+                _reloading = YES;
+                [self requestResultFromServer];
+            }
+        }
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+}
+
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
+{
+    [self contract];
+    return YES;
+}
+
 //处理应用内消息
 - (void)processPullMessage {
     NSString *pullmessage = [MobClick getConfigParams:@"pullmessage"];
@@ -262,34 +358,6 @@
     //  model should call this when its done loading
     _reloading = NO;
     [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
-    
-}
-
-#pragma mark -
-#pragma mark UIScrollViewDelegate Methods
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    
-    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
-    
-    if (canLoadOld) {
-        CGPoint contentOffsetPoint = tableView.contentOffset;
-        CGRect frame = tableView.frame;
-        if (contentOffsetPoint.y == tableView.contentSize.height - frame.size.height || tableView.contentSize.height < frame.size.height) 
-        {
-            NSLog(@"scroll to the end");
-            if (!_reloading) {
-                loadOld = YES;
-                _reloading = YES;
-                [self requestResultFromServer];
-            }
-        }
-    }
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    
-    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
     
 }
 
