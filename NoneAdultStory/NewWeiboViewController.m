@@ -72,7 +72,10 @@
     loginBarItem = [[UIBarButtonItem alloc] initWithTitle:@"登录" style:UIBarButtonItemStyleBordered target:self action:@selector(onLogInOAuthButtonPressed)];
     [loginBarItem setTintColor:[UIColor colorWithRed:142.0f/255.0f green:203.0f/255.0f blue:203.0f/255.0f alpha:1.0f]];
 
-    [self checkLeftBarButton];
+    //暂时隐藏注销登录按钮
+    //[self checkLeftBarButton];
+    self.navigationItem.leftBarButtonItem = nil;
+    
     if ([weiBoEngine isLoggedIn] && ![weiBoEngine isAuthorizeExpired]) {
         [self performRefresh];
     }

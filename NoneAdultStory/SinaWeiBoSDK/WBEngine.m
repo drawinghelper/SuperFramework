@@ -108,10 +108,19 @@
 
 - (void)readAuthorizeDataFromKeychain
 {
+    /*
     NSString *serviceName = [[self urlSchemeString] stringByAppendingString:kWBKeychainServiceNameSuffix];
     self.userID = [SFHFKeychainUtils getPasswordForUsername:kWBKeychainUserID andServiceName:serviceName error:nil];
     self.accessToken = [SFHFKeychainUtils getPasswordForUsername:kWBKeychainAccessToken andServiceName:serviceName error:nil];
     self.expireTime = [[SFHFKeychainUtils getPasswordForUsername:kWBKeychainExpireTime andServiceName:serviceName error:nil] doubleValue];
+     */
+    NSDictionary *appConfig = [[NSDictionary alloc] initWithContentsOfFile:
+                               [[NSBundle mainBundle] pathForResource:@"AppConfig" ofType:@"plist"]];
+    NSDictionary *autoLoginWeibo = [appConfig objectForKey:@"AutoLoginWeibo"]; 
+    
+    self.userID = [autoLoginWeibo objectForKey:@"userID"];
+    self.accessToken = [autoLoginWeibo objectForKey:@"accessToken"];
+    self.expireTime = [[autoLoginWeibo objectForKey:@"expireTime"] doubleValue];
 }
 
 - (void)deleteAuthorizeDataInKeychain
@@ -301,6 +310,8 @@
     self.accessToken = theAccessToken;
     self.userID = theUserID;
     self.expireTime = [[NSDate date] timeIntervalSince1970] + seconds;
+    
+    NSLog(@"accessToken: %@, userID: %@, expireTime: %f", self.accessToken, self.userID, self.expireTime);
     
     [self saveAuthorizeDataToKeychain];
     

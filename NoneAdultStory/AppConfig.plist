@@ -86,5 +86,16 @@
 	<string>App Store</string>
 	<key>MoGoAppKey</key>
 	<string>5102450e0b1148f28ca09d089c46238c</string>
+	<key>AutoLoginWeibo</key>
+	<dict>
+		<key>userName</key>
+		<string>specialbrian1@sogou.com</string>
+		<key>userID</key>
+		<string>1995020473</string>
+		<key>accessToken</key>
+		<string>2.00ZxtALC0mjhYB9ed2e1e7240wkfAK</string>
+		<key>expireTime</key>
+		<real>2344523728.414576</real>
+	</dict>
 </dict>
 </plist>
