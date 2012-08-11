@@ -26,7 +26,8 @@
 @end
 
 @implementation NewWeiboViewController
-@synthesize weiBoEngine;
+/*
+ @synthesize weiBoEngine;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withTitle:(NSString *)title
 {
@@ -73,7 +74,7 @@
     [loginBarItem setTintColor:[UIColor colorWithRed:142.0f/255.0f green:203.0f/255.0f blue:203.0f/255.0f alpha:1.0f]];
 
     //暂时隐藏注销登录按钮
-    //[self checkLeftBarButton];
+    [self checkLeftBarButton];
     self.navigationItem.leftBarButtonItem = nil;
     
     if ([weiBoEngine isLoggedIn] && ![weiBoEngine isAuthorizeExpired]) {
@@ -359,4 +360,5 @@
     }
     return input;
 }
+ */
 @end

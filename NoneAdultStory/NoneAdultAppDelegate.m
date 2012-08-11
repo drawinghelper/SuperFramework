@@ -8,6 +8,7 @@
 
 #import "NoneAdultAppDelegate.h"
 #import "NewCommonViewController.h"
+#import "MagicWeiboViewController.h"
 #import "NewWeiboViewController.h"
 #import "NewPathViewController.h"
 //#import "HistoryPathViewController.h"
@@ -222,9 +223,13 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                                  withCid:[[NoneAdultAppDelegate sharedAppDelegate] getNewTabCid]];
     UINavigationController *newCommonNavViewController = [[UINavigationController alloc] initWithRootViewController:newCommonViewController];
     
+     UIViewController *magicWeiboViewController = [[MagicWeiboViewController alloc] initWithNibName:@"MagicWeiboViewController" bundle:nil withTitle:@"微博"];
+     UINavigationController *magicWeiboNavViewController = [[UINavigationController alloc] initWithRootViewController:magicWeiboViewController];
+    
+    /*
     UIViewController *newWeiboViewController = [[NewWeiboViewController alloc] initWithNibName:@"NewWeiboViewController" bundle:nil withTitle:@"微博"];
     UINavigationController *newWeiboNavViewController = [[UINavigationController alloc] initWithRootViewController:newWeiboViewController];
-    
+    */
     UIViewController *newPathViewController = [[NewPathViewController alloc] init];
     UINavigationController *newPathNavViewController = [[UINavigationController alloc] initWithRootViewController:newPathViewController];
     
@@ -263,10 +268,11 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     
     //为过审和推广初期内容高质量，只显示精选；之后可以显示未精选过的最新笑话
     PFUser *user = [PFUser currentUser];
-    if (user && [user.username isEqualToString:@"drawinghelper@gmail.com"]) {
+    //if (user && [user.username isEqualToString:@"drawinghelper@gmail.com"]) {
         self.tabBarController.viewControllers = [NSArray arrayWithObjects:
 //                                                 newCommonNavViewController,
-                                                 newWeiboNavViewController,
+                                                 magicWeiboNavViewController,
+                                                 //newWeiboNavViewController,
                                                  newPathNavViewController,
                                                  historyTopNavViewController,
                                                  collectGalleryNavViewController,
@@ -274,6 +280,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                                  //collectNavViewController,
                                                  settingNavViewController,
                                                  nil];
+    /*
     } else {
         if ([showFilteredNew isEqualToString:@"YES"]) {
             self.tabBarController.viewControllers = [NSArray arrayWithObjects:
@@ -284,13 +291,13 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                                          nil];
         } else {
             self.tabBarController.viewControllers = [NSArray arrayWithObjects:
-                                                     newWeiboNavViewController, 
+                                                     //newWeiboNavViewController, 
                                                      historyTopNavViewController,
                                                      collectGalleryNavViewController,
                                                      settingNavViewController,
                                                      nil];
         }
-    }
+    }*/
         
     self.window.rootViewController = self.tabBarController;
     //[NSThread sleepForTimeInterval:1.0];
