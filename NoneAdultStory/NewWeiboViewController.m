@@ -26,7 +26,6 @@
 @end
 
 @implementation NewWeiboViewController
-/*
  @synthesize weiBoEngine;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withTitle:(NSString *)title
@@ -360,5 +359,4 @@
     }
     return input;
 }
- */
 @end

@@ -8,7 +8,6 @@
 
 #import "NoneAdultAppDelegate.h"
 #import "NewCommonViewController.h"
-#import "MagicWeiboViewController.h"
 #import "NewWeiboViewController.h"
 #import "NewPathViewController.h"
 //#import "HistoryPathViewController.h"
@@ -223,13 +222,9 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                                  withCid:[[NoneAdultAppDelegate sharedAppDelegate] getNewTabCid]];
     UINavigationController *newCommonNavViewController = [[UINavigationController alloc] initWithRootViewController:newCommonViewController];
     
-     UIViewController *magicWeiboViewController = [[MagicWeiboViewController alloc] initWithNibName:@"MagicWeiboViewController" bundle:nil withTitle:@"微博"];
-     UINavigationController *magicWeiboNavViewController = [[UINavigationController alloc] initWithRootViewController:magicWeiboViewController];
-    
-    /*
     UIViewController *newWeiboViewController = [[NewWeiboViewController alloc] initWithNibName:@"NewWeiboViewController" bundle:nil withTitle:@"微博"];
     UINavigationController *newWeiboNavViewController = [[UINavigationController alloc] initWithRootViewController:newWeiboViewController];
-    */
+
     UIViewController *newPathViewController = [[NewPathViewController alloc] init];
     UINavigationController *newPathNavViewController = [[UINavigationController alloc] initWithRootViewController:newPathViewController];
     
@@ -271,8 +266,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     //if (user && [user.username isEqualToString:@"drawinghelper@gmail.com"]) {
         self.tabBarController.viewControllers = [NSArray arrayWithObjects:
 //                                                 newCommonNavViewController,
-                                                 magicWeiboNavViewController,
-                                                 //newWeiboNavViewController,
+                                                 newWeiboNavViewController,
                                                  newPathNavViewController,
                                                  historyTopNavViewController,
                                                  collectGalleryNavViewController,
