@@ -74,7 +74,6 @@
 
     //暂时隐藏注销登录按钮
     [self checkLeftBarButton];
-    self.navigationItem.leftBarButtonItem = nil;
     
     if ([weiBoEngine isLoggedIn] && ![weiBoEngine isAuthorizeExpired]) {
         [self performRefresh];
