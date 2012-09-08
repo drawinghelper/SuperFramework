@@ -339,9 +339,9 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 	
 	switch (buttonIndex) {
 		case 0:
-		{
-			// they don't want to rate it
-			[userDefaults setBool:YES forKey:kAppiraterDeclinedToRate];
+		{            
+            // remind them later
+			[userDefaults setDouble:[[NSDate date] timeIntervalSince1970] forKey:kAppiraterReminderRequestDate];
 			[userDefaults synchronize];
 			break;
 		}
@@ -352,9 +352,12 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 			break;
 		}
 		case 2:
-			// remind them later
-			[userDefaults setDouble:[[NSDate date] timeIntervalSince1970] forKey:kAppiraterReminderRequestDate];
-			[userDefaults synchronize];
+            [UMFeedback showFeedback:[[[NoneAdultAppDelegate sharedAppDelegate] window] rootViewController]
+                          withAppkey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey]];
+            
+            // they don't want to rate it
+            [userDefaults setBool:YES forKey:kAppiraterDeclinedToRate];
+            [userDefaults synchronize];
 			break;
 		default:
 			break;
