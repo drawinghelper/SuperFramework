@@ -289,9 +289,9 @@
 	newFrame.origin.x = (self.view.bounds.size.width - adSize.width)/2;
     //newFrame.origin.y = self.view.bounds.size.height - adSize.height;
     if (_isFullscreen) {
-        newFrame.origin.y = 480 - adSize.height;
+        newFrame.origin.y = 460 - adSize.height;
     } else {
-        newFrame.origin.y = 480 - adSize.height - 20;
+        newFrame.origin.y = 460 - adSize.height - 20;
     }
 	adView.frame = newFrame;
     
