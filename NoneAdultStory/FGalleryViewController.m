@@ -555,7 +555,8 @@
     if( self.navigationController ) {
         if (_useThumbnailView) {
             UIBarButtonItem *btn = [[[UIBarButtonItem alloc] initWithTitle:@"全部发型" style:UIBarButtonItemStylePlain target:self action:@selector(handleSeeAllTouch:)] autorelease];
-            [btn setTintColor:[UIColor colorWithRed:142.0f/255.0f green:203.0f/255.0f blue:203.0f/255.0f alpha:1.0f]];
+            //[btn setTintColor:[UIColor colorWithRed:142.0f/255.0f green:203.0f/255.0f blue:203.0f/255.0f alpha:1.0f]];
+            [btn setTintColor:[UIColor colorWithRed:245.0f/255.0f green:127.0f/255.0f blue:167.0f/255.0f alpha:1.0f]];
             [self.navigationItem setRightBarButtonItem:btn animated:YES];
         }
         else {
