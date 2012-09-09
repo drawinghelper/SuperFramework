@@ -226,6 +226,7 @@
     [self.navigationController setNavigationBarHidden:hidden 
                                              animated:YES];
     [adView setHidden:NO];
+    
     self.customTbBarController.tabBar.tabBarStyle = CMTabBarStyleTranslucent;
     self.customTbBarController.tabBar.hidden = NO;
 }
@@ -235,6 +236,20 @@
     [super viewDidAppear:animated];
     [self.tabBarController setTabBarHidden:hidden 
                                   animated:NO];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [adView setHidden:YES];
+    
+    self.customTbBarController.tabBar.hidden = YES;
+    [self contract];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
 }
 
 #pragma mark - The Magic!
@@ -308,18 +323,6 @@
 {
     [self contract];
     return YES;
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    [adView setHidden:YES];
-    self.customTbBarController.tabBar.hidden = YES;
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

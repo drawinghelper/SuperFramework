@@ -139,11 +139,13 @@ static CMTabBarController* sharedInstance = nil;
         [vc shouldAutorotateToInterfaceOrientation:interfaceOrientation];
     }
     
+    /*
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     } else {
         return YES;
-    }
+    }*/
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
