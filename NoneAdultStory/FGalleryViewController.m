@@ -764,10 +764,10 @@
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
     label.backgroundColor = [UIColor clearColor];
     label.font = [UIFont boldSystemFontOfSize:20.0];
-    label.shadowColor = [UIColor colorWithRed:219.0f/255 green:241.0f/225 blue:241.0f/255 alpha:1];     
+    label.shadowColor = [UIColor colorWithRed:70.0f/255 green:70.0f/225 blue:70.0f/255 alpha:1];     
     label.textAlignment = UITextAlignmentCenter;
-    label.textColor = [UIColor colorWithRed:37.0f/255 green:149.0f/225 blue:149.0f/255 alpha:1];        
-    [label setShadowOffset:CGSizeMake(0, 1.0)];
+    label.textColor = [UIColor colorWithRed:235.0f/255 green:235.0f/225 blue:235.0f/255 alpha:1];        
+    [label setShadowOffset:CGSizeMake(0, -1.0)];
     
     if (!_hideTitle){
         [label setText:[NSString stringWithFormat:@"%i %@ %i", _currentIndex+1, @"/" , [_photoSource numberOfPhotosForPhotoGallery:self]]];

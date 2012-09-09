@@ -270,7 +270,8 @@
         }
         
         self.toolbarItems = items;
-        [self.navigationController.toolbar setTintColor:[UIColor blackColor]];
+        //[self.navigationController.toolbar setTintColor:[UIColor blackColor]];
+        [self.navigationController.toolbar setBarStyle:UIBarStyleBlackTranslucent];
     }
 }
 
