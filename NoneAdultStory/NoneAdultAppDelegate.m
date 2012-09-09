@@ -325,13 +325,28 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
     
     //设置明天的这个时候推送
-    NSDate *date = [NSDate dateWithTimeIntervalSinceNow:60*60*24];
-    //NSDate *date = [NSDate dateWithTimeIntervalSinceNow:30];
+    NSDate *tomorrow = [NSDate dateWithTimeIntervalSinceNow:60*60*24];
+    NSCalendar *chineseCalendar = [NSCalendar currentCalendar];
+    
+    NSDateComponents *tomorrowComponents = [chineseCalendar components:(NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit) fromDate:tomorrow];  
+    NSLog(@"year: %d, month: %d, day: %d", 
+          [tomorrowComponents year],
+          [tomorrowComponents month],
+          [tomorrowComponents day]);
+    
+    NSDateComponents *offsetComponents = [[NSDateComponents alloc] init]; 
+    [offsetComponents setYear:[tomorrowComponents year]];
+    [offsetComponents setMonth:[tomorrowComponents month]];
+    [offsetComponents setDay:[tomorrowComponents day]];
+    [offsetComponents setHour:20];
+    
+    NSDate *tomorrow20dian = [chineseCalendar dateFromComponents:offsetComponents];  
+    
     //创建一个本地推送
     UILocalNotification *noti = [[UILocalNotification alloc] init];
     if (noti) {
         //设置推送时间
-        noti.fireDate = date;
+        noti.fireDate = tomorrow20dian;
         //设置重复间隔
         noti.repeatInterval = NSWeekCalendarUnit;
         NSString *localNotiRepeatInterval = [MobClick getConfigParams:@"localNotiRepeatInterval"];
