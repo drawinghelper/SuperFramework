@@ -7,6 +7,7 @@
 //
 
 #import "NoneAdultSettingViewController.h"
+#import "UIViewController+CMTabBarController.h"
 
 @interface NoneAdultSettingViewController ()
 
@@ -190,6 +191,19 @@
 	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 	NSLog(@"...didSelectRowAtIndexPath");
     
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    self.customTbBarController.tabBar.hidden = YES;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    self.customTbBarController.tabBar.tabBarStyle = CMTabBarStyleTranslucent;
+    self.customTbBarController.tabBar.hidden = NO;
+    
+    NSLog(@"%@ - viewWillAppear", self.title);
 }
 
 - (void)showLogOut {

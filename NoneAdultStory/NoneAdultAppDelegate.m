@@ -17,11 +17,11 @@
 #import "CollectedViewController.h"
 #import "RootViewController.h"
 #import "NoneAdultSettingViewController.h"
+#import "CMTabBarController.h"
 
 @implementation NoneAdultAppDelegate
 
 @synthesize window = _window;
-@synthesize tabBarController = _tabBarController;
 
 - (void) animateSplashScreen
 {
@@ -249,7 +249,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     UINavigationController *settingNavViewController = [[UINavigationController alloc] initWithRootViewController:settingViewController];
     [settingNavViewController.navigationBar setTintColor:[UIColor darkGrayColor]];
     
-    self.tabBarController = [[UITabBarController alloc] init];
+    CMTabBarController *tabBarController = [CMTabBarController new];
+    //self.tabBarController = [[UITabBarController alloc] init];
     
     NSString *showFilteredNew = [MobClick getConfigParams:@"showFilteredNew"];
     if (showFilteredNew == nil || showFilteredNew == [NSNull null]  || [showFilteredNew isEqualToString:@""]) {
@@ -264,7 +265,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     //为过审和推广初期内容高质量，只显示精选；之后可以显示未精选过的最新笑话
     PFUser *user = [PFUser currentUser];
     if (user && [user.username isEqualToString:@"drawinghelper@gmail.com"]) {
-        self.tabBarController.viewControllers = [NSArray arrayWithObjects:
+        tabBarController.viewControllers = [NSArray arrayWithObjects:
 //                                                 newCommonNavViewController,
                                                  newWeiboNavViewController,
                                                  newPathNavViewController,
@@ -276,14 +277,14 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                                  nil];
     } else {
         if ([showFilteredNew isEqualToString:@"YES"]) {
-            self.tabBarController.viewControllers = [NSArray arrayWithObjects:
+            tabBarController.viewControllers = [NSArray arrayWithObjects:
                                                          newPathNavViewController,
                                                          historyTopNavViewController,
                                                          collectGalleryNavViewController,
                                                          settingNavViewController,
                                                          nil];
         } else {
-            self.tabBarController.viewControllers = [NSArray arrayWithObjects:
+            tabBarController.viewControllers = [NSArray arrayWithObjects:
                                                      //newWeiboNavViewController, 
                                                      historyTopNavViewController,
                                                      collectGalleryNavViewController,
@@ -292,7 +293,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
         }
     }
         
-    self.window.rootViewController = self.tabBarController;
+    self.window.rootViewController = tabBarController;
     //[NSThread sleepForTimeInterval:1.0];
     [self.window makeKeyAndVisible];
     [self animateSplashScreen];
@@ -307,7 +308,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     application.applicationIconBadgeNumber = 0;
     //从push过来默认来最热tab
-    [self.tabBarController setSelectedIndex:1];
+    //[self.tabBarController setSelectedIndex:1];
     [PFPush handlePush:userInfo];
 }
 

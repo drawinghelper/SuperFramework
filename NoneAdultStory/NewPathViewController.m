@@ -8,6 +8,7 @@
 
 #import "NewPathViewController.h"
 #import "UITabBarController+hidable.h"
+#import "UIViewController+CMTabBarController.h"
 
 @implementation NewPathViewController
 {
@@ -16,6 +17,7 @@
     BOOL hidden;
 }
 @synthesize adView;
+
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -29,10 +31,10 @@
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
         label.backgroundColor = [UIColor clearColor];
         label.font = [UIFont boldSystemFontOfSize:20.0];
-        label.shadowColor = [UIColor colorWithRed:219.0f/255 green:241.0f/225 blue:241.0f/255 alpha:1];     
+        label.shadowColor = [UIColor colorWithRed:70.0f/255 green:70.0f/225 blue:70.0f/255 alpha:1];     
         label.textAlignment = UITextAlignmentCenter;
-        label.textColor = [UIColor colorWithRed:37.0f/255 green:149.0f/225 blue:149.0f/255 alpha:1];        
-        [label setShadowOffset:CGSizeMake(0, 1.0)];
+        label.textColor = [UIColor colorWithRed:235.0f/255 green:235.0f/225 blue:235.0f/255 alpha:1];        
+        [label setShadowOffset:CGSizeMake(0, -1.0)];
         
         self.navigationItem.titleView = label;
         label.text = NSLocalizedString(@"每日精选", @"");
@@ -224,6 +226,8 @@
     [self.navigationController setNavigationBarHidden:hidden 
                                              animated:YES];
     [adView setHidden:NO];
+    self.customTbBarController.tabBar.tabBarStyle = CMTabBarStyleTranslucent;
+    self.customTbBarController.tabBar.hidden = NO;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -310,6 +314,7 @@
 {
     [super viewWillDisappear:animated];
     [adView setHidden:YES];
+    self.customTbBarController.tabBar.hidden = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated
