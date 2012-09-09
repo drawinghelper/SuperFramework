@@ -1057,11 +1057,11 @@
     [cell.contentView addSubview:timestampLabel];
     
     //微博头像
-    UIImageView *brandLogoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"shi.jpeg"]];
+    UIImageView *brandLogoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Icon.png"]];
     [brandLogoImageView setFrame:CGRectMake(17, 13, TOP_SECTION_HEIGHT-20, TOP_SECTION_HEIGHT-20)];        
     [cell.contentView addSubview:brandLogoImageView];
     [brandLogoImageView setImageWithURL:[NSURL URLWithString:[duanZi objectForKey:@"profile_image_url"]] 
-                       placeholderImage:[UIImage imageNamed:@"shi.jpeg"]];
+                       placeholderImage:[UIImage imageNamed:@"Icon.png"]];
     CALayer *layer = [brandLogoImageView layer];  
     [layer setMasksToBounds:YES];  
     [layer setCornerRadius:1.5];  

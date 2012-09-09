@@ -141,7 +141,7 @@
     [cell.contentView addSubview:channelSubtitleLabel];
     
     //频道图标
-    UIImageView *channelLogoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"shi.jpeg"]];
+    UIImageView *channelLogoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Icon.png"]];
     [channelLogoImageView setFrame:CGRectMake(13, 13, TOP_SECTION_HEIGHT-13, TOP_SECTION_HEIGHT-13)];        
     [cell.contentView addSubview:channelLogoImageView];
     [channelLogoImageView setImage:[UIImage imageNamed:[currentChannelInfo objectForKey:@"icon"]]];
