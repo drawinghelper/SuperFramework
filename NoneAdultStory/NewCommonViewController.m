@@ -8,6 +8,7 @@
 
 #import "NewCommonViewController.h"
 #import "UITabBarController+hidable.h"
+#import "UIViewController+CMTabBarController.h"
 
 @interface NewCommonViewController ()
 
@@ -33,9 +34,9 @@
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
         label.backgroundColor = [UIColor clearColor];
         label.font = [UIFont boldSystemFontOfSize:20.0];
-        label.shadowColor = [UIColor colorWithRed:219.0f/255 green:241.0f/225 blue:241.0f/255 alpha:1];     
+        label.shadowColor = [UIColor colorWithRed:70.0f/255 green:70.0f/225 blue:70.0f/255 alpha:1];     
         label.textAlignment = UITextAlignmentCenter;
-        label.textColor = [UIColor colorWithRed:37.0f/255 green:149.0f/225 blue:149.0f/255 alpha:1];        
+        label.textColor = [UIColor colorWithRed:235.0f/255 green:235.0f/225 blue:235.0f/255 alpha:1];        
         [label setShadowOffset:CGSizeMake(0, 1.0)];
         
         self.navigationItem.titleView = label;
@@ -84,6 +85,21 @@
 
 - (void)adMoGoDidDismissFullScreenModal {
     //关闭广告内置浏览器时调用 
+}
+
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.customTbBarController.tabBar.tabBarStyle = CMTabBarStyleTranslucent;
+    self.customTbBarController.tabBar.hidden = NO;
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    self.customTbBarController.tabBar.hidden = YES;
+    [self contract];
 }
 
 - (void)viewDidLoad

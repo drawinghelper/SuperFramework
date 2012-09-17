@@ -266,7 +266,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     PFUser *user = [PFUser currentUser];
     if (user && [user.username isEqualToString:@"drawinghelper@gmail.com"]) {
         tabBarController.viewControllers = [NSArray arrayWithObjects:
-//                                                 newCommonNavViewController,
+                                                 newCommonNavViewController,
                                                  newWeiboNavViewController,
                                                  newPathNavViewController,
                                                  historyTopNavViewController,
