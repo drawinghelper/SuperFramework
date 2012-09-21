@@ -72,7 +72,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return starCommentVisible ? 4 : 3;
+    return starCommentVisible ? 4 : 2;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -121,11 +121,8 @@
             cell.text = starCommentVisible ? @"评五星鼓励我" : @"用着不爽提意见";
             break;
         case 1:
-            cell.text = starCommentVisible ? @"用着不爽提意见" : @"精彩应用推荐";
-            break;
-        case 2:
             if (starCommentVisible) {
-                cell.text = @"精彩应用推荐";
+                cell.text = @"用着不爽提意见";
             } else {
                 if (user) {
                     cell.text = [NSString stringWithFormat:@"%@ 已登录", user.username];
@@ -133,6 +130,9 @@
                     cell.text = @"登录";
                 }
             }
+            break;
+        case 2:
+            cell.text = @"精彩应用推荐";
             break;
         case 3:
             if (user) {
@@ -169,18 +169,14 @@
         if (starCommentVisible) {
             [self umengFeedback];
         } else {
-            [self showLianMeng];
-        }
-    } else if (row == 2){
-        if (starCommentVisible) {
-            [self showLianMeng];
-        } else {
             if (user) {
                 [self showLogOut];
             } else {
                 [self showLogin];
             }
         }
+    } else if (row == 2){
+        [self showLianMeng];
     } else {
         if (user) {
             [self showLogOut];
