@@ -89,7 +89,8 @@
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 2;
+    //return 2;
+    return 3;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -110,7 +111,8 @@
     }
     
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        //cell = [[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier];
     }
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
@@ -126,56 +128,16 @@
     
     // Configure the cell...
     int row = [indexPath row];
-    //标题
-    UILabel *channelTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(TOP_SECTION_HEIGHT, 20, 320 - TOP_SECTION_HEIGHT, 35)];
-    channelTitleLabel.textAlignment = UITextAlignmentLeft;
-    channelTitleLabel.text = @"附赠杂志";
-    channelTitleLabel.font = [UIFont fontWithName:@"Helvetica" size:20];
-    channelTitleLabel.textColor = [UIColor blackColor];
-    channelTitleLabel.backgroundColor = [UIColor clearColor];
-    [cell.contentView addSubview:channelTitleLabel];
-    
-    //副标题
-    UILabel *channelSubtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(TOP_SECTION_HEIGHT, 35+20, 320 - TOP_SECTION_HEIGHT, 35)];
-    channelSubtitleLabel.textAlignment = UITextAlignmentLeft;    
-    channelSubtitleLabel.text = @"图解最火爆的潮流发型";   
-    channelSubtitleLabel.font = [UIFont fontWithName:@"Helvetica" size:14];
-    channelSubtitleLabel.textColor = [UIColor darkGrayColor];
-    channelSubtitleLabel.backgroundColor = [UIColor clearColor];
-    [cell.contentView addSubview:channelSubtitleLabel];
-    
-    //内含图片数
-    UILabel *channelSumLabel = [[UILabel alloc] initWithFrame:CGRectMake(TOP_SECTION_HEIGHT, 35*2+20, 320 - TOP_SECTION_HEIGHT, 35)];
-    channelSumLabel.textAlignment = UITextAlignmentLeft;    
-    channelSumLabel.text = [NSString stringWithFormat:@"%d款发型", kPresetNum];   
-    channelSumLabel.font = [UIFont fontWithName:@"Helvetica" size:14];
-    channelSumLabel.textColor = [UIColor darkGrayColor];
-    channelSumLabel.backgroundColor = [UIColor clearColor];
-    [cell.contentView addSubview:channelSumLabel];
-    
-    //频道图标
-    SWSnapshotStackView *channelLogoImageView = [[SWSnapshotStackView alloc] initWithFrame:
-                                                 CGRectMake(5, 5, kTableViewCellHeight-15, kTableViewCellHeight-15)];
-    channelLogoImageView.displayAsStack = YES;
-    channelLogoImageView.image = [UIImage imageNamed:@"h1_thumb.jpg"];
-    [cell.contentView addSubview:channelLogoImageView];
-    
-    if (row == 1) {
-        channelTitleLabel.text = @"姐的杂志";
-        channelSubtitleLabel.text = @"您收藏的发型全在这里";   
-        if (networkImages != nil) {
-            if ([networkImages count] != 0) {
-                SDWebImageManager *manager = [SDWebImageManager sharedManager];
-                UIImage *networkImage = [manager imageWithURL:
-                                         [NSURL URLWithString:[networkImages objectAtIndex:0]]
-                                         ];
-                channelLogoImageView.image = [self getCropImage:networkImage];
-            } else {
-                channelLogoImageView.image = [UIImage imageNamed:@"Icon.png"];
-            }
-            
-            channelSumLabel.text = [NSString stringWithFormat:@"%d款发型", [networkImages count]];   
-        }
+    [cell.textLabel setFont:[UIFont systemFontOfSize:18]];
+    [cell.textLabel setTextColor:[UIColor colorWithRed:40.0f/255.0f green:40.0f/255.0f blue:40.0f/255.0f alpha:1.0f]];
+    [cell.textLabel setBackgroundColor:[UIColor clearColor]];
+
+    if (row == 0) {
+        [cell.textLabel setText:@" 附赠杂志"];
+    } else if (row == 1) {
+        [cell.textLabel setText:@" 姐的收藏"];
+    } else if (row == 2) {
+        [cell.textLabel setText:@" 短发"];
     }
     return cell;
 }
@@ -234,6 +196,8 @@
 - (NSString*)photoGallery:(FGalleryViewController *)gallery urlForPhotoSize:(FGalleryPhotoSize)size atIndex:(NSUInteger)index {
     return [networkImages objectAtIndex:index];
 }
+
+#pragma mark - Other Action Methods
 
 - (void)handleTrashButtonTouch:(id)sender {
     // here we could remove images from our local array storage and tell the gallery to remove that image
@@ -420,6 +384,11 @@
             currentGallery = networkGallery;
             [self.navigationController pushViewController:networkGallery animated:YES];
         }
+    } else if ( indexPath.row == 2) {
+        NSLog(@"短发。。。");
+        NewPathViewController *newPathViewController = [[NewPathViewController alloc] init];
+        newPathViewController.keyword = @"短";
+        [self.navigationController pushViewController:newPathViewController animated:YES];
     }
 }
 

@@ -16,9 +16,10 @@
 #import "MBProgressHUD.h"
 #import "UMSNSService.h"
 #import "AdMoGoView.h"
+#import "NewPathViewController.h"
 
 #define TOP_SECTION_HEIGHT 150.0f
-#define kTableViewCellHeight 150.0f
+#define kTableViewCellHeight 50.0f
 #define kTableViewCellWidth 320.0f
 #define kPresetNum 10
 

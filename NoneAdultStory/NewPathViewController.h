@@ -35,7 +35,10 @@
     NSDictionary *pullmessageInfo;
     
     BOOL newChannel;
+    
+    NSString *keyword;
 }
 @property (nonatomic, retain) AdMoGoView *adView;
+@property (nonatomic, retain) NSString *keyword;
 
 @end

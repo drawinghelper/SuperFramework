@@ -17,7 +17,7 @@
     BOOL hidden;
 }
 @synthesize adView;
-
+@synthesize keyword;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -393,6 +393,7 @@
 // all objects ordered by createdAt descending.
 - (PFQuery *)queryForTable {
     PFQuery *query = [PFQuery queryWithClassName:self.className];
+    [query whereKey:@"content" containsString:self.keyword];
     
     // If no objects are loaded in memory, we look to the cache first to fill the table
     // and then subsequently do a query against the network.
