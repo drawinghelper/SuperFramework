@@ -27,6 +27,7 @@ typedef enum {
 } UIChannel;
 
 @interface NoneAdultAppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>{
+    NSArray *channelList;
 }
 
 @property (strong, nonatomic) UIWindow *window;
@@ -39,6 +40,7 @@ typedef enum {
 - (NSString *)getAppStoreId;
 - (NSString *)getAppStoreShortUrl;
 - (NSString *)getAppChannelTag;
+- (NSArray *)getChannelList;
 - (void)scoreForShareUrl:(NSString *)shareurl channel:(UIChannel)channel action:(UIAction)action;
 
 @end

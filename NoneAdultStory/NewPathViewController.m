@@ -211,7 +211,7 @@
     
     self.tableView.backgroundColor = [UIColor colorWithRed:230.0f/255.0f green:230.0f/255.0f blue:230.0f/255.0f alpha:1];
     
-    if (![self.title isEqualToString:@"每日精选"]) {
+    if (![self.title isEqualToString:@"每日精选"] && ![self.title isEqualToString:@"历史最热"]) {
         //custom back button
         UIImage *buttonImage = [UIImage imageNamed:@"custombackbutton.png"];
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];

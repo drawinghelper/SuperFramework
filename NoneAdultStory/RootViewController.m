@@ -90,8 +90,8 @@
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     //return 2;
-    NSArray *channelList = [appConfig objectForKey: @"ChannelList"];
-    return 2+[channelList count];
+    NSArray *channelList = [[NoneAdultAppDelegate sharedAppDelegate] getChannelList];
+    return 2 + [channelList count];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -134,11 +134,12 @@
     [cell.textLabel setBackgroundColor:[UIColor clearColor]];
 
     if (row == 0) {
-        [cell.textLabel setText:@" 附赠杂志"];
+        [cell.textLabel setText:@"姐的收藏"];
+        [cell.imageView setImage:[UIImage imageNamed:@"star_pressed.png"]];
     } else if (row == 1) {
-        [cell.textLabel setText:@" 姐的收藏"];
+        [cell.textLabel setText:@" 附赠杂志"];
     } else {
-        NSArray *channelList = [appConfig objectForKey: @"ChannelList"];
+        NSArray *channelList = [[NoneAdultAppDelegate sharedAppDelegate] getChannelList];
         NSDictionary *channelInfo = [channelList objectAtIndex:(row - 2)];
         NSString *titleStr = [NSString stringWithFormat:@" %@", [channelInfo objectForKey:@"title"]];
         [cell.textLabel setText:titleStr];
@@ -379,17 +380,17 @@
     NSArray *barItemsCollect = [NSArray arrayWithObjects:trashButtonCollect, shareButton, nil];
     
 	if( indexPath.row == 0 ) {
-		localGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItemsPreset];
-        currentGallery = localGallery;
-        [self.navigationController pushViewController:localGallery animated:YES];
-	} else if( indexPath.row == 1 ) {
-        if ([networkImages count] != 0) {
+		if ([networkImages count] != 0) {
             networkGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItemsCollect];
             currentGallery = networkGallery;
             [self.navigationController pushViewController:networkGallery animated:YES];
         }
+	} else if( indexPath.row == 1 ) {
+        localGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItemsPreset];
+        currentGallery = localGallery;
+        [self.navigationController pushViewController:localGallery animated:YES];
     } else {
-        NSArray *channelList = [appConfig objectForKey: @"ChannelList"];
+        NSArray *channelList = [[NoneAdultAppDelegate sharedAppDelegate] getChannelList];
         NSDictionary *channelInfo = [channelList objectAtIndex:(indexPath.row - 2)];
         NSString *titleStr = [channelInfo objectForKey:@"title"];
         NSString *keywordStr = [channelInfo objectForKey:@"keyword"];
@@ -435,9 +436,7 @@
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
     // For example: self.myOutlet = nil;
     [super viewDidLoad];
-    appConfig = [[NSDictionary alloc] initWithContentsOfFile:
-                 [[NSBundle mainBundle] pathForResource:@"AppConfig" ofType:@"plist"]];
-
+    
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav_bg.png"] forBarMetrics:UIBarMetricsDefault];
     self.tableView.separatorColor = [UIColor clearColor];
     self.tableView.backgroundColor = [UIColor colorWithRed:245.0f/255.0f green:245.0f/255.0f blue:245.0f/255.0f alpha:1.0f];

@@ -186,6 +186,15 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     return [appConfig objectForKey:@"AlertKeyword"];
 }
 
+- (NSArray *)getChannelList {
+    if (channelList == nil) {
+        NSDictionary *appConfig = [[NSDictionary alloc] initWithContentsOfFile:
+                                   [[NSBundle mainBundle] pathForResource:@"AppConfig" ofType:@"plist"]];
+        return [appConfig objectForKey: @"ChannelList"];
+    }
+    return channelList;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     NSDictionary *appConfig = [[NSDictionary alloc] initWithContentsOfFile:
@@ -262,6 +271,10 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     if (showChannel == nil || showChannel == [NSNull null]  || [showChannel isEqualToString:@""]) {
         showChannel = @"NO";
     }
+    
+    NSString *channelListStr = [MobClick getConfigParams:@"channelListStr"];
+    channelList = [UMSNSStringJson JSONValue:channelListStr];
+    NSLog(@"channleList: %@", channelList);
     
     //为过审和推广初期内容高质量，只显示精选；之后可以显示未精选过的最新笑话
     PFUser *user = [PFUser currentUser];
