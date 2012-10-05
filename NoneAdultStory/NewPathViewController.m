@@ -24,21 +24,8 @@
     self = [super initWithStyle:style];
     newChannel = YES;
     if (self) {
-        self.title = NSLocalizedString(@"每日精选", @"Second");
         hidden = NO;
         self.tabBarItem.image = [UIImage imageNamed:@"new"];
-        
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
-        label.backgroundColor = [UIColor clearColor];
-        label.font = [UIFont boldSystemFontOfSize:20.0];
-        label.shadowColor = [UIColor colorWithRed:70.0f/255 green:70.0f/225 blue:70.0f/255 alpha:1];     
-        label.textAlignment = UITextAlignmentCenter;
-        label.textColor = [UIColor colorWithRed:235.0f/255 green:235.0f/225 blue:235.0f/255 alpha:1];        
-        [label setShadowOffset:CGSizeMake(0, -1.0)];
-        
-        self.navigationItem.titleView = label;
-        label.text = NSLocalizedString(@"每日精选", @"");
-        [label sizeToFit];
         
         // Custom the table
         // The className to query on
@@ -57,6 +44,22 @@
         self.objectsPerPage = 10;
     }
     return self;
+}
+
+- (void)setTitleString:(NSString *)titleString {
+    self.title = titleString;
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    label.backgroundColor = [UIColor clearColor];
+    label.font = [UIFont boldSystemFontOfSize:20.0];
+    label.shadowColor = [UIColor colorWithRed:70.0f/255 green:70.0f/225 blue:70.0f/255 alpha:1];
+    label.textAlignment = UITextAlignmentCenter;
+    label.textColor = [UIColor colorWithRed:235.0f/255 green:235.0f/225 blue:235.0f/255 alpha:1];
+    [label setShadowOffset:CGSizeMake(0, -1.0)];
+    
+    self.navigationItem.titleView = label;
+    label.text = titleString;
+    [label sizeToFit];
 }
 #pragma mark -
 #pragma mark AdMogo Methods
@@ -207,6 +210,21 @@
                                                   forBarMetrics:UIBarMetricsDefault]; 
     
     self.tableView.backgroundColor = [UIColor colorWithRed:230.0f/255.0f green:230.0f/255.0f blue:230.0f/255.0f alpha:1];
+    
+    if (![self.title isEqualToString:@"每日精选"]) {
+        //custom back button
+        UIImage *buttonImage = [UIImage imageNamed:@"custombackbutton.png"];
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        [button setImage:buttonImage forState:UIControlStateNormal];
+        button.frame = CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height);
+        [button addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+        UIBarButtonItem *customBarItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+        self.navigationItem.leftBarButtonItem = customBarItem;
+    }
+}
+
+-(void)back {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)performRefresh {

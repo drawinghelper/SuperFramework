@@ -90,7 +90,8 @@
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     //return 2;
-    return 3;
+    NSArray *channelList = [appConfig objectForKey: @"ChannelList"];
+    return 2+[channelList count];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -136,8 +137,11 @@
         [cell.textLabel setText:@" 附赠杂志"];
     } else if (row == 1) {
         [cell.textLabel setText:@" 姐的收藏"];
-    } else if (row == 2) {
-        [cell.textLabel setText:@" 短发"];
+    } else {
+        NSArray *channelList = [appConfig objectForKey: @"ChannelList"];
+        NSDictionary *channelInfo = [channelList objectAtIndex:(row - 2)];
+        NSString *titleStr = [NSString stringWithFormat:@" %@", [channelInfo objectForKey:@"title"]];
+        [cell.textLabel setText:titleStr];
     }
     return cell;
 }
@@ -384,10 +388,15 @@
             currentGallery = networkGallery;
             [self.navigationController pushViewController:networkGallery animated:YES];
         }
-    } else if ( indexPath.row == 2) {
-        NSLog(@"短发。。。");
+    } else {
+        NSArray *channelList = [appConfig objectForKey: @"ChannelList"];
+        NSDictionary *channelInfo = [channelList objectAtIndex:(indexPath.row - 2)];
+        NSString *titleStr = [channelInfo objectForKey:@"title"];
+        NSString *keywordStr = [channelInfo objectForKey:@"keyword"];
+
         NewPathViewController *newPathViewController = [[NewPathViewController alloc] init];
-        newPathViewController.keyword = @"短";
+        [newPathViewController setTitleString:titleStr];
+        newPathViewController.keyword = keywordStr;
         [self.navigationController pushViewController:newPathViewController animated:YES];
     }
 }
@@ -426,7 +435,10 @@
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
     // For example: self.myOutlet = nil;
     [super viewDidLoad];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav_bg.png"] forBarMetrics:UIBarMetricsDefault]; 
+    appConfig = [[NSDictionary alloc] initWithContentsOfFile:
+                 [[NSBundle mainBundle] pathForResource:@"AppConfig" ofType:@"plist"]];
+
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav_bg.png"] forBarMetrics:UIBarMetricsDefault];
     self.tableView.separatorColor = [UIColor clearColor];
     self.tableView.backgroundColor = [UIColor colorWithRed:245.0f/255.0f green:245.0f/255.0f blue:245.0f/255.0f alpha:1.0f];
     

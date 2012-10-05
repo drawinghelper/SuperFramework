@@ -5,64 +5,22 @@
 	<key>ChannelList</key>
 	<array>
 		<dict>
-			<key>cid</key>
-			<string>890</string>
 			<key>title</key>
-			<string>美容</string>
-			<key>subtitle</key>
-			<string>没有丑女人，只有懒女人</string>
-			<key>icon</key>
-			<string>meirong.png</string>
+			<string>盘发DIY</string>
+			<key>keyword</key>
+			<string>盘发</string>
 		</dict>
 		<dict>
-			<key>cid</key>
-			<string>891</string>
 			<key>title</key>
-			<string>瘦身</string>
-			<key>subtitle</key>
-			<string>要么瘦，要么死！</string>
-			<key>icon</key>
-			<string>shoushen.png</string>
+			<string>男生发型</string>
+			<key>keyword</key>
+			<string>男</string>
 		</dict>
 		<dict>
-			<key>cid</key>
-			<string>897</string>
 			<key>title</key>
-			<string>美甲</string>
-			<key>subtitle</key>
-			<string>漂亮指甲，点缀生活</string>
-			<key>icon</key>
-			<string>meijia.png</string>
-		</dict>
-		<dict>
-			<key>cid</key>
-			<string>896</string>
-			<key>title</key>
-			<string>服饰</string>
-			<key>subtitle</key>
-			<string>混搭达人，潮流看我</string>
-			<key>icon</key>
-			<string>fushi.png</string>
-		</dict>
-		<dict>
-			<key>cid</key>
-			<string>895</string>
-			<key>title</key>
-			<string>鞋包配饰</string>
-			<key>subtitle</key>
-			<string>每日精选，让你一秒变潮</string>
-			<key>icon</key>
-			<string>xiezi.png</string>
-		</dict>
-		<dict>
-			<key>cid</key>
-			<string>907</string>
-			<key>title</key>
-			<string>婚纱</string>
-			<key>subtitle</key>
-			<string>唯美的婚纱，浪漫的爱情</string>
-			<key>icon</key>
-			<string>hunsha.png</string>
+			<string>短发发型</string>
+			<key>keyword</key>
+			<string>短</string>
 		</dict>
 	</array>
 	<key>NewTabCid</key>

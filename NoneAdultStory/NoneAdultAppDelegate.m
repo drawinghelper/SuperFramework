@@ -225,7 +225,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     UIViewController *newWeiboViewController = [[NewWeiboViewController alloc] initWithNibName:@"NewWeiboViewController" bundle:nil withTitle:@"微博"];
     UINavigationController *newWeiboNavViewController = [[UINavigationController alloc] initWithRootViewController:newWeiboViewController];
 
-    UIViewController *newPathViewController = [[NewPathViewController alloc] init];
+    NewPathViewController *newPathViewController = [[NewPathViewController alloc] init];
+    [newPathViewController setTitleString:@"每日精选"];
     UINavigationController *newPathNavViewController = [[UINavigationController alloc] initWithRootViewController:newPathViewController];
     
     //HistoryPathViewController *historyTopController = [[HistoryPathViewController alloc] init];

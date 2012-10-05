@@ -41,4 +41,6 @@
 @property (nonatomic, retain) AdMoGoView *adView;
 @property (nonatomic, retain) NSString *keyword;
 
+- (void)setTitleString:(NSString *)titleString;
+
 @end

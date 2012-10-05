@@ -25,6 +25,7 @@
 
 @interface RootViewController : UITableViewController <UIActionSheetDelegate, MBProgressHUDDelegate, UMSNSDataSendDelegate, AdMoGoDelegate, FGalleryViewControllerDelegate> {
     AdMoGoView *adView;
+    NSDictionary *appConfig;
 
 	FGalleryViewController *localGallery;
 	NSMutableArray *localCaptions;
