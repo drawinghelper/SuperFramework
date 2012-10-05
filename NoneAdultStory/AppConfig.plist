@@ -6,9 +6,15 @@
 	<array>
 		<dict>
 			<key>title</key>
+			<string>中长发型</string>
+			<key>keyword</key>
+			<string>长发</string>
+		</dict>
+		<dict>
+			<key>title</key>
 			<string>盘发DIY</string>
 			<key>keyword</key>
-			<string>盘发</string>
+			<string>辫</string>
 		</dict>
 		<dict>
 			<key>title</key>
