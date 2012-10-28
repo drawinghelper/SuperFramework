@@ -12,6 +12,7 @@
 #import "NewPathViewController.h"
 //#import "HistoryPathViewController.h"
 #import "HistoryTopPathViewController.h"
+#import "CateViewController.h"
 
 #import "ChannelViewController.h"
 #import "CollectedViewController.h"
@@ -250,7 +251,9 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     [collectNavViewController.navigationBar setTintColor:[UIColor darkGrayColor]];
 
     //Gallery形式的收藏
-    UIViewController *collectGalleryViewController = [[RootViewController alloc] init];
+    //UIViewController *collectGalleryViewController = [[RootViewController alloc] init];
+    UIViewController *collectGalleryViewController = [[CateViewController alloc] initWithNibName:@"CateViewController" bundle:nil];
+    
     UINavigationController *collectGalleryNavViewController = [[UINavigationController alloc] initWithRootViewController:collectGalleryViewController];
     [collectGalleryNavViewController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
     //[collectGalleryNavViewController.navigationBar setTintColor:[UIColor darkGrayColor]];
@@ -259,8 +262,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     UINavigationController *settingNavViewController = [[UINavigationController alloc] initWithRootViewController:settingViewController];
     [settingNavViewController.navigationBar setTintColor:[UIColor darkGrayColor]];
     
-    CMTabBarController *tabBarController = [CMTabBarController new];
-    //self.tabBarController = [[UITabBarController alloc] init];
+    //CMTabBarController *tabBarController = [CMTabBarController new];
+    self.tabBarController = [[UITabBarController alloc] init];
     
     NSString *showFilteredNew = [MobClick getConfigParams:@"showFilteredNew"];
     if (showFilteredNew == nil || showFilteredNew == [NSNull null]  || [showFilteredNew isEqualToString:@""]) {
@@ -279,7 +282,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     //为过审和推广初期内容高质量，只显示精选；之后可以显示未精选过的最新笑话
     PFUser *user = [PFUser currentUser];
     if (user && [user.username isEqualToString:@"drawinghelper@gmail.com"]) {
-        tabBarController.viewControllers = [NSArray arrayWithObjects:
+        self.tabBarController.viewControllers = [NSArray arrayWithObjects:
                                                  newCommonNavViewController,
                                                  newWeiboNavViewController,
                                                  newPathNavViewController,
@@ -291,14 +294,14 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                                  nil];
     } else {
         if ([showFilteredNew isEqualToString:@"YES"]) {
-            tabBarController.viewControllers = [NSArray arrayWithObjects:
+            self.tabBarController.viewControllers = [NSArray arrayWithObjects:
                                                          newPathNavViewController,
                                                          historyTopNavViewController,
                                                          collectGalleryNavViewController,
                                                          settingNavViewController,
                                                          nil];
         } else {
-            tabBarController.viewControllers = [NSArray arrayWithObjects:
+            self.tabBarController.viewControllers = [NSArray arrayWithObjects:
                                                      //newWeiboNavViewController, 
                                                      historyTopNavViewController,
                                                      collectGalleryNavViewController,
@@ -307,7 +310,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
         }
     }
         
-    self.window.rootViewController = tabBarController;
+    self.window.rootViewController = self.tabBarController;
     //[NSThread sleepForTimeInterval:1.0];
     [self.window makeKeyAndVisible];
     //[self animateSplashScreen];

@@ -867,7 +867,7 @@
     NSNumber *weiboId = [duanZi objectForKey:@"weiboId"];
     NSString *idString = [weiboId stringValue];
     //NSString *idString = [duanZi objectForKey:@"weiboId"];
-    NSLog(@"collectedIdsDic: %@", collectedIdsDic);
+    //NSLog(@"collectedIdsDic: %@", collectedIdsDic);
     if ([collectedIdsDic objectForKey:idString] != nil) {
         NSLog(@"idString YES: %@", idString);
         [duanZi setObject:@"YES" forKey:@"collected_tag"];
