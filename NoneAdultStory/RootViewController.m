@@ -7,8 +7,6 @@
 //
 
 #import "RootViewController.h"
-#import "UIViewController+CMTabBarController.h"
-
 
 @implementation RootViewController
 @synthesize adView;
@@ -415,17 +413,12 @@
 {
     [super viewWillAppear:animated];
     [adView setHidden:NO];
-    
-    self.customTbBarController.tabBar.tabBarStyle = CMTabBarStyleTranslucent;
-    self.customTbBarController.tabBar.hidden = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [adView setHidden:YES];
-    
-    self.customTbBarController.tabBar.hidden = YES;
 }
 - (void)viewDidUnload {
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.

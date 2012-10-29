@@ -18,7 +18,6 @@
 #import "CollectedViewController.h"
 #import "RootViewController.h"
 #import "NoneAdultSettingViewController.h"
-#import "CMTabBarController.h"
 
 @implementation NoneAdultAppDelegate
 
@@ -284,7 +283,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     if (user && [user.username isEqualToString:@"drawinghelper@gmail.com"]) {
         self.tabBarController.viewControllers = [NSArray arrayWithObjects:
                                                  newCommonNavViewController,
-                                                 newWeiboNavViewController,
+                                                 //newWeiboNavViewController,
                                                  newPathNavViewController,
                                                  historyTopNavViewController,
                                                  collectGalleryNavViewController,

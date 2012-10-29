@@ -8,7 +8,6 @@
 
 #import "NewCommonViewController.h"
 #import "UITabBarController+hidable.h"
-#import "UIViewController+CMTabBarController.h"
 
 @interface NewCommonViewController ()
 
@@ -87,18 +86,9 @@
     //关闭广告内置浏览器时调用 
 }
 
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    self.customTbBarController.tabBar.tabBarStyle = CMTabBarStyleTranslucent;
-    self.customTbBarController.tabBar.hidden = NO;
-}
-
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    self.customTbBarController.tabBar.hidden = YES;
     [self contract];
 }
 
