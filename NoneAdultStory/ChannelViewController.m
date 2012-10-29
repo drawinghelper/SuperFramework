@@ -111,12 +111,12 @@
     backgroundViewFrame.size.height = kTableViewCellHeight;
     backgroundViewFrame.size.width = kTableViewCellWidth;
     cell.backgroundView = [[UIView alloc] initWithFrame:backgroundViewFrame];
-    [cell.backgroundView addLinearUniformGradient:[NSArray arrayWithObjects:
+    /*[cell.backgroundView addLinearUniformGradient:[NSArray arrayWithObjects:
                                                    (id)[[UIColor whiteColor] CGColor],
                                                    (id)[
                                                         [UIColor colorWithRed:225.0f/255.0f green:225.0f/255.0f blue:225.0f/255.0f alpha:1.0f]
                                                         CGColor], nil]];
-    
+    */
     // Configure the cell...
     int row = [indexPath row];
     NSArray *channelList = [appConfig objectForKey: @"ChannelList"];

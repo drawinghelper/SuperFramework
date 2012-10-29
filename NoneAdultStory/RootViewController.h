@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "FGalleryViewController.h"
 #import <QuartzCore/QuartzCore.h>
-#import "UIView+Gradient.h"
 #import "NoneAdultAppDelegate.h"
 #import "SDWebImageManager.h"
 #import "MBProgressHUD.h"

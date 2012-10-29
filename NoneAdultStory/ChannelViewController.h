@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
-#import "UIView+Gradient.h"
 #import "NewCommonViewController.h"
 
 #define TOP_SECTION_HEIGHT 52.0f
