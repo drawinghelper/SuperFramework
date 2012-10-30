@@ -122,7 +122,6 @@
         cell = [[[CateTableCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
                                       reuseIdentifier:CellIdentifier] autorelease];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
- 
     }
     
     NSDictionary *cate = [self.cates objectAtIndex:indexPath.row];
@@ -190,6 +189,13 @@
         if ([networkImages count] != 0) {
             networkGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItemsCollect];
             [self.navigationController pushViewController:networkGallery animated:YES];
+        } else {
+            UIAlertView*alert = [[UIAlertView alloc]initWithTitle:@"提示"
+                                                          message:@"主银，您还没有收藏过发型哦：）"
+                                                         delegate:nil
+                                                cancelButtonTitle:@"确定"
+                                                otherButtonTitles:nil];
+            [alert show];
         }
     } else {
         SubCateViewController *subVc = [[[SubCateViewController alloc]
