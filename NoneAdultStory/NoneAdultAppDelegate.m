@@ -283,7 +283,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     if (user && [user.username isEqualToString:@"drawinghelper@gmail.com"]) {
         self.tabBarController.viewControllers = [NSArray arrayWithObjects:
                                                  newCommonNavViewController,
-                                                 //newWeiboNavViewController,
+                                                 newWeiboNavViewController,
                                                  newPathNavViewController,
                                                  historyTopNavViewController,
                                                  collectGalleryNavViewController,
@@ -301,7 +301,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                                          nil];
         } else {
             self.tabBarController.viewControllers = [NSArray arrayWithObjects:
-                                                     //newWeiboNavViewController, 
+                                                     newWeiboNavViewController, 
                                                      historyTopNavViewController,
                                                      collectGalleryNavViewController,
                                                      settingNavViewController,

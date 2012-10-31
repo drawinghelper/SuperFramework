@@ -4,7 +4,7 @@
 <array>
 	<dict>
 		<key>imageName</key>
-		<string>tmall_icon_cat_mcloth</string>
+		<string>category_heart</string>
 		<key>imageUrl</key>
 		<string></string>
 		<key>name</key>
@@ -12,7 +12,7 @@
 	</dict>
 	<dict>
 		<key>imageName</key>
-		<string>tmall_icon_cat_bag</string>
+		<string>category_jingpin</string>
 		<key>imageUrl</key>
 		<string></string>
 		<key>name</key>
@@ -23,7 +23,7 @@
 				<key>keyword</key>
 				<string>【视频】</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_bag_1</string>
+				<string>video</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -33,7 +33,7 @@
 				<key>keyword</key>
 				<string>男</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_bag_2</string>
+				<string>man</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -43,7 +43,7 @@
 				<key>keyword</key>
 				<string>气质</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_bag_3</string>
+				<string>qizhi</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -53,7 +53,7 @@
 				<key>keyword</key>
 				<string>新娘</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_bag_4</string>
+				<string>bride</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -63,7 +63,7 @@
 	</dict>
 	<dict>
 		<key>imageName</key>
-		<string>tmall_icon_cat_digital</string>
+		<string>category_liuxing</string>
 		<key>imageUrl</key>
 		<string></string>
 		<key>name</key>
@@ -74,7 +74,7 @@
 				<key>keyword</key>
 				<string>短发</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_digital_1</string>
+				<string>short</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -84,7 +84,7 @@
 				<key>keyword</key>
 				<string>中长</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_digital_2</string>
+				<string>middlelong</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -94,7 +94,7 @@
 				<key>keyword</key>
 				<string>卷</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_digital_3</string>
+				<string>curl</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -104,7 +104,7 @@
 				<key>keyword</key>
 				<string>直发</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_digital_4</string>
+				<string>straight</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -114,7 +114,7 @@
 				<key>keyword</key>
 				<string>日系</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_digital_5</string>
+				<string>japan</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -124,7 +124,7 @@
 				<key>keyword</key>
 				<string>韩</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_digital_6</string>
+				<string>korea</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -134,7 +134,7 @@
 				<key>keyword</key>
 				<string>梨花</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_fcloth_2</string>
+				<string>lihua</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -144,7 +144,7 @@
 				<key>keyword</key>
 				<string>波波</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_fcloth_3</string>
+				<string>bobo</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -154,7 +154,7 @@
 	</dict>
 	<dict>
 		<key>imageName</key>
-		<string>tmall_icon_cat_fcloth</string>
+		<string>category_diy</string>
 		<key>imageUrl</key>
 		<string></string>
 		<key>name</key>
@@ -165,7 +165,7 @@
 				<key>keyword</key>
 				<string>盘</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_fcloth_1</string>
+				<string>panfa</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -175,7 +175,7 @@
 				<key>keyword</key>
 				<string>马尾</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_fcloth_1</string>
+				<string>horse</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -185,7 +185,7 @@
 				<key>keyword</key>
 				<string>花苞</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_fcloth_4</string>
+				<string>huabao</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -195,7 +195,7 @@
 				<key>keyword</key>
 				<string>丸子</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_fcloth_5</string>
+				<string>wanzi</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -205,7 +205,7 @@
 				<key>keyword</key>
 				<string>公主</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_fcloth_6</string>
+				<string>princess</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -215,7 +215,7 @@
 	</dict>
 	<dict>
 		<key>imageName</key>
-		<string>tmall_icon_cat_mcloth</string>
+		<string>category_lianxing</string>
 		<key>imageUrl</key>
 		<string></string>
 		<key>name</key>
@@ -226,7 +226,7 @@
 				<key>keyword</key>
 				<string>圆脸</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_mcloth_1</string>
+				<string>roundface</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -236,7 +236,7 @@
 				<key>keyword</key>
 				<string>长脸</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_mcloth_2</string>
+				<string>longface</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
@@ -246,7 +246,7 @@
 				<key>keyword</key>
 				<string>小脸</string>
 				<key>imageName</key>
-				<string>tmall_icon_cat_mcloth_3</string>
+				<string>shortface</string>
 				<key>imageUrl</key>
 				<string></string>
 				<key>name</key>
