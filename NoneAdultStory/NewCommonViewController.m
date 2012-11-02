@@ -549,6 +549,8 @@
     
     [dic setObject:[[tempPropertyDic objectForKey:idString] objectForKey:@"width"] forKey:@"width"];//图片内容的width
     [dic setObject:[[tempPropertyDic objectForKey:idString] objectForKey:@"height"] forKey:@"height"];//图片内容的height
+    
+    [dic setObject:[NSString stringWithFormat:@"http://t.qq.com/p/t/%@", idString] forKey:@"shareurl"];
 }
 
 //- (void)viewWillAppear:(BOOL)animated {
@@ -733,25 +735,6 @@
         && ([self.title isEqualToString:@"最新"] || [self.title isEqualToString:@"微博"])) {
         [self storeIntoParseDB:tag withClassName:@"newfiltered"];
     }
-}
-
--(void)goDing:(id)sender {
-    int i = [sender tag] - 3000;
-    currentDuanZi = [searchDuanZiList objectAtIndex:i];
-    
-    BOOL tag = YES;
-    NSString *dingTag = [currentDuanZi objectForKey:@"ding_tag"];
-    if ([dingTag isEqual:@"YES"]) {
-        tag = NO;
-        [currentDuanZi setObject:@"NO" forKey:@"ding_tag"];
-    } else {
-        tag = YES;
-        [currentDuanZi setObject:@"YES" forKey:@"ding_tag"];
-    }
-    [self toggleDing:tag withSender:sender];
-    [self dingDuanZi:tag];
-    //初期用于提纯内容的，和审核的
-    [self storeIntoParseDB:tag withClassName:@"newfiltered"];
 }
 
 - (void)storeIntoParseDB:(BOOL)tag withClassName:(NSString *)className {
@@ -1188,27 +1171,6 @@
     [caiLabel setFrame:CGRectMake(77, cellFrame.size.height + TOP_SECTION_HEIGHT - 3 + imageDisplayRect.size.height, 60, BOTTOM_SECTION_HEIGHT)];
     pingLabel = (UILabel *)[cell viewWithTag:4];
     [pingLabel setFrame:CGRectMake(135, cellFrame.size.height + TOP_SECTION_HEIGHT - 3 + imageDisplayRect.size.height, 60, BOTTOM_SECTION_HEIGHT)];
-
-    //顶按钮（审核精选）
-    PFUser *user = [PFUser currentUser];
-    if (user && [user.username isEqualToString:@"drawinghelper@gmail.com"]
-        && [self.title isEqualToString:@"最新"]) {
-        UIButton *btnDing = [UIButton buttonWithType:UIButtonTypeCustom]; 
-        [btnDing setTitle:@"" forState:UIControlStateNormal];
-        [btnDing setTag:(row + 3000)];
-        [btnDing addTarget:self action:@selector(goDing:) forControlEvents:UIControlEventTouchUpInside];
-        [cell.contentView addSubview:btnDing];
-        UIImage *btnDingImage = [UIImage imageNamed:@"ding.png"];
-        UIImage *btnDingImagePressed = [UIImage imageNamed:@"ding_pressed.png"];
-        if ([[duanZi objectForKey:@"ding_tag"] isEqual:@"YES"]) {
-            [btnDing setImage:btnDingImagePressed forState:UIControlStateNormal];
-            [btnDing setImage:btnDingImage forState:UIControlStateHighlighted];
-        } else {
-            [btnDing setImage:btnDingImage forState:UIControlStateNormal];
-            [btnDing setImage:btnDingImagePressed forState:UIControlStateHighlighted];
-        }
-        [btnDing setFrame:CGRectMake(210, cellFrame.size.height + TOP_SECTION_HEIGHT - 3 + imageDisplayRect.size.height, 20, BOTTOM_SECTION_HEIGHT)];
-    }
     
     //收藏按钮（审核最热）
     UIButton *btnStar = [UIButton buttonWithType:UIButtonTypeCustom]; 
