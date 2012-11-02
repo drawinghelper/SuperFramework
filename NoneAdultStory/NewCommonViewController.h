@@ -16,16 +16,18 @@
 #import "AdMoGoView.h"
 #import "NoneAdultDetailViewController.h"
 #import "NSString+HTML.h"
+#import "FGalleryViewController.h"
 
 #define FONT_SIZE 14.0f
 #define TOP_SECTION_HEIGHT 52.0f
 #define BOTTOM_SECTION_HEIGHT 34.0f
 #define HORIZONTAL_PADDING 16.0f
 
-@interface NewCommonViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, EGORefreshTableHeaderDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UMSNSDataSendDelegate, MBProgressHUDDelegate, AdMoGoDelegate> {
+@interface NewCommonViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, EGORefreshTableHeaderDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UMSNSDataSendDelegate, MBProgressHUDDelegate, AdMoGoDelegate, FGalleryViewControllerDelegate> {
     AdMoGoView *adView;
 
     MBProgressHUD *HUD;
+    UIImage *currentImage;
 
     IBOutlet UITableView *tableView;
 
