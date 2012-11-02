@@ -703,7 +703,7 @@
     NSString *shareurl = [currentDuanZi objectForKey:@"shareurl"];
     
     //查看详情时记分
-    [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrl:shareurl channel:UIChannelNew action:UIActionView];
+    [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrlNew:currentDuanZi channel:UIChannelNew action:UIActionView];
     
     //底部工具栏操作项
     UIImage *likeIcon = [UIImage imageNamed:@"photo-gallery-collect-noselect.png"];
@@ -917,6 +917,10 @@
                               nil
                               ];
         [db executeUpdate:@"replace into collected(weiboId, profile_image_url, screen_name, timestamp, content, large_url, width, height, gif_mark, favorite_count, bury_count, comments_count, collect_time, share_url) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:dataArray];
+        
+        NSString *shareurl = [currentDuanZi objectForKey:@"shareurl"];
+        //收藏时记分
+        [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrlNew:currentDuanZi channel:UIChannelNew action:UIActionCollect];
     } else {
         NSArray *dataArray = [NSArray arrayWithObjects:[currentDuanZi objectForKey:@"id"], nil];
         [db executeUpdate:@"delete from collected where weiboId = ?" withArgumentsInArray:dataArray];
@@ -953,6 +957,9 @@
         }
         statusContent = [NSString stringWithString:cuttedContent];
         NSString *largeUrl = [currentDuanZi objectForKey:@"large_url"];
+        NSString *shareurl = [currentDuanZi objectForKey:@"shareurl"];
+        [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrlNew:currentDuanZi channel:UIChannelNew action:UIActionShare];
+        
         SDWebImageManager *manager = [SDWebImageManager sharedManager];
         currentImage = [manager imageWithURL:[NSURL URLWithString:largeUrl]];
         

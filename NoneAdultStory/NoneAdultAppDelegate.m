@@ -100,8 +100,27 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     //[db executeUpdate:@"DROP TABLE score"];
     
     //创建一个名为User的表，有两个字段分别为string类型的Name，integer类型的 Age
-    NSString *createSQL = @"CREATE TABLE IF NOT EXISTS score (";
-	createSQL = [createSQL stringByAppendingString:@" ID INTEGER PRIMARY KEY AUTOINCREMENT,"];
+    NSString *createSQL = @"CREATE TABLE IF NOT EXISTS score (";    
+    createSQL = [createSQL stringByAppendingString:@" ID INTEGER PRIMARY KEY AUTOINCREMENT,"];
+    
+    createSQL = [createSQL stringByAppendingString:@" weiboId INTEGER UNIQUE,"];//微博的id
+	createSQL = [createSQL stringByAppendingString:@" profile_image_url TEXT,"];//博主头像图片地址
+    createSQL = [createSQL stringByAppendingString:@" screen_name TEXT,"];//微博名
+    createSQL = [createSQL stringByAppendingString:@" timestamp INTEGER,"];//微博发表时间
+    
+	createSQL = [createSQL stringByAppendingString:@" content TEXT,"];//文字内容
+    createSQL = [createSQL stringByAppendingString:@" large_url TEXT,"];//图片内容
+    createSQL = [createSQL stringByAppendingString:@" width INTEGER,"];//图片宽度
+    createSQL = [createSQL stringByAppendingString:@" height INTEGER,"];//图片高度
+    createSQL = [createSQL stringByAppendingString:@" gif_mark INTEGER,"];//图片是否为gif，0为不是gif，1是gif
+    
+    createSQL = [createSQL stringByAppendingString:@" favorite_count INTEGER,"];
+    createSQL = [createSQL stringByAppendingString:@" bury_count INTEGER,"];//
+    createSQL = [createSQL stringByAppendingString:@" comments_count INTEGER,"];//
+    
+    //-
+    //createSQL = [createSQL stringByAppendingString:@" collect_time INTEGER"];
+    //+
     createSQL = [createSQL stringByAppendingString:@" share_url TEXT UNIQUE,"];//微博的id
     createSQL = [createSQL stringByAppendingString:@" score_to_send INTEGER"];
     createSQL = [createSQL stringByAppendingString:@");"];
@@ -404,6 +423,83 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     }
 }
 
+- (void)scoreForShareUrlNew:(NSDictionary *)currentDuanZi channel:(UIChannel)channel action:(UIAction)action{
+    int actionFactor, channelFactor;
+    NSString *shareurl = [currentDuanZi objectForKey:@"shareurl"];
+    switch (action) {
+        case UIActionShare:
+            actionFactor = 5;
+            break;
+        case UIActionCollect:
+            actionFactor = 3;
+            break;
+        case UIActionView:
+            actionFactor = 1;
+            break;
+        default:
+            break;
+    }
+    switch (channel) {
+        case UIChannelNew:
+            channelFactor = 3;
+            break;
+        case UIChannelMagzine:
+            channelFactor = 2;
+            break;
+        case UIChannelHistory:
+            channelFactor = 1;
+        default:
+            break;
+    }
+    int score = actionFactor * channelFactor;
+    
+    FMDatabase *db= [FMDatabase databaseWithPath:[[NoneAdultAppDelegate sharedAppDelegate] getDbPath]] ;
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+        return ;
+    }
+    
+    NSString *sql = [[NSString alloc] initWithFormat:@"SELECT * FROM score WHERE share_url = '%@'", shareurl];
+    FMResultSet *rs=[db executeQuery:sql];
+    NSArray *dataArray = nil;
+    if ([rs next]){
+        dataArray = [NSArray arrayWithObjects:
+                     [[NSNumber alloc] initWithInt:score],
+                     shareurl,
+                     nil
+                     ];
+        //score表中如果有shareurl的记录，就直接加分
+        [db executeUpdate:@"update score set score_to_send = score_to_send + ? where share_url = ?" withArgumentsInArray:dataArray];
+    } else {
+        //score表中如果没有shareurl的记录，就为此shareurl建立分数档案
+        dataArray = [NSArray arrayWithObjects:
+                     [currentDuanZi objectForKey:@"id"],
+                     [currentDuanZi objectForKey:@"profile_image_url"],
+                     [currentDuanZi objectForKey:@"screen_name"],
+                     [currentDuanZi objectForKey:@"timestamp"],
+                     [currentDuanZi objectForKey:@"content"],
+                     
+                     [currentDuanZi objectForKey:@"large_url"],
+                     [currentDuanZi objectForKey:@"width"],
+                     [currentDuanZi objectForKey:@"height"],
+                     [[NSNumber alloc] initWithInt:0],
+                     
+                     [currentDuanZi objectForKey:@"favorite_count"],
+                     [currentDuanZi objectForKey:@"bury_count"],
+                     [currentDuanZi objectForKey:@"comments_count"],
+                     [currentDuanZi objectForKey:@"shareurl"],
+                     [[NSNumber alloc] initWithInt:score],
+                     nil
+                     ];
+        
+        //score表中如果没有shareurl的记录，就为此shareurl建立分数档案
+        [db executeUpdate:@"replace into score(weiboId, profile_image_url, screen_name, timestamp, content, large_url, width, height, gif_mark, favorite_count, bury_count, comments_count,  share_url, score_to_send) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:dataArray];
+        
+    }
+    
+}
+
+
 //为对应记录加分
 - (void)scoreForShareUrl:(NSString *)shareurl channel:(UIChannel)channel action:(UIAction)action {
     int actionFactor, channelFactor;
@@ -442,19 +538,16 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     
     NSString *sql = [[NSString alloc] initWithFormat:@"SELECT * FROM score WHERE share_url = '%@'", shareurl];
     FMResultSet *rs=[db executeQuery:sql];
-    NSArray *dataArray = [NSArray arrayWithObjects:
-                                      [[NSNumber alloc] initWithInt:score],
-                                      shareurl,
-                                      nil
-                                      ];
-    if ([rs next]){    
+    NSArray *dataArray = nil;
+    if ([rs next]){
+        dataArray = [NSArray arrayWithObjects:
+                         [[NSNumber alloc] initWithInt:score],
+                         shareurl,
+                         nil
+                     ];
         //score表中如果有shareurl的记录，就直接加分
         [db executeUpdate:@"update score set score_to_send = score_to_send + ? where share_url = ?" withArgumentsInArray:dataArray];
-    } else {    
-        //score表中如果没有shareurl的记录，就为此shareurl建立分数档案
-        [db executeUpdate:@"replace into score(score_to_send, share_url) values (?, ?)" withArgumentsInArray:dataArray];
-        
-    }
+    } 
 
 }
 
@@ -497,6 +590,22 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
         int scoreToSend = [rs intForColumn:@"score_to_send"];
         NSLog(@"shareUrl: %@, score to send: %d", shareUrl, scoreToSend);
         
+        
+        NSNumber *weiboId = [[NSNumber alloc] initWithLongLong:[rs longLongIntForColumn:@"weiboId"]];
+        NSString *profileImageUrl = [rs stringForColumn:@"profile_image_url"];
+        NSString *screenName = [rs stringForColumn:@"screen_name"];
+        NSNumber *timestamp = [[NSNumber alloc] initWithInt:[rs intForColumn:@"timestamp"]];
+        NSString *content = [rs stringForColumn:@"content"];
+        NSString *largeUrl = [rs stringForColumn:@"large_url"];
+        
+        NSNumber *width = [[NSNumber alloc] initWithInt:[rs intForColumn:@"width"]];
+        NSNumber *height = [[NSNumber alloc] initWithInt:[rs intForColumn:@"height"]];
+        NSNumber *gifMark = [[NSNumber alloc] initWithInt:[rs intForColumn:@"gif_mark"]];
+        NSNumber *favoriteCount = [[NSNumber alloc] initWithInt:[rs intForColumn:@"favorite_count"]];
+        NSNumber *buryCount = [[NSNumber alloc] initWithInt:[rs intForColumn:@"bury_count"]];
+        NSNumber *commentsCount = [[NSNumber alloc] initWithInt:[rs intForColumn:@"comments_count"]];
+        
+        
         PFQuery *query = [PFQuery queryWithClassName:@"newfiltered"];
         [query whereKey:@"shareurl" equalTo:shareUrl];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -504,9 +613,36 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                 // The find succeeded.
                 NSLog(@"Successfully retrieved %d scores.", objects.count);
                 if (objects.count > 0) {
+                    NSLog(@"已有记录。");
                     PFObject *object = [objects objectAtIndex:0];
                     [object incrementKey:@"score" byAmount:[NSNumber numberWithInt:scoreToSend]];
                     [object saveInBackground];
+                } else {
+                    NSLog(@"新记录。");
+                    PFObject *newFiltered = [PFObject objectWithClassName:@"newfiltered"];
+                    [newFiltered setObject:weiboId forKey:@"weiboId"];
+                    [newFiltered setObject:profileImageUrl forKey:@"profile_image_url"];
+                    [newFiltered setObject:screenName forKey:@"screen_name"];
+                    [newFiltered setObject:timestamp forKey:@"timestamp"];
+                    [newFiltered setObject:content forKey:@"content"];
+                    [newFiltered setObject:largeUrl forKey:@"large_url"];
+                    
+                    [newFiltered setObject:width forKey:@"width"];
+                    [newFiltered setObject:height forKey:@"height"];
+                    [newFiltered setObject:gifMark forKey:@"gif_mark"];
+                    
+                    [newFiltered setObject:favoriteCount forKey:@"favorite_count"];
+                    [newFiltered setObject:buryCount forKey:@"bury_count"];
+                    [newFiltered setObject:commentsCount forKey:@"comments_count"];
+                    [newFiltered setObject:shareUrl forKey:@"shareurl"];
+                    [newFiltered setObject:[[NSNumber alloc] initWithInt:scoreToSend] forKey:@"score"];
+                    
+                    PFACL *groupACL = [PFACL ACL];
+                    [groupACL setPublicWriteAccess:YES];
+                    [groupACL setPublicReadAccess:YES];
+                    newFiltered.ACL = groupACL;
+                    
+                    [newFiltered saveEventually];
                 }
             } else {
                 // Log details of the failure
