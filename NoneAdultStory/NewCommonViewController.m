@@ -89,7 +89,9 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self contract];
+    if (needAutoHide) {
+        [self contract];
+    }
 }
 
 - (void)viewDidLoad
@@ -97,6 +99,7 @@
     [super viewDidLoad];
     [self processPullMessage];
 
+    needAutoHide = YES;
     NSString *showAdList = [MobClick getConfigParams:@"showAdList"];
     if (showAdList == nil || showAdList == [NSNull null]  || [showAdList isEqualToString:@""]) {
         showAdList = @"NO";
@@ -214,11 +217,11 @@
     if((differenceFromStart) < 0)
     {
         // scroll up
-        if(scrollView.isTracking && (abs(differenceFromLast)>1))
+        if(scrollView.isTracking && (abs(differenceFromLast)>1) && needAutoHide)
             [self expand];
     }
     else {
-        if(scrollView.isTracking && (abs(differenceFromLast)>1))
+        if(scrollView.isTracking && (abs(differenceFromLast)>1) && needAutoHide)
             [self contract];
     }
     
@@ -250,7 +253,9 @@
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
 {
-    [self contract];
+    if (needAutoHide) {
+        [self contract];
+    }
     return YES;
 }
 
@@ -692,7 +697,9 @@
 #pragma mark - User Action Methods
 -(void)goGallery:(UITapGestureRecognizer *)sender{
     //点击进入详情页，隐藏的工具栏和Tab栏需要显示出来，要不就退不出来了
-    [self contract];
+    if (needAutoHide) {
+        [self contract];
+    }
     
     //这个sender其实就是UIButton，因此通过sender.tag就可以拿到刚才的参数
     int i = [sender.view tag] - 5000;

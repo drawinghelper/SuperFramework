@@ -53,6 +53,8 @@
     
     NSDictionary *pullmessageInfo;
     NSString *currentCid;
+    
+    BOOL needAutoHide;
 }
 @property(nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) AdMoGoView *adView;

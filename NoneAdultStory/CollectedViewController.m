@@ -106,6 +106,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    needAutoHide = NO;
     canLoadNew = NO;
     canLoadOld = NO;
 	// Do any additional setup after loading the view, typically from a nib.
