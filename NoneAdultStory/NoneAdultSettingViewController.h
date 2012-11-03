@@ -11,7 +11,7 @@
 #import "UMFeedback.h"
 #import "Appirater.h"
 #import "NoneAdultAppDelegate.h"
-#import "UMTableViewDemo.h"
+#import "UMTableViewDemoNew.h"
 #import "MyLogInViewController.h"
 #import "MySignUpViewController.h"
 @interface NoneAdultSettingViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate>{

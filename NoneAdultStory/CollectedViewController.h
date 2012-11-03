@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "NewCommonViewController.h"
+#import "UMTableViewDemoNew.h"
 @interface CollectedViewController : NewCommonViewController{
     BOOL firstLoaded;
 }

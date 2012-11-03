@@ -126,7 +126,13 @@
     }
     firstLoaded = NO;
 }
-
+//覆盖父类的方法
+- (void)showLianMeng {
+    UMTableViewDemoNew *lianMengViewController = [[UMTableViewDemoNew alloc]init];
+    lianMengViewController.title = @"精彩应用推荐";
+    lianMengViewController.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:lianMengViewController animated:YES];
+}
 - (void)viewDidUnload
 {
     [super viewDidUnload];
