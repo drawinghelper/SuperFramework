@@ -29,8 +29,8 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"发型目录", @"Second");
-        self.tabBarItem.image = [UIImage imageNamed:@"tab_zazhi"];
+        self.title = NSLocalizedString(@"分类", @"Second");
+        self.tabBarItem.image = [UIImage imageNamed:@"tab_category"];
         
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
         label.backgroundColor = [UIColor clearColor];
@@ -41,7 +41,7 @@
         [label setShadowOffset:CGSizeMake(0, -1.0)];
         
         self.navigationItem.titleView = label;
-        label.text = NSLocalizedString(@"发型目录", @"");
+        label.text = NSLocalizedString(@"分类", @"");
         [label sizeToFit];
         
     }

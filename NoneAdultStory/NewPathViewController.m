@@ -216,7 +216,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [adView setHidden:YES];
+    [adView removeFromSuperview];
     [self contract];
 }
 
