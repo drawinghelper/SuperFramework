@@ -4,62 +4,11 @@
 <array>
 	<dict>
 		<key>imageName</key>
-		<string>category_heart</string>
+		<string>category_video</string>
 		<key>imageUrl</key>
 		<string></string>
 		<key>name</key>
-		<string>姐的收藏</string>
-	</dict>
-	<dict>
-		<key>imageName</key>
-		<string>category_jingpin</string>
-		<key>imageUrl</key>
-		<string></string>
-		<key>name</key>
-		<string>精品发型</string>
-		<key>subClass</key>
-		<array>
-			<dict>
-				<key>keyword</key>
-				<string>【视频】</string>
-				<key>imageName</key>
-				<string>video</string>
-				<key>imageUrl</key>
-				<string></string>
-				<key>name</key>
-				<string>视频教程</string>
-			</dict>
-			<dict>
-				<key>keyword</key>
-				<string>男</string>
-				<key>imageName</key>
-				<string>man</string>
-				<key>imageUrl</key>
-				<string></string>
-				<key>name</key>
-				<string>男生发型</string>
-			</dict>
-			<dict>
-				<key>keyword</key>
-				<string>气质</string>
-				<key>imageName</key>
-				<string>qizhi</string>
-				<key>imageUrl</key>
-				<string></string>
-				<key>name</key>
-				<string>气质发型</string>
-			</dict>
-			<dict>
-				<key>keyword</key>
-				<string>新娘</string>
-				<key>imageName</key>
-				<string>bride</string>
-				<key>imageUrl</key>
-				<string></string>
-				<key>name</key>
-				<string>新娘发型</string>
-			</dict>
-		</array>
+		<string>视频教程</string>
 	</dict>
 	<dict>
 		<key>imageName</key>
@@ -251,6 +200,47 @@
 				<string></string>
 				<key>name</key>
 				<string>小脸发型</string>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>imageName</key>
+		<string>category_jingpin</string>
+		<key>imageUrl</key>
+		<string></string>
+		<key>name</key>
+		<string>其他发型</string>
+		<key>subClass</key>
+		<array>
+			<dict>
+				<key>keyword</key>
+				<string>男</string>
+				<key>imageName</key>
+				<string>man</string>
+				<key>imageUrl</key>
+				<string></string>
+				<key>name</key>
+				<string>男生发型</string>
+			</dict>
+			<dict>
+				<key>keyword</key>
+				<string>气质</string>
+				<key>imageName</key>
+				<string>qizhi</string>
+				<key>imageUrl</key>
+				<string></string>
+				<key>name</key>
+				<string>气质发型</string>
+			</dict>
+			<dict>
+				<key>keyword</key>
+				<string>新娘</string>
+				<key>imageName</key>
+				<string>bride</string>
+				<key>imageUrl</key>
+				<string></string>
+				<key>name</key>
+				<string>新娘发型</string>
 			</dict>
 		</array>
 	</dict>

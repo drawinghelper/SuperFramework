@@ -8,7 +8,6 @@
 
 #import "NoneAdultAppDelegate.h"
 #import "NewCommonViewController.h"
-#import "NewWeiboViewController.h"
 #import "NewPathViewController.h"
 #import "CateViewController.h"
 
@@ -245,9 +244,6 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                                  withTitle:@"最新" 
                                                  withCid:[[NoneAdultAppDelegate sharedAppDelegate] getNewTabCid]];
     UINavigationController *newCommonNavViewController = [[UINavigationController alloc] initWithRootViewController:newCommonViewController];
-    
-    UIViewController *newWeiboViewController = [[NewWeiboViewController alloc] initWithNibName:@"NewWeiboViewController" bundle:nil withTitle:@"微博"];
-    UINavigationController *newWeiboNavViewController = [[UINavigationController alloc] initWithRootViewController:newWeiboViewController];
 
     NewPathViewController *newPathViewController = [[NewPathViewController alloc] init];
     [newPathViewController setTitleString:@"最热"];
@@ -258,7 +254,6 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     [collectNavViewController.navigationBar setTintColor:[UIColor darkGrayColor]];
 
     //Gallery形式的收藏
-    //UIViewController *collectGalleryViewController = [[RootViewController alloc] init];
     UIViewController *collectGalleryViewController = [[CateViewController alloc] initWithNibName:@"CateViewController" bundle:nil];
     
     UINavigationController *collectGalleryNavViewController = [[UINavigationController alloc] initWithRootViewController:collectGalleryViewController];
@@ -287,6 +282,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     NSLog(@"channleList: %@", channelList);
     
     //为过审和推广初期内容高质量，只显示精选；之后可以显示未精选过的最新笑话
+    /*
     PFUser *user = [PFUser currentUser];
     if (user && [user.username isEqualToString:@"drawinghelper@gmail.com"]) {
         self.tabBarController.viewControllers = [NSArray arrayWithObjects:
@@ -296,7 +292,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                                  collectGalleryNavViewController,
                                                  settingNavViewController,
                                                  nil];
-    } else {
+    } else {*/
         self.tabBarController.viewControllers = [NSArray arrayWithObjects:
                                                  newCommonNavViewController,
                                                  newPathNavViewController,
@@ -305,7 +301,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                                  collectNavViewController,
                                                  settingNavViewController,
                                                      nil];
-    }
+    /*}*/
         
     self.window.rootViewController = self.tabBarController;
     //[NSThread sleepForTimeInterval:1.0];

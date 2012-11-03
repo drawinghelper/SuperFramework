@@ -183,25 +183,19 @@
     UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithImage:shareIcon style:UIBarButtonItemStylePlain target:self action:@selector(handleShareButtonTouch:)];
     NSArray *barItemsCollect = [NSArray arrayWithObjects:trashButtonCollect, shareButton, nil];
     
+    SubCateViewController *subVc = [[[SubCateViewController alloc]
+                                     initWithNibName:NSStringFromClass([SubCateViewController class])
+                                     bundle:nil] autorelease];
+    NSDictionary *cate = [self.cates objectAtIndex:indexPath.row];
+    
     int selectedIndex = [indexPath row];
     if (selectedIndex == 0) {
-        NSLog(@"选择了收藏功能");
-        if ([networkImages count] != 0) {
-            networkGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItemsCollect];
-            [self.navigationController pushViewController:networkGallery animated:YES];
-        } else {
-            UIAlertView*alert = [[UIAlertView alloc]initWithTitle:@"提示"
-                                                          message:@"主银，您还没有收藏过发型哦：）"
-                                                         delegate:nil
-                                                cancelButtonTitle:@"确定"
-                                                otherButtonTitles:nil];
-            [alert show];
-        }
+        NewPathViewController *newPathViewController = [[NewPathViewController alloc] init];
+        [newPathViewController setTitleString:[cate objectForKey:@"name"]];
+        newPathViewController.keyword = @"【视频】";
+        [self.navigationController pushViewController:newPathViewController animated:YES];
+        
     } else {
-        SubCateViewController *subVc = [[[SubCateViewController alloc]
-                                         initWithNibName:NSStringFromClass([SubCateViewController class])
-                                         bundle:nil] autorelease];
-        NSDictionary *cate = [self.cates objectAtIndex:indexPath.row];
         subVc.subCates = [cate objectForKey:@"subClass"];
         self.currentCate = cate;
         subVc.cateVC = self;
@@ -229,12 +223,6 @@
     NSString *titleStr = [subCate objectForKey:@"name"];
     NSString *keywordStr = [subCate objectForKey:@"keyword"];
     
-	/*
-    NSArray *channelList = [[NoneAdultAppDelegate sharedAppDelegate] getChannelList];
-    NSDictionary *channelInfo = [channelList objectAtIndex:(indexPath.row - 2)];
-    NSString *titleStr = [channelInfo objectForKey:@"title"];
-    NSString *keywordStr = [channelInfo objectForKey:@"keyword"];
-    */
     NewPathViewController *newPathViewController = [[NewPathViewController alloc] init];
     [newPathViewController setTitleString:titleStr];
     newPathViewController.keyword = keywordStr;
