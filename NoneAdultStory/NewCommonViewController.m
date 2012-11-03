@@ -143,7 +143,7 @@
     
     //分类页的“返回”按钮定制化
     if (![self.title isEqualToString:@"最新"] 
-        && ![self.title isEqualToString:@"收藏"]) {
+        && ![self.title isEqualToString:@"已收藏"]) {
         UIImage *buttonImage = [UIImage imageNamed:@"custombackbutton.png"];
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         [button setImage:buttonImage forState:UIControlStateNormal];

@@ -21,10 +21,21 @@
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
-    newChannel = YES;
     if (self) {
-        hidden = NO;
-        self.tabBarItem.image = [UIImage imageNamed:@"new"];
+        self.title = NSLocalizedString(@"最热", @"Second");
+        self.tabBarItem.image = [UIImage imageNamed:@"historyhot"];
+        
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+        label.backgroundColor = [UIColor clearColor];
+        label.font = [UIFont boldSystemFontOfSize:20.0];
+        label.shadowColor = [UIColor colorWithRed:70.0f/255 green:70.0f/225 blue:70.0f/255 alpha:1];
+        label.textAlignment = UITextAlignmentCenter;
+        label.textColor = [UIColor colorWithRed:235.0f/255 green:235.0f/225 blue:235.0f/255 alpha:1];
+        [label setShadowOffset:CGSizeMake(0, -1.0)];
+        
+        self.navigationItem.titleView = label;
+        label.text = NSLocalizedString(@"最热", @"");
+        [label sizeToFit];
         
         // Custom the table
         // The className to query on
@@ -210,7 +221,7 @@
     
     self.tableView.backgroundColor = [UIColor colorWithRed:230.0f/255.0f green:230.0f/255.0f blue:230.0f/255.0f alpha:1];
     
-    if (![self.title isEqualToString:@"每日精选"] && ![self.title isEqualToString:@"历史最热"]) {
+    if (![self.title isEqualToString:@"每日精选"] && ![self.title isEqualToString:@"最热"]) {
         //custom back button
         UIImage *buttonImage = [UIImage imageNamed:@"custombackbutton.png"];
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -413,12 +424,7 @@
         query.cachePolicy = kPFCachePolicyCacheThenNetwork;
     }
     
-    if (newChannel) {//最新精选栏目排序字段
-        [query orderByDescending:@"timestamp"];
-    } else {//历史最热栏目排序字段
-        [query orderByDescending:@"score"];
-    }
-    
+    [query orderByDescending:@"score"];
     return query;
 }
 
@@ -500,12 +506,11 @@
     // -对于视频，是优酷上的详情页url;
     NSString *shareurl = [currentDuanZi objectForKey:@"shareurl"];
     
+    /*
     //查看详情时记分
-    if (newChannel) {
-        [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrl:shareurl channel:UIChannelNew action:UIActionView];
-    } else {
+    
         [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrl:shareurl channel:UIChannelHistory action:UIActionView];
-    }
+    */
     
     NSNumber *feature = [currentDuanZi objectForKey:@"feature"];
     if ([feature intValue] == 0) {
@@ -628,15 +633,12 @@
         [db executeUpdate:@"delete from collected where weiboId = ?" withArgumentsInArray:dataArray];
     }
     
+    /*
     if (tag) {
         NSString *shareurl = [currentDuanZi objectForKey:@"shareurl"];
         //收藏时记分
-        if (newChannel) {
-            [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrl:shareurl channel:UIChannelNew action:UIActionCollect];
-        } else {
             [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrl:shareurl channel:UIChannelHistory action:UIActionCollect];
-        }
-    }
+    }*/
 }
 
 /*
@@ -690,12 +692,10 @@
         SDWebImageManager *manager = [SDWebImageManager sharedManager];
         currentImage = [manager imageWithURL:[NSURL URLWithString:largeUrl]];
         //记分
-        if (newChannel) {
-            [[NoneAdultAppDelegate sharedAppDelegate] 
-                scoreForShareUrl:shareurl channel:UIChannelNew action:UIActionShare];
-        } else {
+        /*
+        
             [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrl:shareurl channel:UIChannelHistory action:UIActionShare];
-        }
+        */
         if (buttonIndex == actionSheet.firstOtherButtonIndex) {
             NSLog(@"custom event share_sina_budong!");
             statusContent = [NSString stringWithFormat:@"今儿偶然在网上发现了一个超喜欢的新发型[爱你]￼，看看，编起来还挺简单的 %@ [兔子]。O(∩_∩)O还有很多更漂亮的，都是从这个神器中找到的￼ %@ [good]。", 

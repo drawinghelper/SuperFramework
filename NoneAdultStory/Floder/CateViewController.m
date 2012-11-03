@@ -29,7 +29,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"杂志收藏", @"Second");
+        self.title = NSLocalizedString(@"发型目录", @"Second");
         self.tabBarItem.image = [UIImage imageNamed:@"tab_zazhi"];
         
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -41,7 +41,7 @@
         [label setShadowOffset:CGSizeMake(0, -1.0)];
         
         self.navigationItem.titleView = label;
-        label.text = NSLocalizedString(@"杂志收藏", @"");
+        label.text = NSLocalizedString(@"发型目录", @"");
         [label sizeToFit];
         
     }

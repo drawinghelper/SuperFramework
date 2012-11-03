@@ -10,13 +10,9 @@
 #import "NewCommonViewController.h"
 #import "NewWeiboViewController.h"
 #import "NewPathViewController.h"
-//#import "HistoryPathViewController.h"
-#import "HistoryTopPathViewController.h"
 #import "CateViewController.h"
 
-#import "ChannelViewController.h"
 #import "CollectedViewController.h"
-#import "RootViewController.h"
 #import "NoneAdultSettingViewController.h"
 
 @implementation NoneAdultAppDelegate
@@ -254,17 +250,10 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     UINavigationController *newWeiboNavViewController = [[UINavigationController alloc] initWithRootViewController:newWeiboViewController];
 
     NewPathViewController *newPathViewController = [[NewPathViewController alloc] init];
-    [newPathViewController setTitleString:@"每日精选"];
+    [newPathViewController setTitleString:@"最热"];
     UINavigationController *newPathNavViewController = [[UINavigationController alloc] initWithRootViewController:newPathViewController];
     
-    //HistoryPathViewController *historyTopController = [[HistoryPathViewController alloc] init];
-    HistoryTopPathViewController *historyTopController = [[HistoryTopPathViewController alloc] init];
-    UINavigationController *historyTopNavViewController = [[UINavigationController alloc] initWithRootViewController:historyTopController];
-    
-    ChannelViewController *channelController = [[ChannelViewController alloc] init];
-    UINavigationController *channelNavViewController = [[UINavigationController alloc] initWithRootViewController:channelController];
-    
-    UIViewController *collectViewController = [[CollectedViewController alloc] initWithNibName:@"CollectedViewController" bundle:nil withTitle:@"收藏"];
+    UIViewController *collectViewController = [[CollectedViewController alloc] initWithNibName:@"CollectedViewController" bundle:nil withTitle:@"已收藏"];
     UINavigationController *collectNavViewController = [[UINavigationController alloc] initWithRootViewController:collectViewController];
     [collectNavViewController.navigationBar setTintColor:[UIColor darkGrayColor]];
 
@@ -304,28 +293,18 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                                  newCommonNavViewController,
                                                  newWeiboNavViewController,
                                                  newPathNavViewController,
-                                                 historyTopNavViewController,
                                                  collectGalleryNavViewController,
-                                                 //channelNavViewController,
-                                                 //collectNavViewController,
                                                  settingNavViewController,
                                                  nil];
     } else {
-        if ([showFilteredNew isEqualToString:@"YES"]) {
-            self.tabBarController.viewControllers = [NSArray arrayWithObjects:
-                                                         newPathNavViewController,
-                                                         historyTopNavViewController,
-                                                         collectGalleryNavViewController,
-                                                         settingNavViewController,
-                                                         nil];
-        } else {
-            self.tabBarController.viewControllers = [NSArray arrayWithObjects:
-                                                     newWeiboNavViewController, 
-                                                     historyTopNavViewController,
-                                                     collectGalleryNavViewController,
-                                                     settingNavViewController,
+        self.tabBarController.viewControllers = [NSArray arrayWithObjects:
+                                                 newCommonNavViewController,
+                                                 newPathNavViewController,
+                                                 collectGalleryNavViewController,
+                                                 
+                                                 collectNavViewController,
+                                                 settingNavViewController,
                                                      nil];
-        }
     }
         
     self.window.rootViewController = self.tabBarController;
