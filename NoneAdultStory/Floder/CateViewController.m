@@ -75,7 +75,18 @@
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav_bg.png"] forBarMetrics:UIBarMetricsDefault];
 
     self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tmall_bg_furley.png"]];
-//    self.view.backgroundColor = [UIColor blackColor];
+    
+    UIButton *btnLianMeng = [UIButton buttonWithType:UIButtonTypeCustom];
+    btnLianMeng.frame = CGRectMake(0, 0, 55, 30);
+    [btnLianMeng addTarget:self action:@selector(showLianMeng) forControlEvents:UIControlEventTouchUpInside];
+    [btnLianMeng setTitle:@"推荐(1)" forState:UIControlStateNormal];
+    [btnLianMeng setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [btnLianMeng setBackgroundImage:[UIImage imageNamed:@"btn_header.png"] forState:UIControlStateNormal];
+    [btnLianMeng.titleLabel setFont:[UIFont boldSystemFontOfSize:12.0]];
+    [btnLianMeng.titleLabel setShadowOffset:CGSizeMake(0, -1.0f)];
+    [btnLianMeng.titleLabel setShadowColor:[UIColor darkGrayColor]];
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btnLianMeng];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -146,6 +157,13 @@
     [self loadDataForGallery];
 }
 
+- (void)showLianMeng {
+    UMTableViewDemo *lianMengViewController = [[UMTableViewDemo alloc]init];
+    lianMengViewController.title = @"精彩应用推荐";
+    lianMengViewController.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:lianMengViewController animated:YES];
+}
+
 - (void)loadDataForGallery {
     networkCaptions = [[NSMutableArray alloc] init];
     networkImages = [[NSMutableArray alloc] init];
@@ -194,7 +212,6 @@
         [newPathViewController setTitleString:[cate objectForKey:@"name"]];
         newPathViewController.keyword = @"【视频】";
         [self.navigationController pushViewController:newPathViewController animated:YES];
-        
     } else {
         subVc.subCates = [cate objectForKey:@"subClass"];
         self.currentCate = cate;

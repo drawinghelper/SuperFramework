@@ -91,7 +91,7 @@
 	newFrame.size.width = adSize.width;
 	newFrame.origin.x = (self.view.bounds.size.width - adSize.width)/2;
     //newFrame.origin.y = self.navigationController.view.bounds.size.height - adSize.height;
-    newFrame.origin.y = 0;
+    newFrame.origin.y = 20;
 	adView.frame = newFrame;
     
 	[UIView commitAnimations];
@@ -214,6 +214,17 @@
     UIImage *btnImage = [UIImage imageNamed:@"refresh.png"];
     [btnRefresh setImage:btnImage forState:UIControlStateNormal];
     
+    UIButton *btnLianMeng = [UIButton buttonWithType:UIButtonTypeCustom];
+    btnLianMeng.frame = CGRectMake(0, 0, 55, 30);
+    [btnLianMeng addTarget:self action:@selector(showLianMeng) forControlEvents:UIControlEventTouchUpInside];
+    [btnLianMeng setTitle:@"推荐(1)" forState:UIControlStateNormal];
+    [btnLianMeng setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [btnLianMeng setBackgroundImage:[UIImage imageNamed:@"btn_header.png"] forState:UIControlStateNormal];
+    [btnLianMeng.titleLabel setFont:[UIFont boldSystemFontOfSize:12.0]];
+    [btnLianMeng.titleLabel setShadowOffset:CGSizeMake(0, -1.0f)];
+    [btnLianMeng.titleLabel setShadowColor:[UIColor darkGrayColor]];
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btnLianMeng];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btnRefresh];
     
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav_bg.png"] 
@@ -231,6 +242,13 @@
         UIBarButtonItem *customBarItem = [[UIBarButtonItem alloc] initWithCustomView:button];
         self.navigationItem.leftBarButtonItem = customBarItem;
     }
+}
+
+- (void)showLianMeng {
+    UMTableViewDemo *lianMengViewController = [[UMTableViewDemo alloc]init];
+    lianMengViewController.title = @"精彩应用推荐";
+    lianMengViewController.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:lianMengViewController animated:YES];
 }
 
 -(void)back {

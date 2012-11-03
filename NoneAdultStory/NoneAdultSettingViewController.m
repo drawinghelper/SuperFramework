@@ -134,7 +134,7 @@
             if (starCommentVisible) {
                 cell.text = @"精彩应用推荐";
             } else {
-                cell.text = @"清空缓存";
+                cell.text = [NSString stringWithFormat:@"清空缓存: 已占%@",[self getCacheFolderSizeStr]];
             }
             break;
         case 3:
