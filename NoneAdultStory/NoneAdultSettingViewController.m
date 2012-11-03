@@ -71,7 +71,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return starCommentVisible ? 4 : 2;
+    return starCommentVisible ? 5 : 3;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -131,7 +131,11 @@
             }
             break;
         case 2:
-            cell.text = @"精彩应用推荐";
+            if (starCommentVisible) {
+                cell.text = @"精彩应用推荐";
+            } else {
+                cell.text = @"清空缓存";
+            }
             break;
         case 3:
             if (user) {
@@ -140,12 +144,70 @@
                 cell.text = @"登录";
             }
             break;
+        case 4:
+            cell.text = [NSString stringWithFormat:@"清空缓存: 已占%@",[self getCacheFolderSizeStr]];
+            break;
         default:
             break;
     }
     return cell;
 }
 
+
+/*计算APP缓存大小*/
+- (unsigned long long int) cacheFolderSize {
+    NSFileManager *_manager = [NSFileManager defaultManager];
+    NSArray *_cachePaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *_cacheDirectory = [_cachePaths objectAtIndex:0];
+    NSLog(@"cacheDirectory: %@", _cacheDirectory);
+    NSArray *_cacheFileList;
+    NSEnumerator *_cacheEnumerator;
+    NSString *_cacheFilePath;
+    unsigned long long int _cacheFolderSize = 0;
+    
+    _cacheFileList = [_manager subpathsAtPath:_cacheDirectory];
+    _cacheEnumerator = [_cacheFileList objectEnumerator];
+    while (_cacheFilePath = [_cacheEnumerator nextObject]) {
+        NSDictionary *_cacheFileAttributes = [_manager fileAttributesAtPath:[_cacheDirectory stringByAppendingPathComponent:_cacheFilePath] traverseLink:YES];
+        _cacheFolderSize += [_cacheFileAttributes fileSize];
+    }
+    
+    return _cacheFolderSize;
+}
+
+- (NSString *)getCacheFolderSizeStr {
+    NSNumber *number = [NSNumber numberWithLongLong:[self cacheFolderSize]];
+    const unsigned int bytes = 1024 * 1024;
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+    [formatter setPositiveFormat:@"##0.00MB"];
+    NSNumber *partial = [NSNumber numberWithFloat:([number floatValue] / bytes)];
+    return [formatter stringFromNumber:partial];
+}
+
+/*清空APP缓存*/
+- (void)clearCache {
+    NSArray *_cachePaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *_cacheDirectory = [_cachePaths objectAtIndex:0];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error;
+    NSArray *imagesFiles = [fileManager contentsOfDirectoryAtPath:_cacheDirectory error:&error];
+    for (NSString *file in imagesFiles) {
+        error = nil;
+        [fileManager removeItemAtPath:[_cacheDirectory stringByAppendingPathComponent:file] error:&error];
+        /* do error handling here */
+    }
+    [self didFinishClearCache];
+}
+
+- (void)didFinishClearCache {
+    [self.tableView reloadData];
+}
+- (void)viewDidAppear:(BOOL)animated {
+    [self.tableView reloadData];
+    NSLog(@"cache size: %lld", [self cacheFolderSize]); //in byte
+}
 #pragma mark -
 #pragma mark Table Delegate Methods
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -175,19 +237,40 @@
             }
         }
     } else if (row == 2){
-        [self showLianMeng];
-    } else {
+        if (starCommentVisible) {
+            [self showLianMeng];
+        } else {
+            [self confirmClearCache];
+        }
+    } else if (row == 3){
         if (user) {
             [self showLogOut];
         } else {
             [self showLogin];
         }    
+    } else {
+        [self confirmClearCache];
     }
 	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 	NSLog(@"...didSelectRowAtIndexPath");
     
 }
-
+- (void)confirmClearCache {
+    UIActionSheet *actionsSheet = [[UIActionSheet alloc] initWithTitle:@"确认清除缓存？"
+                                                              delegate:self
+                                                     cancelButtonTitle:@"取消"
+                                                destructiveButtonTitle:nil
+                                                     otherButtonTitles:@"确定", nil];
+    [actionsSheet showInView:[[NoneAdultAppDelegate sharedAppDelegate] window]];
+}
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    // Actions
+    if (buttonIndex != actionSheet.cancelButtonIndex) {
+        if (buttonIndex == actionSheet.firstOtherButtonIndex) {
+            [self clearCache];
+        }
+    }
+}
 - (void)showLogOut {
     UIAlertView *logOutAlertView = [[UIAlertView alloc] initWithTitle:@"确认退出登录吗？"
                                                                    message:nil

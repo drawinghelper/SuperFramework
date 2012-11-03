@@ -155,6 +155,12 @@
         UIBarButtonItem *customBarItem = [[UIBarButtonItem alloc] initWithCustomView:button];
         self.navigationItem.leftBarButtonItem = customBarItem;
     }
+    
+    handleView = [[UMUFPHandleView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-88, 32, 88) appKey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey] slotId:nil currentViewController:self];
+    handleView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
+    [handleView setHandleViewBackgroundImage:[UIImage imageNamed:@"um_handle_placeholder.png"]];
+    [self.view addSubview:handleView];
+    [handleView requestPromoterDataInBackground];
 }
 
 -(void)back {

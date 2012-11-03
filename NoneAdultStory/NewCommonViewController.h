@@ -17,6 +17,7 @@
 #import "NoneAdultDetailViewController.h"
 #import "NSString+HTML.h"
 #import "FGalleryViewController.h"
+#import "UMUFPHandleView.h"
 
 #define FONT_SIZE 14.0f
 #define TOP_SECTION_HEIGHT 52.0f
@@ -24,6 +25,7 @@
 #define HORIZONTAL_PADDING 16.0f
 
 @interface NewCommonViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, EGORefreshTableHeaderDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UMSNSDataSendDelegate, MBProgressHUDDelegate, AdMoGoDelegate, FGalleryViewControllerDelegate> {
+    UMUFPHandleView *handleView;
     AdMoGoView *adView;
 
     MBProgressHUD *HUD;
