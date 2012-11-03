@@ -117,73 +117,6 @@
 
 
 #pragma mark - View lifecycle
-//处理应用内消息
-- (void)processPullMessage {
-    NSString *pullmessage = [MobClick getConfigParams:@"pullmessage"];
-    if (pullmessage != nil 
-        && pullmessage != [NSNull null]
-        && ![pullmessage isEqualToString:@""]) {
-        
-        pullmessageInfo = [UMSNSStringJson JSONValue:pullmessage]; 
-        NSString *pullmessageTimestamp = [pullmessageInfo objectForKey:@"timestamp"];
-        
-        //1. 读取已展现消息的时间戳数组
-        NSMutableArray *showedMessageTimestampArray = [[NSMutableArray alloc] init];
-        NSUserDefaults *currentDefaults = [NSUserDefaults standardUserDefaults];
-        NSData *dataRepresentingSavedArray = [currentDefaults objectForKey:@"showedMessageTimestampArray"];
-        if (dataRepresentingSavedArray != nil)
-        {
-            NSArray *oldSavedArray = [NSKeyedUnarchiver unarchiveObjectWithData:dataRepresentingSavedArray];
-            if (oldSavedArray != nil)
-                showedMessageTimestampArray = [[NSMutableArray alloc] initWithArray:oldSavedArray];
-            else
-                showedMessageTimestampArray = [[NSMutableArray alloc] init];
-        }
-        
-        //2. 遍历时间戳数组，与本次消息的时间戳做对比
-        BOOL showedTag = NO;
-        for (int i = 0; i < [showedMessageTimestampArray count]; i++) {
-            NSString *showedMessageTimestamp = [showedMessageTimestampArray objectAtIndex:i];
-            if ([showedMessageTimestamp isEqualToString:pullmessageTimestamp]) {
-                showedTag = YES;
-                break;
-            }
-        }
-        
-        //是否匹配渠道与版本号
-        NSString *currentAppVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString*)kCFBundleVersionKey];
-        NSString *channelId = [[NoneAdultAppDelegate sharedAppDelegate] getAppChannelTag];
-        NSString *pullmessageChannelIdList = [pullmessageInfo objectForKey:@"channelId"];
-        NSString *pullmessageAppversionList = [pullmessageInfo objectForKey:@"appversion"];
-        BOOL channelTargeted = NO;
-        if ([pullmessageChannelIdList isEqualToString:@""]
-            ||[pullmessageChannelIdList rangeOfString:channelId].length > 0 ) {
-            channelTargeted = YES;
-        }
-        BOOL versionTargeted = NO;
-        if ([pullmessageAppversionList isEqualToString:@""]
-            ||[pullmessageAppversionList rangeOfString:currentAppVersion].length > 0 ) {
-            versionTargeted = YES;
-        }
-        
-        if (versionTargeted && channelTargeted) {
-            //3. 无匹配项，则显示此消息
-            if (!showedTag) {
-                UIAlertView *pullmessageAlertView = [[UIAlertView alloc] initWithTitle:[pullmessageInfo objectForKey:@"title"]
-                                                                               message:[pullmessageInfo objectForKey:@"message"]
-                                                                              delegate:self
-                                                                     cancelButtonTitle:[pullmessageInfo objectForKey:@"oktitle"]
-                                                                     otherButtonTitles:[pullmessageInfo objectForKey:@"canceltitle"], nil];
-                [pullmessageAlertView show];
-                
-                [showedMessageTimestampArray addObject:pullmessageTimestamp];
-                [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:showedMessageTimestampArray] forKey:@"showedMessageTimestampArray"];
-            }
-        }
-        
-    }
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -192,7 +125,6 @@
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    [self processPullMessage];
     
     NSString *showAdList = [MobClick getConfigParams:@"showAdList"];
     if (showAdList == nil || showAdList == [NSNull null]  || [showAdList isEqualToString:@""]) {
@@ -675,30 +607,6 @@
 	HUD.yOffset = 150.f;
 	HUD.removeFromSuperViewOnHide = YES;
 	[HUD hide:YES afterDelay:1];
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    switch (buttonIndex) {
-        case 0:
-        {          
-            NSString *okUrl = [pullmessageInfo objectForKey:@"okurl"];
-            if (![okUrl isEqualToString:@""]) {
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:okUrl]];
-            }
-            break;
-        }
-        case 1:
-        {
-            // they want to rate it
-            NSString *cancelUrl = [pullmessageInfo objectForKey:@"cancelurl"];
-            if (![cancelUrl isEqualToString:@""]) {
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:cancelUrl]];
-            }
-            break;
-        }
-        default:
-            break;
-    }
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
