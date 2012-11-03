@@ -1310,6 +1310,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	NSLog(@"didSelectRowAtIndexPath...");
+    [self contract];
     /*
     int row = [indexPath row];
     NSDictionary *duanZi = [searchDuanZiList objectAtIndex:row];

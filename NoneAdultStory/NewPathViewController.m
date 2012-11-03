@@ -1199,6 +1199,7 @@
 {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self contract];
 }
 
 
