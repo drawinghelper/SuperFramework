@@ -54,7 +54,7 @@
     NSDictionary *pullmessageInfo;
     NSString *currentCid;
     
-    BOOL needAutoHide;
+    BOOL isInCommonView;
 }
 @property(nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) AdMoGoView *adView;

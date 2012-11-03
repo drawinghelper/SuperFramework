@@ -89,7 +89,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    if (needAutoHide) {
+    if (isInCommonView) {
         [self contract];
     }
 }
@@ -99,7 +99,7 @@
     [super viewDidLoad];
     [self processPullMessage];
 
-    needAutoHide = YES;
+    isInCommonView = YES;
     NSString *showAdList = [MobClick getConfigParams:@"showAdList"];
     if (showAdList == nil || showAdList == [NSNull null]  || [showAdList isEqualToString:@""]) {
         showAdList = @"NO";
@@ -217,11 +217,11 @@
     if((differenceFromStart) < 0)
     {
         // scroll up
-        if(scrollView.isTracking && (abs(differenceFromLast)>1) && needAutoHide)
+        if(scrollView.isTracking && (abs(differenceFromLast)>1) && isInCommonView)
             [self expand];
     }
     else {
-        if(scrollView.isTracking && (abs(differenceFromLast)>1) && needAutoHide)
+        if(scrollView.isTracking && (abs(differenceFromLast)>1) && isInCommonView)
             [self contract];
     }
     
@@ -253,7 +253,7 @@
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
 {
-    if (needAutoHide) {
+    if (isInCommonView) {
         [self contract];
     }
     return YES;
@@ -697,7 +697,7 @@
 #pragma mark - User Action Methods
 -(void)goGallery:(UITapGestureRecognizer *)sender{
     //点击进入详情页，隐藏的工具栏和Tab栏需要显示出来，要不就退不出来了
-    if (needAutoHide) {
+    if (isInCommonView) {
         [self contract];
     }
     
@@ -710,7 +710,9 @@
     NSString *shareurl = [currentDuanZi objectForKey:@"shareurl"];
     
     //查看详情时记分
-    [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrlNew:currentDuanZi channel:UIChannelNew action:UIActionView];
+    if (isInCommonView) {
+        [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrlNew:currentDuanZi channel:UIChannelNew action:UIActionView];
+    }
     
     //底部工具栏操作项
     UIImage *likeIcon = [UIImage imageNamed:@"photo-gallery-collect-noselect.png"];
@@ -927,7 +929,9 @@
         
         NSString *shareurl = [currentDuanZi objectForKey:@"shareurl"];
         //收藏时记分
-        [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrlNew:currentDuanZi channel:UIChannelNew action:UIActionCollect];
+        if (isInCommonView) {
+            [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrlNew:currentDuanZi channel:UIChannelNew action:UIActionCollect];
+        }
     } else {
         NSArray *dataArray = [NSArray arrayWithObjects:[currentDuanZi objectForKey:@"id"], nil];
         [db executeUpdate:@"delete from collected where weiboId = ?" withArgumentsInArray:dataArray];
@@ -965,8 +969,9 @@
         statusContent = [NSString stringWithString:cuttedContent];
         NSString *largeUrl = [currentDuanZi objectForKey:@"large_url"];
         NSString *shareurl = [currentDuanZi objectForKey:@"shareurl"];
-        [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrlNew:currentDuanZi channel:UIChannelNew action:UIActionShare];
-        
+        if (isInCommonView) {
+            [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrlNew:currentDuanZi channel:UIChannelNew action:UIActionShare];
+        }
         SDWebImageManager *manager = [SDWebImageManager sharedManager];
         currentImage = [manager imageWithURL:[NSURL URLWithString:largeUrl]];
         
