@@ -435,9 +435,11 @@
         NSDecimalNumber *currentMinTimestampNumber = (NSDecimalNumber *)[lastDuanZi objectForKey:@"timestamp"];
         NSString *lastId = [lastDuanZi objectForKey:@"id"];
         int currentMinTimestamp = [currentMinTimestampNumber intValue];
-        url = [[NSString alloc] initWithFormat:@"%@&time=%d&id=%@", recentUrlPrefix, currentMinTimestamp, lastId];
+        //url = [[NSString alloc] initWithFormat:@"%@&time=%d&id=%@", recentUrlPrefix, currentMinTimestamp, lastId];
+        url = [NSString stringWithFormat:@"http://apps.dazhuangzhuang.com/03/recentlist?pageSize=%d", NUMBER_OF_PAGESIZE];
     } else {
-        url = [[NSString alloc] initWithFormat:@"%@", recentUrlPrefix];
+        //url = [[NSString alloc] initWithFormat:@"%@", recentUrlPrefix];
+        url = [NSString stringWithFormat:@"http://apps.dazhuangzhuang.com/03/recentlist?pageSize=%d", NUMBER_OF_PAGESIZE];
     }
     
     NSLog(@"loadUrl: %@", url);
@@ -455,7 +457,7 @@
     NSLog(@"requestTipInfoFromServer encoded url:%@", url);
 	
     NSString *post = nil;  
-	post = [[NSString alloc] initWithString:@""];
+	post = @"";
 	NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];  
 	NSString *postLength = [NSString stringWithFormat:@"%d", [postData length]];  
 	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];  
@@ -525,9 +527,9 @@
     NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
     //NSLog(responseString);
     NSDictionary *responseInfo = [UMSNSStringJson JSONValue:responseString]; 
-    NSDictionary *dataDic = [responseInfo objectForKey:@"info"];
-    NSMutableArray *addedList = [dataDic objectForKey:@"talk"];
-    tempPropertyDic = [dataDic objectForKey:@"selectedMap"];
+    //NSDictionary *dataDic = [responseInfo objectForKey:@"info"];
+    NSMutableArray *addedList = [responseInfo objectForKey:@"resource"];
+    //tempPropertyDic = [dataDic objectForKey:@"selectedMap"];
     NSLog(@"result: %@", addedList);
     
     [self performSelectorOnMainThread:@selector(appendTableWith:) withObject:addedList waitUntilDone:NO];
@@ -552,13 +554,18 @@
 - (void)adaptDic:(NSMutableDictionary *)dic {
     NSString *idString = [self autoCorrectNull:[dic objectForKey:@"id"]];
     NSString *screenName = [self autoCorrectNull:[dic objectForKey:@"nick"]];
-    NSString *profileImageUrl = [self autoCorrectNull:[dic objectForKey:@"pic"]];
-    NSString *weiboContent = [self autoCorrectNull:[dic objectForKey:@"content"]];
-
-    NSDecimalNumber *favoriteCount = (NSDecimalNumber *)[dic objectForKey:@"count"];
-    NSDecimalNumber *buryCount = [[NSDecimalNumber alloc] initWithInt:([favoriteCount intValue]/5)];
-    NSDecimalNumber *commentCount = [[NSDecimalNumber alloc] initWithInt:([favoriteCount intValue]/3)];
+    NSString *profileImageUrl = [self autoCorrectNull:[dic objectForKey:@"authorpic"]];
+    NSString *weiboContent = [self autoCorrectNull:[dic objectForKey:@"desc"]];
+    NSString *largeUrl = [self autoCorrectNull:[dic objectForKey:@"large_url"]];
+    NSString  *shareUrl = [self autoCorrectNull:[dic objectForKey:@"share_url"]];
     
+    NSDecimalNumber *commentCount = (NSDecimalNumber *)[dic objectForKey:@"comments_count"];
+    NSDecimalNumber *favoriteCount = [[NSDecimalNumber alloc] initWithInt:([commentCount intValue]*3)];
+    NSDecimalNumber *buryCount = [[NSDecimalNumber alloc] initWithInt:([commentCount intValue]*2)];
+    NSDecimalNumber *imageWidth = (NSDecimalNumber *)[dic objectForKey:@"image_width"];
+    NSDecimalNumber *imageHeight = (NSDecimalNumber *)[dic objectForKey:@"image_height"];
+    NSDecimalNumber *timestamp = (NSDecimalNumber *)[dic objectForKey:@"timestamp"];
+
     [dic setObject:screenName forKey:@"screen_name"];
     [dic setObject:profileImageUrl forKey:@"profile_image_url"];
     [dic setObject:[weiboContent stringByConvertingHTMLToPlainText] forKey:@"content"];
@@ -566,18 +573,13 @@
     [dic setObject:buryCount forKey:@"bury_count"];
     [dic setObject:commentCount forKey:@"comments_count"];
     
-    NSArray *imageArray = [dic objectForKey:@"image"];
-    if ( imageArray != nil && [imageArray count] != 0) {
-        NSString *imageUrl = [[NSString alloc] initWithFormat:@"%@/2000", [imageArray objectAtIndex:0]];
-        [dic setObject:imageUrl forKey:@"large_url"];    //图片内容的url
-    } else {
-        [dic setObject:@"" forKey:@"large_url"];
-    }
+    [dic setObject:largeUrl forKey:@"large_url"];
+        
+    [dic setObject:imageWidth forKey:@"width"];//图片内容的width
+    [dic setObject:imageHeight forKey:@"height"];//图片内容的height
+    [dic setObject:[NSNumber numberWithDouble:[timestamp doubleValue]/1000] forKey:@"timestamp"];
     
-    [dic setObject:[[tempPropertyDic objectForKey:idString] objectForKey:@"width"] forKey:@"width"];//图片内容的width
-    [dic setObject:[[tempPropertyDic objectForKey:idString] objectForKey:@"height"] forKey:@"height"];//图片内容的height
-    
-    [dic setObject:[NSString stringWithFormat:@"http://t.qq.com/p/t/%@", idString] forKey:@"shareurl"];
+    [dic setObject:shareUrl forKey:@"shareurl"];
 }
 
 //- (void)viewWillAppear:(BOOL)animated {

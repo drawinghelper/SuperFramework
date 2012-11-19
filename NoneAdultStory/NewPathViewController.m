@@ -782,6 +782,22 @@
 // a UITableViewCellStyleDefault style cell with the label being the first key in the object. 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)duanZi {
     int row = [indexPath row];
+    //NSLog(@"%@", duanZi);
+    
+    NSLog(@"json: {\"bury_count\" : %d, \"comments_count\": %d, \"favorite_count\" : %d, \"score\": %d,\"feature\" : %d, \"timestamp\": %lld, \"width\" : %d, \"height\": %d, \"content\" : \"%@\", \"large_url\": \"%@\",\"profile_image_url\" : \"%@\", \"screen_name\": \"%@\", \"shareurl\" : \"%@\"}",
+          [(NSNumber *)[duanZi objectForKey:@"bury_count"] intValue],
+          [(NSNumber *)[duanZi objectForKey:@"comments_count"] intValue],
+          [(NSNumber *)[duanZi objectForKey:@"favorite_count"] intValue],
+          [(NSNumber *)[duanZi objectForKey:@"score"] intValue],
+          [(NSNumber *)[duanZi objectForKey:@"feature"] intValue],
+          [(NSNumber *)[duanZi objectForKey:@"timestamp"] longLongValue],
+          [(NSNumber *)[duanZi objectForKey:@"width"] intValue],
+          [(NSNumber *)[duanZi objectForKey:@"height"] intValue],
+          [duanZi objectForKey:@"content"],
+          [duanZi objectForKey:@"large_url"],
+          [duanZi objectForKey:@"profile_image_url"],
+          [duanZi objectForKey:@"screen_name"],
+          [duanZi objectForKey:@"shareurl"]);
     
     //打上是否收藏过的标记
     NSNumber *weiboId = [duanZi objectForKey:@"weiboId"];
@@ -789,10 +805,10 @@
     //NSString *idString = [duanZi objectForKey:@"weiboId"];
     //NSLog(@"collectedIdsDic: %@", collectedIdsDic);
     if ([collectedIdsDic objectForKey:idString] != nil) {
-        NSLog(@"idString YES: %@", idString);
+        //NSLog(@"idString YES: %@", idString);
         [duanZi setObject:@"YES" forKey:@"collected_tag"];
     } else {
-        NSLog(@"idString NO: %@", idString);
+        //NSLog(@"idString NO: %@", idString);
         [duanZi setObject:@"NO" forKey:@"collected_tag"];
     }
     
