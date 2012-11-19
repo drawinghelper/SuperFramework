@@ -46,6 +46,7 @@
     BOOL canLoadNew;
     //BOOL loadOld;
     BOOL _reloading;
+    NSString *keyword;
     
     NSDictionary *tempPropertyDic;
     
@@ -66,6 +67,7 @@
 }
 @property(nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) AdMoGoView *adView;
+@property (nonatomic, retain) NSString *keyword;
 
 - (void)reloadTableViewDataSource;
 - (void)doneLoadingTableViewData;
@@ -73,5 +75,5 @@
 - (void)goCollect:(id)sender;
 - (void)performRefresh;
 - (CGRect)getImageDisplayRect:(NSDictionary *)duanZi;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withTitle:(NSString *)title withCid:(NSString *)cid;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withTitle:(NSString *)title withKeyword:(NSString *)pKeyword;
 @end

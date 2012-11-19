@@ -242,7 +242,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                                  initWithNibName:@"NewCommonViewController" 
                                                  bundle:nil 
                                                  withTitle:@"最新" 
-                                                 withCid:[[NoneAdultAppDelegate sharedAppDelegate] getNewTabCid]];
+                                                 withKeyword:@""];
     UINavigationController *newCommonNavViewController = [[UINavigationController alloc] initWithRootViewController:newCommonViewController];
 
     NewPathViewController *newPathViewController = [[NewPathViewController alloc] init];

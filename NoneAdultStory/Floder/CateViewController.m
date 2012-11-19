@@ -208,10 +208,12 @@
     
     int selectedIndex = [indexPath row];
     if (selectedIndex == 0) {
-        NewPathViewController *newPathViewController = [[NewPathViewController alloc] init];
-        [newPathViewController setTitleString:[cate objectForKey:@"name"]];
-        newPathViewController.keyword = @"【视频】";
-        [self.navigationController pushViewController:newPathViewController animated:YES];
+        NewCommonViewController *newCommonViewController = [[NewCommonViewController alloc]
+                                             initWithNibName:@"NewCommonViewController"
+                                             bundle:nil
+                                             withTitle:@"视频"
+                                             withKeyword:@"【视频】"];
+        [self.navigationController pushViewController:newCommonViewController animated:YES];
     } else {
         subVc.subCates = [cate objectForKey:@"subClass"];
         self.currentCate = cate;
@@ -240,10 +242,12 @@
     NSString *titleStr = [subCate objectForKey:@"name"];
     NSString *keywordStr = [subCate objectForKey:@"keyword"];
     
-    NewPathViewController *newPathViewController = [[NewPathViewController alloc] init];
-    [newPathViewController setTitleString:titleStr];
-    newPathViewController.keyword = keywordStr;
-    [self.navigationController pushViewController:newPathViewController animated:YES];
+    NewCommonViewController *newCommonViewController = [[NewCommonViewController alloc]
+                                                        initWithNibName:@"NewCommonViewController"
+                                                        bundle:nil
+                                                        withTitle:titleStr
+                                                        withKeyword:keywordStr];
+    [self.navigationController pushViewController:newCommonViewController animated:YES];
 }
 
 #pragma mark - FGalleryViewControllerDelegate Methods

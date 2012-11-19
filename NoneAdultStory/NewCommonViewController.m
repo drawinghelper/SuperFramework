@@ -22,9 +22,10 @@
 
 @synthesize tableView;
 @synthesize adView;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withTitle:(NSString *)title withCid:(NSString *)cid
+@synthesize keyword;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withTitle:(NSString *)title withKeyword:(NSString *)pKeyword
 {
-    currentCid = cid;
+    keyword = pKeyword;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(title, @"First");
@@ -431,7 +432,7 @@
 
 - (void)loadUrl {
     //url = [[NSString alloc] initWithFormat:@"%@", recentUrlPrefix];
-    url = [NSString stringWithFormat:@"http://apps.dazhuangzhuang.com/03/recentlist?pageSize=%d", NUMBER_OF_PAGESIZE];
+    url = [NSString stringWithFormat:@"http://apps.dazhuangzhuang.com/03/recentlist?pageSize=%d&keyword=%@", NUMBER_OF_PAGESIZE, keyword];
     if (currentPage != 0) {
         url = [url stringByAppendingFormat:@"&max_time=%lld&page=%d", baseTime, currentPage];
     }
