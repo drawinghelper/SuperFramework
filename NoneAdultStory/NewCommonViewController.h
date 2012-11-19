@@ -23,7 +23,7 @@
 #define TOP_SECTION_HEIGHT 52.0f
 #define BOTTOM_SECTION_HEIGHT 34.0f
 #define HORIZONTAL_PADDING 16.0f
-#define NUMBER_OF_PAGESIZE 20
+
 @interface NewCommonViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, EGORefreshTableHeaderDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UMSNSDataSendDelegate, MBProgressHUDDelegate, AdMoGoDelegate, FGalleryViewControllerDelegate> {
     AdMoGoView *adView;
 
@@ -42,21 +42,26 @@
     
     //  Reloading var should really be your tableviews datasource
     //  Putting it here for demo purposes
-    BOOL canLoadOld;
-    BOOL canLoadNew;
-    //BOOL loadOld;
-    BOOL _reloading;
-    NSString *keyword;
-    
     NSDictionary *tempPropertyDic;
-    
     NSMutableDictionary *collectedIdsDic;
     NSMutableDictionary *dingIdsDic;
     
     NSDictionary *pullmessageInfo;
     NSString *currentCid;
     
-    BOOL isInCommonView;
+    //0 - 最新； 1 - 最热； 2 - 分类； 3 - 收藏
+    int viewType;
+    
+    //是否可以分页加载老记录和新记录
+    BOOL canLoadOld;
+    BOOL canLoadNew;
+    BOOL shouldExpandContract;
+    BOOL shouldScore;
+    int numOfPagesize;
+    
+    //BOOL loadOld;
+    BOOL _reloading;
+    NSString *keyword;
     
     //初次查询的基准时间
     long long baseTime;
@@ -75,5 +80,5 @@
 - (void)goCollect:(id)sender;
 - (void)performRefresh;
 - (CGRect)getImageDisplayRect:(NSDictionary *)duanZi;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withTitle:(NSString *)title withKeyword:(NSString *)pKeyword;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withTitle:(NSString *)title withKeyword:(NSString *)pKeyword withViewType:(int)pViewType;
 @end

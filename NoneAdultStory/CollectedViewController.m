@@ -107,9 +107,6 @@
 {
     [super viewDidLoad];
     
-    isInCommonView = NO;
-    canLoadNew = NO;
-    canLoadOld = NO;
 	// Do any additional setup after loading the view, typically from a nib.
     self.navigationItem.rightBarButtonItem = nil;
     firstLoaded = YES;

@@ -209,10 +209,11 @@
     int selectedIndex = [indexPath row];
     if (selectedIndex == 0) {
         NewCommonViewController *newCommonViewController = [[NewCommonViewController alloc]
-                                             initWithNibName:@"NewCommonViewController"
-                                             bundle:nil
-                                             withTitle:@"视频"
-                                             withKeyword:@"【视频】"];
+                                                            initWithNibName:@"NewCommonViewController"
+                                                            bundle:nil
+                                                            withTitle:@"视频"
+                                                            withKeyword:@"【视频】"
+                                                            withViewType:2];
         [self.navigationController pushViewController:newCommonViewController animated:YES];
     } else {
         subVc.subCates = [cate objectForKey:@"subClass"];
@@ -246,7 +247,8 @@
                                                         initWithNibName:@"NewCommonViewController"
                                                         bundle:nil
                                                         withTitle:titleStr
-                                                        withKeyword:keywordStr];
+                                                        withKeyword:keywordStr
+                                                        withViewType:2];
     [self.navigationController pushViewController:newCommonViewController animated:YES];
 }
 

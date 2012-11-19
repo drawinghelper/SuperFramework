@@ -23,9 +23,38 @@
 @synthesize tableView;
 @synthesize adView;
 @synthesize keyword;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withTitle:(NSString *)title withKeyword:(NSString *)pKeyword
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withTitle:(NSString *)title withKeyword:(NSString *)pKeyword withViewType:(int)pViewType
 {
     keyword = pKeyword;
+    viewType = pViewType;
+    //0 - 最新； 1 - 最热； 2 - 分类； 3 - 收藏
+    switch (pViewType) {
+        case 0:
+        case 2:
+            canLoadOld = YES;
+            canLoadNew = YES;
+            shouldExpandContract = YES;
+            shouldScore = YES;
+            numOfPagesize = 10;
+            break;
+        case 1:
+            canLoadOld = NO;
+            canLoadNew = YES;
+            shouldExpandContract = YES;
+            shouldScore = NO;
+            numOfPagesize = 50;
+            break;
+        case 3:
+            canLoadOld = NO;
+            canLoadNew = NO;
+            shouldExpandContract = NO;
+            shouldScore = NO;
+            numOfPagesize = 10000;
+            break;
+        default:
+            break;
+    }
+    
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(title, @"First");
@@ -90,7 +119,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    if (isInCommonView) {
+    if (shouldExpandContract) {
         [self contract];
     }
 }
@@ -105,7 +134,6 @@
     [super viewDidLoad];
     [self processPullMessage];
 
-    isInCommonView = YES;
     NSString *showAdList = [MobClick getConfigParams:@"showAdList"];
     if (showAdList == nil || showAdList == [NSNull null]  || [showAdList isEqualToString:@""]) {
         showAdList = @"NO";
@@ -164,8 +192,7 @@
     self.tableView.backgroundColor = [UIColor colorWithRed:230.0f/255.0f green:230.0f/255.0f blue:230.0f/255.0f alpha:1];
     
     //分类页的“返回”按钮定制化
-    if (![self.title isEqualToString:@"最新"] 
-        && ![self.title isEqualToString:@"已收藏"]) {
+    if (viewType == 2) {
         UIImage *buttonImage = [UIImage imageNamed:@"custombackbutton.png"];
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         [button setImage:buttonImage forState:UIControlStateNormal];
@@ -242,11 +269,11 @@
     if((differenceFromStart) < 0)
     {
         // scroll up
-        if(scrollView.isTracking && (abs(differenceFromLast)>1) && isInCommonView)
+        if(scrollView.isTracking && (abs(differenceFromLast)>1) && shouldExpandContract)
             [self expand];
     }
     else {
-        if(scrollView.isTracking && (abs(differenceFromLast)>1) && isInCommonView)
+        if(scrollView.isTracking && (abs(differenceFromLast)>1) && shouldExpandContract)
             [self contract];
     }
     
@@ -279,7 +306,7 @@
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
 {
-    if (isInCommonView) {
+    if (shouldExpandContract) {
         [self contract];
     }
     return YES;
@@ -432,11 +459,14 @@
 
 - (void)loadUrl {
     //url = [[NSString alloc] initWithFormat:@"%@", recentUrlPrefix];
-    url = [NSString stringWithFormat:@"http://apps.dazhuangzhuang.com/03/recentlist?pageSize=%d&keyword=%@", NUMBER_OF_PAGESIZE, keyword];
-    if (currentPage != 0) {
-        url = [url stringByAppendingFormat:@"&max_time=%lld&page=%d", baseTime, currentPage];
+    if (viewType == 1) { //最热频道
+        url = [NSString stringWithFormat:@"http://apps.dazhuangzhuang.com/03/toplist/history?count=%d", numOfPagesize];
+    } else {
+        url = [NSString stringWithFormat:@"http://apps.dazhuangzhuang.com/03/recentlist?pageSize=%d&keyword=%@", numOfPagesize, keyword];
+        if (currentPage != 0) {
+            url = [url stringByAppendingFormat:@"&max_time=%lld&page=%d", baseTime, currentPage];
+        }
     }
-    
     NSLog(@"loadUrl: %@", url);
 }
 
@@ -523,10 +553,10 @@
     //NSLog(responseString);
     NSDictionary *responseInfo = [UMSNSStringJson JSONValue:responseString]; 
     //NSDictionary *dataDic = [responseInfo objectForKey:@"info"];
-    NSMutableArray *addedList = [responseInfo objectForKey:@"resource"];
+    NSMutableArray *addedList = [responseInfo objectForKey:@"resources"];
     //tempPropertyDic = [dataDic objectForKey:@"selectedMap"];
     
-    if (currentPage == 0) {
+    if (viewType != 1 && currentPage == 0) {
         NSNumber *baseTimeNum = [responseInfo objectForKey:@"time"];
         NSNumber *totalNum = [responseInfo objectForKey:@"total"];
         baseTime = [baseTimeNum longLongValue];
@@ -720,7 +750,7 @@
 #pragma mark - User Action Methods
 -(void)goGallery:(UITapGestureRecognizer *)sender{
     //点击进入详情页，隐藏的工具栏和Tab栏需要显示出来，要不就退不出来了
-    if (isInCommonView) {
+    if (shouldExpandContract) {
         [self contract];
     }
     
@@ -733,7 +763,7 @@
     NSString *shareurl = [currentDuanZi objectForKey:@"shareurl"];
     
     //查看详情时记分
-    if (isInCommonView) {
+    if (shouldScore) {
         [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrlNew:currentDuanZi channel:UIChannelNew action:UIActionView];
     }
     
@@ -952,7 +982,7 @@
         
         NSString *shareurl = [currentDuanZi objectForKey:@"shareurl"];
         //收藏时记分
-        if (isInCommonView) {
+        if (shouldScore) {
             [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrlNew:currentDuanZi channel:UIChannelNew action:UIActionCollect];
         }
     } else {
@@ -992,7 +1022,7 @@
         statusContent = [NSString stringWithString:cuttedContent];
         NSString *largeUrl = [currentDuanZi objectForKey:@"large_url"];
         NSString *shareurl = [currentDuanZi objectForKey:@"shareurl"];
-        if (isInCommonView) {
+        if (shouldScore) {
             [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrlNew:currentDuanZi channel:UIChannelNew action:UIActionShare];
         }
         SDWebImageManager *manager = [SDWebImageManager sharedManager];

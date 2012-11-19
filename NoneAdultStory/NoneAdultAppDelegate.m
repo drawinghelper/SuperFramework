@@ -242,12 +242,21 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                                  initWithNibName:@"NewCommonViewController" 
                                                  bundle:nil 
                                                  withTitle:@"最新" 
-                                                 withKeyword:@""];
+                                                 withKeyword:@""
+                                                 withViewType:0];
     UINavigationController *newCommonNavViewController = [[UINavigationController alloc] initWithRootViewController:newCommonViewController];
-
-    NewPathViewController *newPathViewController = [[NewPathViewController alloc] init];
+    
+    UIViewController *hotCommonViewController = [[NewCommonViewController alloc]
+                                                 initWithNibName:@"NewCommonViewController"
+                                                 bundle:nil
+                                                 withTitle:@"最热"
+                                                 withKeyword:@""
+                                                 withViewType:1];
+    UINavigationController *hotCommonNavViewController = [[UINavigationController alloc] initWithRootViewController:hotCommonViewController];
+    /*NewPathViewController *newPathViewController = [[NewPathViewController alloc] init];
     [newPathViewController setTitleString:@"最热"];
     UINavigationController *newPathNavViewController = [[UINavigationController alloc] initWithRootViewController:newPathViewController];
+    */
     
     UIViewController *collectViewController = [[CollectedViewController alloc] initWithNibName:@"CollectedViewController" bundle:nil withTitle:@"已收藏"];
     UINavigationController *collectNavViewController = [[UINavigationController alloc] initWithRootViewController:collectViewController];
@@ -295,7 +304,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     } else {*/
         self.tabBarController.viewControllers = [NSArray arrayWithObjects:
                                                  newCommonNavViewController,
-                                                 newPathNavViewController,
+                                                 hotCommonNavViewController,
+                                                 //newPathNavViewController,
                                                  collectGalleryNavViewController,
                                                  
                                                  collectNavViewController,
