@@ -44,7 +44,7 @@
     //  Putting it here for demo purposes
     BOOL canLoadOld;
     BOOL canLoadNew;
-    BOOL loadOld;
+    //BOOL loadOld;
     BOOL _reloading;
     
     NSDictionary *tempPropertyDic;
@@ -56,6 +56,13 @@
     NSString *currentCid;
     
     BOOL isInCommonView;
+    
+    //初次查询的基准时间
+    long long baseTime;
+    //总记录数
+    int total;
+    //当前页码
+    int currentPage;
 }
 @property(nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) AdMoGoView *adView;

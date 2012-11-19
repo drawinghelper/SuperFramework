@@ -154,9 +154,11 @@
 	// Do any additional setup after loading the view, typically from a nib.
     canLoadNew = YES;
     canLoadOld = YES;
-    loadOld = NO;
+    //loadOld = NO;
     _reloading = YES;
     
+    currentPage = 0;
+
     [self performRefresh];
     self.tableView.backgroundColor = [UIColor colorWithRed:230.0f/255.0f green:230.0f/255.0f blue:230.0f/255.0f alpha:1];
     
@@ -184,7 +186,7 @@
 }
 
 -(void)performRefresh {
-    loadOld = NO;
+    //loadOld = NO;
     searchDuanZiList = [[NSMutableArray alloc] init];
     [self performSelector:@selector(requestResultFromServer) withObject:nil];
     
@@ -256,8 +258,9 @@
         {
             NSLog(@"scroll to the end");
             if (!_reloading) {
-                loadOld = YES;
+                //loadOld = YES;
                 _reloading = YES;
+                currentPage ++;
                 [self requestResultFromServer];
             }
         }
@@ -427,19 +430,10 @@
  */
 
 - (void)loadUrl {
-    NSString *recentUrlPrefix = [NSString stringWithFormat:@"http://c.t.qq.com/asyn/selectedAutoUpdate.php?cid=%@&top=1&turn=1&version=0&r=1339057285481&p=2&apiType=7&apiHost=http%3A%2F%2Fapi.t.qq.com&_r=1339057285481&n=20", currentCid];
-    NSLog(@".........%@", recentUrlPrefix);
-    
-    if (loadOld && [searchDuanZiList count] > 0 ) {
-        NSDictionary *lastDuanZi = [searchDuanZiList objectAtIndex:([searchDuanZiList count] - 1)];
-        NSDecimalNumber *currentMinTimestampNumber = (NSDecimalNumber *)[lastDuanZi objectForKey:@"timestamp"];
-        NSString *lastId = [lastDuanZi objectForKey:@"id"];
-        int currentMinTimestamp = [currentMinTimestampNumber intValue];
-        //url = [[NSString alloc] initWithFormat:@"%@&time=%d&id=%@", recentUrlPrefix, currentMinTimestamp, lastId];
-        url = [NSString stringWithFormat:@"http://apps.dazhuangzhuang.com/03/recentlist?pageSize=%d", NUMBER_OF_PAGESIZE];
-    } else {
-        //url = [[NSString alloc] initWithFormat:@"%@", recentUrlPrefix];
-        url = [NSString stringWithFormat:@"http://apps.dazhuangzhuang.com/03/recentlist?pageSize=%d", NUMBER_OF_PAGESIZE];
+    //url = [[NSString alloc] initWithFormat:@"%@", recentUrlPrefix];
+    url = [NSString stringWithFormat:@"http://apps.dazhuangzhuang.com/03/recentlist?pageSize=%d", NUMBER_OF_PAGESIZE];
+    if (currentPage != 0) {
+        url = [url stringByAppendingFormat:@"&max_time=%lld&page=%d", baseTime, currentPage];
     }
     
     NSLog(@"loadUrl: %@", url);
@@ -530,6 +524,14 @@
     //NSDictionary *dataDic = [responseInfo objectForKey:@"info"];
     NSMutableArray *addedList = [responseInfo objectForKey:@"resource"];
     //tempPropertyDic = [dataDic objectForKey:@"selectedMap"];
+    
+    if (currentPage == 0) {
+        NSNumber *baseTimeNum = [responseInfo objectForKey:@"time"];
+        NSNumber *totalNum = [responseInfo objectForKey:@"total"];
+        baseTime = [baseTimeNum longLongValue];
+        total = [totalNum intValue];
+    }
+    
     NSLog(@"result: %@", addedList);
     
     [self performSelectorOnMainThread:@selector(appendTableWith:) withObject:addedList waitUntilDone:NO];
@@ -552,7 +554,7 @@
 }
 //从享评接口格式适配到腾讯微频道接口格式
 - (void)adaptDic:(NSMutableDictionary *)dic {
-    NSString *idString = [self autoCorrectNull:[dic objectForKey:@"id"]];
+    //NSString *idString = [self autoCorrectNull:[dic objectForKey:@"id"]];
     NSString *screenName = [self autoCorrectNull:[dic objectForKey:@"nick"]];
     NSString *profileImageUrl = [self autoCorrectNull:[dic objectForKey:@"authorpic"]];
     NSString *weiboContent = [self autoCorrectNull:[dic objectForKey:@"desc"]];
@@ -646,21 +648,20 @@
     [self loadDingIds];
     int minWordCount = 40;
     NSMutableDictionary *dic = nil;
-    if (loadOld) {
+    //if (loadOld) {
         for (int i=0;i<[data count];i++) {
             dic = [data objectAtIndex:i];
             [self adaptDic:dic];
             [self checkCollected:dic];
             [self checkDing:dic];
-/*
-            [originalNewDuanZiList addObject:dic];
- */
+
             NSString *largeUrl = [dic objectForKey:@"large_url"];
             if ([largeUrl isEqualToString:@""]) {
                 continue;
             }
             [searchDuanZiList addObject:dic];
         }
+    /*
     } else {
         for (int i=[data count]-1;i>=0;i--) {
             dic = [data objectAtIndex:i];
@@ -668,16 +669,13 @@
             [self checkCollected:dic];
             [self checkDing:dic];
 
-/*
-            [originalNewDuanZiList insertObject:dic atIndex:0];
- */
             NSString *largeUrl = [dic objectForKey:@"large_url"];
             if ([largeUrl isEqualToString:@""]) {
                 continue;
             }
             [searchDuanZiList insertObject:dic atIndex:0];
         }
-    }
+    }*/
     
     NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:10];
     for (int ind = 0; ind < [data count]; ind++) {
