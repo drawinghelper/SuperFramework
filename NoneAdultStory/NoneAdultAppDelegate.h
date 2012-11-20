@@ -26,7 +26,7 @@ typedef enum {
     UIChannelHistory  = 2,
 } UIChannel;
 
-@interface NoneAdultAppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>{
+@interface NoneAdultAppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate, NSURLConnectionDelegate>{
     NSArray *channelList;
 }
 

@@ -137,7 +137,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     NSString *createSQL = @"CREATE TABLE IF NOT EXISTS collected (";
 	createSQL = [createSQL stringByAppendingString:@" ID INTEGER PRIMARY KEY AUTOINCREMENT,"];
 
-    createSQL = [createSQL stringByAppendingString:@" weiboId INTEGER UNIQUE,"];//微博的id
+    createSQL = [createSQL stringByAppendingString:@" weiboId TEXT UNIQUE,"];//微博的id
 	createSQL = [createSQL stringByAppendingString:@" profile_image_url TEXT,"];//博主头像图片地址
     createSQL = [createSQL stringByAppendingString:@" screen_name TEXT,"];//微博名
     createSQL = [createSQL stringByAppendingString:@" timestamp INTEGER,"];//微博发表时间
@@ -209,8 +209,31 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     return channelList;
 }
 
+- ( void)connection:( NSURLConnection *)connection
+ didReceiveResponse:(NSURLResponse *)response {
+    if ([( NSHTTPURLResponse*)response statusCode] == 200 ) {
+        // 成功，返回200
+        NSLog(@"成功，返回200");
+    } else {
+        // 失败，错误处理
+        NSLog(@"失败，错误处理");
+    }
+}
+- ( void)connection:( NSURLConnection *)connection
+   didFailWithError:(NSError *)error {
+    // 失败，错误处理
+    NSLog(@"失败，错误处理");
+}
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    //appcpa配置
+    NSString *appKey = @"5674541a1d6e4bc7b1521a1ba6db7548";
+    NSString *deviceName = [[[UIDevice currentDevice ] name]
+                            stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding ];
+    NSString *url = [ NSString stringWithFormat : @"http://c.appcpa.co/e?appkey=%@&deviceName=%@", appKey, deviceName];
+    NSURLConnection *connection = [ NSURLConnection connectionWithRequest :[NSMutableURLRequest requestWithURL:[NSURL URLWithString :url]] delegate : self];
+    
+    //parse配置
     NSDictionary *appConfig = [[NSDictionary alloc] initWithContentsOfFile:
                                [[NSBundle mainBundle] pathForResource:@"AppConfig" ofType:@"plist"]];
     NSDictionary *parseConfig = [appConfig objectForKey:@"ParseConfig"]; 

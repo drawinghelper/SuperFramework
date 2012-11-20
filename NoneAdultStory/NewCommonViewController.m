@@ -563,7 +563,7 @@
         total = [totalNum intValue];
     }
     
-    NSLog(@"result: %@", addedList);
+    //NSLog(@"result: %@", addedList);
     
     [self performSelectorOnMainThread:@selector(appendTableWith:) withObject:addedList waitUntilDone:NO];
 }
@@ -629,8 +629,7 @@
     collectedIdsDic = [[NSMutableDictionary alloc] init];
     FMResultSet *rs=[db executeQuery:@"SELECT * FROM collected ORDER BY collect_time DESC"];
     while ([rs next]){
-        NSString *weiboId = [NSString stringWithFormat:@"%lld", [rs longLongIntForColumn:@"weiboId"]];
-        [collectedIdsDic setObject:[[NSNumber alloc] initWithInt:1] forKey:weiboId];
+        [collectedIdsDic setObject:[[NSNumber alloc] initWithInt:1] forKey:[rs stringForColumn:@"weiboId"]];
     }
 }
 
@@ -664,11 +663,12 @@
 - (void)checkCollected:(NSMutableDictionary *)dic {
     NSString *idString = [dic objectForKey:@"id"];
     
+    NSLog(@"collectedIdsDic: %@", collectedIdsDic);
     if ([collectedIdsDic objectForKey:idString] != nil) {
-        //NSLog(@"idString YES: %@", idString);
+        NSLog(@"idString YES: %@", idString);
         [dic setObject:@"YES" forKey:@"collected_tag"];
     } else {
-        //NSLog(@"idString NO: %@", idString);
+        NSLog(@"idString NO: %@", idString);
         [dic setObject:@"NO" forKey:@"collected_tag"];
     }
 }
