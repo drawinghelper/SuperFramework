@@ -181,8 +181,8 @@
     [_refreshHeaderView refreshLastUpdatedDate];
     
 	// Do any additional setup after loading the view, typically from a nib.
-    canLoadNew = YES;
-    canLoadOld = YES;
+    //canLoadNew = YES;
+    //canLoadOld = YES;
     //loadOld = NO;
     _reloading = YES;
     
