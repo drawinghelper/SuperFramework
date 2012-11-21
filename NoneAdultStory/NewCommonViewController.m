@@ -59,7 +59,11 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(title, @"First");
-        self.tabBarItem.image = [UIImage imageNamed:@"new"];
+        if (viewType == 1) {
+            self.tabBarItem.image = [UIImage imageNamed:@"historyhot"];
+        } else {
+            self.tabBarItem.image = [UIImage imageNamed:@"new"];
+        }
         
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
         label.backgroundColor = [UIColor clearColor];
@@ -461,9 +465,9 @@
 - (void)loadUrl {
     //url = [[NSString alloc] initWithFormat:@"%@", recentUrlPrefix];
     if (viewType == 1) { //最热频道
-        url = [NSString stringWithFormat:@"http://apps.dazhuangzhuang.com/03/toplist/history?count=%d", numOfPagesize];
+        url = [NSString stringWithFormat:@"http://42.121.2.172/03/toplist/history?count=%d", numOfPagesize];
     } else {
-        url = [NSString stringWithFormat:@"http://apps.dazhuangzhuang.com/03/recentlist?pageSize=%d&keyword=%@", numOfPagesize, keyword];
+        url = [NSString stringWithFormat:@"http://42.121.2.172/03/recentlist?pageSize=%d&keyword=%@", numOfPagesize, keyword];
         if (currentPage != 0) {
             url = [url stringByAppendingFormat:@"&max_time=%lld&page=%d", baseTime, currentPage];
         }
