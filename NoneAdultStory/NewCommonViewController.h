@@ -18,11 +18,13 @@
 #import "NSString+HTML.h"
 #import "FGalleryViewController.h"
 #import "UMTableViewDemo.h"
+#import "SVWebViewController.h"
 
 #define FONT_SIZE 14.0f
 #define TOP_SECTION_HEIGHT 52.0f
 #define BOTTOM_SECTION_HEIGHT 34.0f
 #define HORIZONTAL_PADDING 16.0f
+#define PLAYBUTTON_WIDTH 30.0f
 
 @interface NewCommonViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, EGORefreshTableHeaderDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UMSNSDataSendDelegate, MBProgressHUDDelegate, AdMoGoDelegate, FGalleryViewControllerDelegate> {
     AdMoGoView *adView;
@@ -51,6 +53,7 @@
     
     //0 - 最新； 1 - 最热； 2 - 分类； 3 - 收藏
     int viewType;
+    int category; // 非负整数表示类别编号，-1表示拼url时无需此字段
     
     //是否可以分页加载老记录和新记录
     BOOL canLoadOld;
@@ -80,5 +83,5 @@
 - (void)goCollect:(id)sender;
 - (void)performRefresh;
 - (CGRect)getImageDisplayRect:(NSDictionary *)duanZi;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withTitle:(NSString *)title withKeyword:(NSString *)pKeyword withViewType:(int)pViewType;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withTitle:(NSString *)title withCategory:(int)pCategory withKeyword:(NSString *)pKeyword withViewType:(int)pViewType;
 @end

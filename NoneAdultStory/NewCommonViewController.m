@@ -23,8 +23,9 @@
 @synthesize tableView;
 @synthesize adView;
 @synthesize keyword;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withTitle:(NSString *)title withKeyword:(NSString *)pKeyword withViewType:(int)pViewType
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withTitle:(NSString *)title withCategory:(int)pCategory withKeyword:(NSString *)pKeyword withViewType:(int)pViewType;
 {
+    category = pCategory;
     keyword = pKeyword;
     viewType = pViewType;
     //0 - 最新； 1 - 最热； 2 - 分类； 3 - 收藏
@@ -466,6 +467,9 @@
         if (currentPage != 0) {
             url = [url stringByAppendingFormat:@"&max_time=%lld&page=%d", baseTime, currentPage];
         }
+        if (category != -1) {
+            url = [url stringByAppendingFormat:@"&category=%d", category];
+        }
     }
     NSLog(@"loadUrl: %@", url);
 }
@@ -595,8 +599,8 @@
     NSDecimalNumber *commentCount = (NSDecimalNumber *)[dic objectForKey:@"comments_count"];
     NSDecimalNumber *favoriteCount = [[NSDecimalNumber alloc] initWithInt:([commentCount intValue]*3)];
     NSDecimalNumber *buryCount = [[NSDecimalNumber alloc] initWithInt:([commentCount intValue]*2)];
-    NSDecimalNumber *imageWidth = (NSDecimalNumber *)[dic objectForKey:@"image_width"];
-    NSDecimalNumber *imageHeight = (NSDecimalNumber *)[dic objectForKey:@"image_height"];
+    NSDecimalNumber *imageWidth = (NSDecimalNumber *)[dic objectForKey:@"width"];
+    NSDecimalNumber *imageHeight = (NSDecimalNumber *)[dic objectForKey:@"height"];
     NSDecimalNumber *timestamp = (NSDecimalNumber *)[dic objectForKey:@"timestamp"];
 
     [dic setObject:screenName forKey:@"screen_name"];
@@ -663,12 +667,12 @@
 - (void)checkCollected:(NSMutableDictionary *)dic {
     NSString *idString = [dic objectForKey:@"id"];
     
-    NSLog(@"collectedIdsDic: %@", collectedIdsDic);
+    //NSLog(@"collectedIdsDic: %@", collectedIdsDic);
     if ([collectedIdsDic objectForKey:idString] != nil) {
-        NSLog(@"idString YES: %@", idString);
+        //NSLog(@"idString YES: %@", idString);
         [dic setObject:@"YES" forKey:@"collected_tag"];
     } else {
-        NSLog(@"idString NO: %@", idString);
+        //NSLog(@"idString NO: %@", idString);
         [dic setObject:@"NO" forKey:@"collected_tag"];
     }
 }
@@ -767,31 +771,40 @@
         [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrlNew:currentDuanZi channel:UIChannelNew action:UIActionView];
     }
     
-    //底部工具栏操作项
-    UIImage *likeIcon = [UIImage imageNamed:@"photo-gallery-collect-noselect.png"];
-    UIImage *likeIconSelected = [UIImage imageNamed:@"photo-gallery-collect.png"];
-    NSString *collectedTag = [currentDuanZi objectForKey:@"collected_tag"];
-    
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = CGRectMake(0, 0, 20, 20);
-    [btn addTarget:self action:@selector(handleLikeButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
-    [btn setImage:likeIcon forState:UIControlStateNormal];
-    [btn setImage:likeIconSelected forState:UIControlStateSelected];
-    UIBarButtonItem *likeButton = [[UIBarButtonItem alloc] initWithCustomView:btn];
-    
-    if ([collectedTag isEqualToString:@"YES"]) {
-        [btn setSelected:YES];
+    NSNumber *categoryNumber = [currentDuanZi objectForKey:@"category"];
+    if ([categoryNumber intValue] != 1) {
+        //底部工具栏操作项
+        UIImage *likeIcon = [UIImage imageNamed:@"photo-gallery-collect-noselect.png"];
+        UIImage *likeIconSelected = [UIImage imageNamed:@"photo-gallery-collect.png"];
+        NSString *collectedTag = [currentDuanZi objectForKey:@"collected_tag"];
+        
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.frame = CGRectMake(0, 0, 20, 20);
+        [btn addTarget:self action:@selector(handleLikeButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
+        [btn setImage:likeIcon forState:UIControlStateNormal];
+        [btn setImage:likeIconSelected forState:UIControlStateSelected];
+        UIBarButtonItem *likeButton = [[UIBarButtonItem alloc] initWithCustomView:btn];
+        
+        if ([collectedTag isEqualToString:@"YES"]) {
+            [btn setSelected:YES];
+        }
+        
+        UIImage *shareIcon = [UIImage imageNamed:@"photo-gallery-share.png"];
+        UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithImage:shareIcon style:UIBarButtonItemStylePlain target:self action:@selector(handleShareButtonTouch:)];
+        NSArray *barItems = [NSArray arrayWithObjects:likeButton, shareButton, nil];
+        
+        FGalleryViewController *localGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItems];
+        [localGallery setUseThumbnailView:NO];
+        //[localGallery setHideTitle:YES];
+        [self.navigationController pushViewController:localGallery animated:YES];
+    } else {
+        SVWebViewController *webViewController = [[SVWebViewController alloc]
+                                                  initWithURL:[NSURL URLWithString:shareurl]];
+        NSLog(@"shareurl: %@", shareurl);
+        webViewController.hidesBottomBarWhenPushed = YES;
+        webViewController.title = @"视频详情";
+        [self.navigationController pushViewController:webViewController animated:YES];
     }
-    
-    UIImage *shareIcon = [UIImage imageNamed:@"photo-gallery-share.png"];
-    UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithImage:shareIcon style:UIBarButtonItemStylePlain target:self action:@selector(handleShareButtonTouch:)];
-    NSArray *barItems = [NSArray arrayWithObjects:likeButton, shareButton, nil];
-    
-    FGalleryViewController *localGallery = [[FGalleryViewController alloc] initWithPhotoSource:self barItems:barItems];
-    [localGallery setUseThumbnailView:NO];
-    //[localGallery setHideTitle:YES];
-    [self.navigationController pushViewController:localGallery animated:YES];
-    
 }
 
 -(void)goShare:(id)sender{  
@@ -1247,6 +1260,10 @@
         [coverImageView addGestureRecognizer:singleTap];
     }
     
+    //叠加播放按钮
+    UIImageView *playImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"feedvideoplay.png"]];
+    [cell.contentView addSubview:playImageView];
+    
     //【底部】
     UIView *bottomBgView = [[UIView alloc] initWithFrame:CGRectZero];
     [cell.contentView addSubview:bottomBgView];
@@ -1288,6 +1305,15 @@
     imageDisplayRect.origin.y = imageDisplayRect.origin.y + 5;
     [coverImageView setFrame:imageDisplayRect];
     
+    //叠加播放按钮
+    int imageX = imageDisplayRect.origin.x;
+    int imageY = imageDisplayRect.origin.y;
+    int imageWidth = imageDisplayRect.size.width;
+    int imageHeight = imageDisplayRect.size.height;
+    CGRect playDisplayRect = CGRectMake(imageX + (imageWidth - PLAYBUTTON_WIDTH)/2,
+                                        imageY + (imageHeight - PLAYBUTTON_WIDTH)/2,
+                                        PLAYBUTTON_WIDTH, PLAYBUTTON_WIDTH);
+    [playImageView setFrame:playDisplayRect];
     
     //content文字内容自适应
     label = (UILabel *)[cell viewWithTag:1];
@@ -1328,6 +1354,13 @@
         [btnStar setImage:btnStarImagePressed forState:UIControlStateHighlighted];
     }
     [btnStar setFrame:CGRectMake(280, cellFrame.size.height + TOP_SECTION_HEIGHT - 3 + imageDisplayRect.size.height, 20, BOTTOM_SECTION_HEIGHT)];
+    
+    //视频资源暂不支持收藏
+    if ([[duanZi objectForKey:@"category"] intValue] == 1) {
+        [btnStar setHidden:YES];
+    } else {
+        [playImageView setHidden:YES];
+    }
     
     [cell setFrame:cellFrame];
     cell.accessoryType = UITableViewCellAccessoryNone;

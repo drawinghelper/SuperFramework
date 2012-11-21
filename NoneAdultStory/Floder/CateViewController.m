@@ -212,7 +212,8 @@
                                                             initWithNibName:@"NewCommonViewController"
                                                             bundle:nil
                                                             withTitle:@"视频"
-                                                            withKeyword:@"【视频】"
+                                                            withCategory:1
+                                                            withKeyword:@""
                                                             withViewType:2];
         [self.navigationController pushViewController:newCommonViewController animated:YES];
     } else {
@@ -247,6 +248,7 @@
                                                         initWithNibName:@"NewCommonViewController"
                                                         bundle:nil
                                                         withTitle:titleStr
+                                                        withCategory:-1
                                                         withKeyword:keywordStr
                                                         withViewType:2];
     [self.navigationController pushViewController:newCommonViewController animated:YES];

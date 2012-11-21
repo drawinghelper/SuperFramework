@@ -264,7 +264,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     UIViewController *newCommonViewController = [[NewCommonViewController alloc] 
                                                  initWithNibName:@"NewCommonViewController" 
                                                  bundle:nil 
-                                                 withTitle:@"最新" 
+                                                 withTitle:@"最新"
+                                                 withCategory:-1
                                                  withKeyword:@""
                                                  withViewType:0];
     UINavigationController *newCommonNavViewController = [[UINavigationController alloc] initWithRootViewController:newCommonViewController];
@@ -273,6 +274,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                                  initWithNibName:@"NewCommonViewController"
                                                  bundle:nil
                                                  withTitle:@"最热"
+                                                 withCategory:-1
                                                  withKeyword:@""
                                                  withViewType:1];
     UINavigationController *hotCommonNavViewController = [[UINavigationController alloc] initWithRootViewController:hotCommonViewController];
