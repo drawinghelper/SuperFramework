@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "UIFolderTableView.h"
-#import "NewPathViewController.h"
 #import "NewCommonViewController.h"
 #import "FGalleryViewController.h"
 

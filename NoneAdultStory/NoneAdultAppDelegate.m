@@ -8,7 +8,6 @@
 
 #import "NoneAdultAppDelegate.h"
 #import "NewCommonViewController.h"
-#import "NewPathViewController.h"
 #import "CateViewController.h"
 
 #import "CollectedViewController.h"
@@ -278,10 +277,6 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                                  withKeyword:@""
                                                  withViewType:1];
     UINavigationController *hotCommonNavViewController = [[UINavigationController alloc] initWithRootViewController:hotCommonViewController];
-    /*NewPathViewController *newPathViewController = [[NewPathViewController alloc] init];
-    [newPathViewController setTitleString:@"最热"];
-    UINavigationController *newPathNavViewController = [[UINavigationController alloc] initWithRootViewController:newPathViewController];
-    */
     
     UIViewController *collectViewController = [[CollectedViewController alloc] initWithNibName:@"CollectedViewController" bundle:nil withTitle:@"已收藏"];
     UINavigationController *collectNavViewController = [[UINavigationController alloc] initWithRootViewController:collectViewController];
