@@ -13,12 +13,19 @@
 #import "UIImageView+WebCache.h"
 #import "EGORefreshTableHeaderView.h"
 #import "MBProgressHUD.h"
-#import "AdMoGoView.h"
+//#import "AdMoGoView.h"
 #import "NoneAdultDetailViewController.h"
 #import "NSString+HTML.h"
 #import "FGalleryViewController.h"
 #import "UMTableViewDemo.h"
 #import "SVWebViewController.h"
+#import "WaterflowView.h"
+#import "AsyncImageView.h"
+
+#define NUMBER_OF_COLUMNS 3
+//#define NUMBER_OF_ROWS 20
+#define NUMBER_OF_PAGESIZE 60
+#define NUMBER_OF_HISTORY_PAGESIZE 120
 
 #define FONT_SIZE 14.0f
 #define TOP_SECTION_HEIGHT 52.0f
@@ -26,8 +33,8 @@
 #define HORIZONTAL_PADDING 16.0f
 #define PLAYBUTTON_WIDTH 30.0f
 
-@interface NewCommonViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, EGORefreshTableHeaderDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UMSNSDataSendDelegate, MBProgressHUDDelegate, AdMoGoDelegate, FGalleryViewControllerDelegate> {
-    AdMoGoView *adView;
+@interface NewCommonViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, EGORefreshTableHeaderDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UMSNSDataSendDelegate, MBProgressHUDDelegate, FGalleryViewControllerDelegate, WaterflowViewDelegate,WaterflowViewDatasource> {
+//    AdMoGoView *adView;
 
     MBProgressHUD *HUD;
     UIImage *currentImage;
@@ -72,10 +79,13 @@
     int total;
     //当前页码
     int currentPage;
+    
+    WaterflowView *flowView;
 }
 @property(nonatomic, retain) UITableView *tableView;
-@property (nonatomic, retain) AdMoGoView *adView;
+//@property (nonatomic, retain) AdMoGoView *adView;
 @property (nonatomic, retain) NSString *keyword;
+@property (retain, nonatomic) WaterflowView *flowView;
 
 - (void)reloadTableViewDataSource;
 - (void)doneLoadingTableViewData;

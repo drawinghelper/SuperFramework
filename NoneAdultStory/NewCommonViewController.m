@@ -21,8 +21,10 @@
 }
 
 @synthesize tableView;
-@synthesize adView;
+//@synthesize adView;
 @synthesize keyword;
+@synthesize flowView;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withTitle:(NSString *)title withCategory:(int)pCategory withKeyword:(NSString *)pKeyword withViewType:(int)pViewType;
 {
     category = pCategory;
@@ -80,6 +82,7 @@
     return self;
 }
 
+/*
 - (NSString *)adMoGoApplicationKey{
     return [[NoneAdultAppDelegate sharedAppDelegate] getMogoAppKey];
     //return @"8263cdaa8f724e2293b2f9f3aff849ee"; //此字符串为您的 App 在芒果上的唯一
@@ -120,7 +123,7 @@
 - (void)adMoGoDidDismissFullScreenModal {
     //关闭广告内置浏览器时调用 
 }
-
+*/
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
@@ -145,6 +148,7 @@
     }
     //总：AudioToolbox、CoreLocation、CoreTelephony、MessageUI、SystemConfiguration、QuartzCore、EventKit、MapKit、libxml2
 
+    /*
     if ([showAdList isEqualToString:@"YES"]) {
         //增加广告条显示
         self.adView = [AdMoGoView requestAdMoGoViewWithDelegate:self AndAdType:AdViewTypeNormalBanner
@@ -152,7 +156,7 @@
         [adView setFrame:CGRectMake(0, 0, 320, 30)];
         [self.view addSubview:adView];
     }
-        
+      */
     UIButton *btnRefresh = [UIButton buttonWithType:UIButtonTypeCustom]; 
     btnRefresh.frame = CGRectMake(0, 0, 44, 44);
     [btnRefresh addTarget:self action:@selector(performRefresh) forControlEvents:UIControlEventTouchUpInside];
@@ -212,6 +216,129 @@
     [handleView setHandleViewBackgroundImage:[UIImage imageNamed:@"um_handle_placeholder.png"]];
     [self.view addSubview:handleView];
     [handleView requestPromoterDataInBackground];*/
+    
+    flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height - 44*3)];
+    flowView.flowdatasource = self;
+    flowView.flowdelegate = self;
+    [self.view addSubview:flowView];
+}
+
+#pragma mark-
+#pragma mark- WaterflowDataSource
+
+- (NSInteger)numberOfColumnsInFlowView:(WaterflowView *)flowView
+{
+    return NUMBER_OF_COLUMNS;
+}
+
+- (NSInteger)flowView:(WaterflowView *)flowView numberOfRowsInColumn:(NSInteger)column
+{
+    //return NUMBER_OF_PAGESIZE/NUMBER_OF_COLUMNS;
+    //if ([sort isEqualToString:@"recent"]) {
+        NSLog(@"recnet: %d", [searchDuanZiList count]/NUMBER_OF_COLUMNS);
+        switch ([searchDuanZiList count] % NUMBER_OF_COLUMNS) {
+            case 0:
+                return [searchDuanZiList count]/NUMBER_OF_COLUMNS;
+            case 1:
+                if (column == 0) {
+                    return [searchDuanZiList count]/NUMBER_OF_COLUMNS + 1;
+                } else if (column == 1) {
+                    return [searchDuanZiList count]/NUMBER_OF_COLUMNS;
+                } else if (column == 2) {
+                    return [searchDuanZiList count]/NUMBER_OF_COLUMNS;
+                }
+            case 2:
+                if (column == 0) {
+                    return [searchDuanZiList count]/NUMBER_OF_COLUMNS + 1;
+                } else if (column == 1) {
+                    return [searchDuanZiList count]/NUMBER_OF_COLUMNS + 1;
+                } else if (column == 2) {
+                    return [searchDuanZiList count]/NUMBER_OF_COLUMNS;
+                }
+            default:
+                break;
+        }
+    //}
+    return NUMBER_OF_HISTORY_PAGESIZE/NUMBER_OF_COLUMNS;
+}
+
+- (WaterFlowCell*)flowView:(WaterflowView *)flowView_ cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CellIdentifier = @"Cell";
+	WaterFlowCell *cell = [flowView_ dequeueReusableCellWithIdentifier:CellIdentifier];
+    cell.flowdelegate = self;
+	if(cell == nil)
+	{
+		cell  = [[WaterFlowCell alloc] initWithReuseIdentifier:CellIdentifier];
+		
+		AsyncImageView *imageView = [[AsyncImageView alloc] initWithFrame:CGRectZero];
+		[cell addSubview:imageView];
+        imageView.contentMode = UIViewContentModeScaleToFill;
+		imageView.layer.borderColor = [[UIColor whiteColor] CGColor];
+		imageView.layer.borderWidth = 3;
+		imageView.tag = 1001;
+	}
+	
+	float height = [self flowView:nil heightForRowAtIndexPath:indexPath];
+	
+	AsyncImageView *imageView  = (AsyncImageView *)[cell viewWithTag:1001];
+    imageView.frame = CGRectMake(0, 0, self.view.frame.size.width / 3, height);
+    
+    int row = indexPath.row;
+    int column = indexPath.section;
+    int finalNum = row * NUMBER_OF_COLUMNS + column;
+    if (finalNum < [searchDuanZiList count]) {
+        NSDictionary *record = [searchDuanZiList objectAtIndex:finalNum];
+        NSString *thumbURL = [record objectForKey:@"thumbnail_url"];
+        if ([thumbURL hasPrefix:@"http://"]) {
+            [imageView loadImage:thumbURL
+              withPlaceholdImage:[UIImage imageNamed:@"defaultCover.png"]];
+        } else {
+            NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString* documentsDirectory = [paths objectAtIndex:0];
+            NSString* thumbFullPathToFile = [documentsDirectory stringByAppendingPathComponent:thumbURL];
+            NSLog(@"[fullPathToFile]: %@", thumbFullPathToFile);
+            [imageView setImage:[[UIImage alloc] initWithContentsOfFile:thumbFullPathToFile]];
+        }
+    }
+    
+    cell.type=@"DAILY";
+    
+	//NSLog(@"row: %d, section: %d", indexPath.row, indexPath.section);
+	return cell;
+    
+}
+
+#pragma mark-
+#pragma mark- WaterflowDelegate
+
+-(CGFloat)flowView:(WaterflowView *)flowView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 160;
+}
+
+- (void)flowViewDidSelectCell:(NSIndexPath *)indexPath
+{
+    /*
+    int rowIndex = indexPath.row;
+    int columnIndex = indexPath.section;
+    NSLog(@"did select at (row, column): (%d, %d)", rowIndex, columnIndex);
+    
+    NSLog(@"[self.imageUrls count]: %d", [searchDuanZiList count]);
+    if ([searchDuanZiList count] == 0) {
+        return;
+    }
+    currentSelectedIndex = rowIndex * NUMBER_OF_COLUMNS + columnIndex;
+
+    // Create & present browser
+    MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
+    // Set options
+    browser.wantsFullScreenLayout = YES; // Decide if you want the photo browser full screen, i.e. whether the status bar is affected (defaults to YES)
+    [browser setInitialPageIndex:currentSelectedIndex]; // Example: allows second image to be presented first
+    // Present
+    browser.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self.navigationController presentModalViewController:browser animated:YES];
+*/
 }
 
 -(void)back {

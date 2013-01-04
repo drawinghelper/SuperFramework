@@ -75,7 +75,7 @@
 @synthesize startingIndex = _startingIndex;
 @synthesize beginsInThumbnailView = _beginsInThumbnailView;
 @synthesize hideTitle = _hideTitle;
-@synthesize adView;
+//@synthesize adView;
 
 #pragma mark - Public Methods
 
@@ -262,14 +262,16 @@
         showAdDetail = @"NO";
     }
     
+    /*
     if ([showAdDetail isEqualToString:@"YES"]) {
         self.adView = [AdMoGoView requestAdMoGoViewWithDelegate:self AndAdType:AdViewTypeNormalBanner
                                                     ExpressMode:NO];
         [adView setFrame:CGRectZero];
         [self.view addSubview:adView];
-    }
+    }*/
 }
 
+/*
 //广告
 - (NSString *)adMoGoApplicationKey{
     return [[NoneAdultAppDelegate sharedAppDelegate] getMogoAppKey];
@@ -315,7 +317,7 @@
 - (void)adMoGoDidDismissFullScreenModal {
     //关闭广告内置浏览器时调用 
 }
-
+*/
 - (void)viewDidUnload {
     
     [self destroyViews];
@@ -599,8 +601,8 @@
 {
 	CGRect screenFrame = [[UIScreen mainScreen] bounds];
 	CGRect scrollerRect;
-    CGSize adSize = [adView actualAdSize];
-
+    //CGSize adSize = [adView actualAdSize];
+    CGSize adSize = CGSizeMake(320, 0);
 	if( self.interfaceOrientation == UIInterfaceOrientationPortrait || self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown )
 	{//portrait
 		scrollerRect = CGRectMake( 0, 0, screenFrame.size.width, screenFrame.size.height - adSize.height );
