@@ -21,6 +21,7 @@
 #import "SVWebViewController.h"
 #import "WaterflowView.h"
 #import "AsyncImageView.h"
+#import <ShareSDK/ShareSDK.h>
 
 #define NUMBER_OF_COLUMNS 3
 //#define NUMBER_OF_ROWS 20

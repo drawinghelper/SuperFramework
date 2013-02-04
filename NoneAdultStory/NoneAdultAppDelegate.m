@@ -223,8 +223,18 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     // 失败，错误处理
     NSLog(@"失败，错误处理");
 }
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    return [ShareSDK handleOpenURL:url wxDelegate:self];
+}
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    return [ShareSDK handleOpenURL:url wxDelegate:self];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [ShareSDK registerApp:@"6ed2a3756e"];
+    
     //appcpa配置
     NSString *appKey = @"5674541a1d6e4bc7b1521a1ba6db7548";
     NSString *deviceName = [[[UIDevice currentDevice ] name]

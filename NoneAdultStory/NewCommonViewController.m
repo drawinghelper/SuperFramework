@@ -38,7 +38,8 @@
             canLoadNew = YES;
             shouldExpandContract = YES;
             shouldScore = YES;
-            numOfPagesize = 10;
+            //numOfPagesize = 10;
+            numOfPagesize = 20;
             break;
         case 1:
             canLoadOld = NO;
@@ -217,10 +218,12 @@
     [self.view addSubview:handleView];
     [handleView requestPromoterDataInBackground];*/
     
-    flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height - 44*3)];
+    //[tableView setHidden:YES];
+    
+    flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height - 44)];
     flowView.flowdatasource = self;
     flowView.flowdelegate = self;
-    [self.view addSubview:flowView];
+    //[self.view addSubview:flowView];
 }
 
 #pragma mark-
@@ -262,6 +265,13 @@
     return NUMBER_OF_HISTORY_PAGESIZE/NUMBER_OF_COLUMNS;
 }
 
+/*
+ image_height      中图高度
+ image_width       中图宽度
+ height            大图宽度
+ width             大图宽度
+ */
+ 
 - (WaterFlowCell*)flowView:(WaterflowView *)flowView_ cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
@@ -282,14 +292,14 @@
 	float height = [self flowView:nil heightForRowAtIndexPath:indexPath];
 	
 	AsyncImageView *imageView  = (AsyncImageView *)[cell viewWithTag:1001];
-    imageView.frame = CGRectMake(0, 0, self.view.frame.size.width / 3, height);
+    imageView.frame = CGRectMake(0, 0, self.view.frame.size.width / NUMBER_OF_COLUMNS, height);
     
     int row = indexPath.row;
     int column = indexPath.section;
     int finalNum = row * NUMBER_OF_COLUMNS + column;
     if (finalNum < [searchDuanZiList count]) {
         NSDictionary *record = [searchDuanZiList objectAtIndex:finalNum];
-        NSString *thumbURL = [record objectForKey:@"thumbnail_url"];
+        NSString *thumbURL = [record objectForKey:@"middle_url"];
         if ([thumbURL hasPrefix:@"http://"]) {
             [imageView loadImage:thumbURL
               withPlaceholdImage:[UIImage imageNamed:@"defaultCover.png"]];
@@ -314,7 +324,26 @@
 
 -(CGFloat)flowView:(WaterflowView *)flowView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 160;
+    int row = indexPath.row;
+    int column = indexPath.section;
+    int finalNum = row * NUMBER_OF_COLUMNS + column;
+    if (finalNum < [searchDuanZiList count]) {
+        NSDictionary *duanZi = [searchDuanZiList objectAtIndex:finalNum];
+        int imageDisplayHeightForFlowView = [self getImageDisplayRectForFlowView:duanZi];
+        return imageDisplayHeightForFlowView;
+    }
+    return 100;//[self flowView:nil heightForRowAtIndexPath:indexPath];
+}
+
+//瀑布流模式中适应屏幕的图片尺寸
+- (int)getImageDisplayRectForFlowView:(NSDictionary *)duanZi {    
+    int width = [[duanZi objectForKey:@"image_width"] intValue];
+    int height = [[duanZi objectForKey:@"image_height"] intValue];
+    //int imageDisplayWidth = (320 - 4*HORIZONTAL_PADDING) / 3;
+    int imageDisplayWidth = 320 / 3;
+    int imageDisplayHeight = (height * imageDisplayWidth) / width;
+    
+    return imageDisplayHeight;
 }
 
 - (void)flowViewDidSelectCell:(NSIndexPath *)indexPath
@@ -812,36 +841,19 @@
 {
     [self loadCollectedIds];
     [self loadDingIds];
-    int minWordCount = 40;
     NSMutableDictionary *dic = nil;
-    //if (loadOld) {
-        for (int i=0;i<[data count];i++) {
-            dic = [data objectAtIndex:i];
-            [self adaptDic:dic];
-            [self checkCollected:dic];
-            [self checkDing:dic];
+    for (int i=0;i<[data count];i++) {
+        dic = [data objectAtIndex:i];
+        [self adaptDic:dic];
+        [self checkCollected:dic];
+        [self checkDing:dic];
 
-            NSString *largeUrl = [dic objectForKey:@"large_url"];
-            if ([largeUrl isEqualToString:@""]) {
-                continue;
-            }
-            [searchDuanZiList addObject:dic];
+        NSString *largeUrl = [dic objectForKey:@"large_url"];
+        if ([largeUrl isEqualToString:@""]) {
+            continue;
         }
-    /*
-    } else {
-        for (int i=[data count]-1;i>=0;i--) {
-            dic = [data objectAtIndex:i];
-            [self adaptDic:dic];
-            [self checkCollected:dic];
-            [self checkDing:dic];
-
-            NSString *largeUrl = [dic objectForKey:@"large_url"];
-            if ([largeUrl isEqualToString:@""]) {
-                continue;
-            }
-            [searchDuanZiList insertObject:dic atIndex:0];
-        }
-    }*/
+        [searchDuanZiList addObject:dic];
+    }
     
     NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:10];
     for (int ind = 0; ind < [data count]; ind++) {
@@ -849,10 +861,8 @@
         NSIndexPath *newPath =  [NSIndexPath indexPathForRow:row inSection:0];
         [insertIndexPaths addObject:newPath];
     }
-    //[tableView beginUpdates];
-    //[self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
     [self.tableView reloadData];
-    //[tableView endUpdates];
+    [self.flowView reloadData];
     _reloading = NO;
 }
 
@@ -945,12 +955,38 @@
     [self shareDuanZi];
 }
 - (void)shareDuanZi {
+    /*
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"分享到" 
                                                              delegate:self
                                                     cancelButtonTitle:@"取消" 
                                                destructiveButtonTitle:nil
                                                     otherButtonTitles: @"新浪微博",@"腾讯微博",@"保存至相册", nil];//@"邮件分享", nil];
-    [actionSheet showInView:[UIApplication sharedApplication].keyWindow];
+    [actionSheet showInView:[UIApplication sharedApplication].keyWindow];*/
+    id<ISSPublishContent> publishContent = [ShareSDK publishContent:@"content"
+                                                     defaultContent:@""
+                                                              image:[UIImage imageNamed:@"Icon.png"]
+                                                       imageQuality:0.8
+                                                          mediaType:SSPublishContentMediaTypeNews
+                                                              title:@"ShareSDK"
+                                                                url:url
+                                                       musicFileUrl:nil
+                                                            extInfo:nil
+                                                           fileData:nil];
+    [ShareSDK showShareActionSheet:self
+                         shareList:[ShareSDK getShareListWithType:ShareTypeSinaWeibo, ShareTypeTencentWeibo, nil]
+                           content:publishContent
+                      statusBarTips:YES
+                    oneKeyShareList:[NSArray defaultOneKeyShareList]
+                           autoAuth:YES
+                        convertUrl:YES
+                     shareViewStyle:ShareViewStyleDefault
+                    shareViewTitle:@"内容分享"
+                            result:^(ShareType type, SSPublishContentState state, id<ISSStatusInfo> statusInfo, id<ICMErrorInfo> error, BOOL end) {
+                                 if (state == SSPublishContentStateSuccess) {
+                                     NSLog(@"成功!"); }
+                                 else if(state == SSPublishContentStateFail) {
+                                     NSLog(@"失败!"); }
+                             }];
 }
 
 -(void)goCollect:(id)sender{  
@@ -1237,6 +1273,7 @@
     [viewController dismissModalViewControllerAnimated:YES];
 }
 
+//时间线模式中适应屏幕的图片尺寸
 - (CGRect)getImageDisplayRect:(NSDictionary *)duanZi {
     CGRect rect;
     

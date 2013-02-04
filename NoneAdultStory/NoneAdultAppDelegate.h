@@ -13,6 +13,7 @@
 #import "Appirater.h"
 #import <Parse/Parse.h>
 #import "FMDatabase.h"
+#import <ShareSDK/ShareSDK.h>
 
 typedef enum {
     UIActionShare  = 0,
