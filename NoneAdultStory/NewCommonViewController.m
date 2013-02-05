@@ -220,10 +220,12 @@
     
     //[tableView setHidden:YES];
     
+    /*
     flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height - 44)];
     flowView.flowdatasource = self;
     flowView.flowdelegate = self;
-    //[self.view addSubview:flowView];
+    [self.view addSubview:flowView];
+     */
 }
 
 #pragma mark-
@@ -621,9 +623,9 @@
 - (void)loadUrl {
     //url = [[NSString alloc] initWithFormat:@"%@", recentUrlPrefix];
     if (viewType == 1) { //最热频道
-        url = [NSString stringWithFormat:@"http://42.121.2.172/03/toplist/history?count=%d", numOfPagesize];
+        url = [NSString stringWithFormat:@"http://118.244.225.185:8080/ToufaApp/toplist_history.jsp?count=%d", numOfPagesize];
     } else {
-        url = [NSString stringWithFormat:@"http://42.121.2.172/03/recentlist?pageSize=%d&keyword=%@", numOfPagesize, keyword];
+        url = [NSString stringWithFormat:@"http://118.244.225.185:8080/ToufaApp/recentlist.jsp?pageSize=%d&keyword=%@", numOfPagesize, keyword];
         if (currentPage != 0) {
             url = [url stringByAppendingFormat:@"&max_time=%lld&page=%d", baseTime, currentPage];
         }
@@ -749,20 +751,21 @@
 }
 //从享评接口格式适配到腾讯微频道接口格式
 - (void)adaptDic:(NSMutableDictionary *)dic {
-    //NSString *idString = [self autoCorrectNull:[dic objectForKey:@"id"]];
+    NSString *idString = [self autoCorrectNull:[dic objectForKey:@"record_id"]];
     NSString *screenName = [self autoCorrectNull:[dic objectForKey:@"nick"]];
-    NSString *profileImageUrl = [self autoCorrectNull:[dic objectForKey:@"authorpic"]];
-    NSString *weiboContent = [self autoCorrectNull:[dic objectForKey:@"desc"]];
+    NSString *profileImageUrl = [self autoCorrectNull:[dic objectForKey:@"author_pic"]];
+    NSString *weiboContent = [self autoCorrectNull:[dic objectForKey:@"summary"]];
     NSString *largeUrl = [self autoCorrectNull:[dic objectForKey:@"large_url"]];
     NSString  *shareUrl = [self autoCorrectNull:[dic objectForKey:@"share_url"]];
     
     NSDecimalNumber *commentCount = (NSDecimalNumber *)[dic objectForKey:@"comments_count"];
     NSDecimalNumber *favoriteCount = [[NSDecimalNumber alloc] initWithInt:([commentCount intValue]*3)];
     NSDecimalNumber *buryCount = [[NSDecimalNumber alloc] initWithInt:([commentCount intValue]*2)];
-    NSDecimalNumber *imageWidth = (NSDecimalNumber *)[dic objectForKey:@"width"];
-    NSDecimalNumber *imageHeight = (NSDecimalNumber *)[dic objectForKey:@"height"];
+    NSDecimalNumber *imageWidth = (NSDecimalNumber *)[dic objectForKey:@"large_width"];
+    NSDecimalNumber *imageHeight = (NSDecimalNumber *)[dic objectForKey:@"large_height"];
     NSDecimalNumber *timestamp = (NSDecimalNumber *)[dic objectForKey:@"timestamp"];
 
+    [dic setObject:idString forKey:@"id"];
     [dic setObject:screenName forKey:@"screen_name"];
     [dic setObject:profileImageUrl forKey:@"profile_image_url"];
     [dic setObject:[weiboContent stringByConvertingHTMLToPlainText] forKey:@"content"];

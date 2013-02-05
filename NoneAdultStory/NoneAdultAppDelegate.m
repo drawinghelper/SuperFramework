@@ -509,9 +509,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
         
         //score表中如果没有shareurl的记录，就为此shareurl建立分数档案
         [db executeUpdate:@"replace into score(weiboId, profile_image_url, screen_name, timestamp, content, large_url, width, height, gif_mark, favorite_count, bury_count, comments_count,  share_url, score_to_send) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:dataArray];
-        
     }
-    
 }
 
 
