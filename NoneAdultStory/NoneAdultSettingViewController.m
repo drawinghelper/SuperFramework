@@ -387,7 +387,10 @@
 }
 
 - (void)umengFeedback {
-    //    [MobClick event:@"feedback_click" label:@"列表页"];
+    /*UIViewController *authVC = [[AGAuthViewController alloc] init];
+    authVC.title = @"授权";
+    [self.navigationController pushViewController:authVC animated:YES];
+    */
     [UMFeedback showFeedback:self withAppkey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey]];
 }
 

@@ -958,38 +958,12 @@
     [self shareDuanZi];
 }
 - (void)shareDuanZi {
-    /*
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"分享到" 
                                                              delegate:self
                                                     cancelButtonTitle:@"取消" 
                                                destructiveButtonTitle:nil
-                                                    otherButtonTitles: @"新浪微博",@"腾讯微博",@"保存至相册", nil];//@"邮件分享", nil];
-    [actionSheet showInView:[UIApplication sharedApplication].keyWindow];*/
-    id<ISSPublishContent> publishContent = [ShareSDK publishContent:@"content"
-                                                     defaultContent:@""
-                                                              image:[UIImage imageNamed:@"Icon.png"]
-                                                       imageQuality:0.8
-                                                          mediaType:SSPublishContentMediaTypeNews
-                                                              title:@"ShareSDK"
-                                                                url:url
-                                                       musicFileUrl:nil
-                                                            extInfo:nil
-                                                           fileData:nil];
-    [ShareSDK showShareActionSheet:self
-                         shareList:[ShareSDK getShareListWithType:ShareTypeSinaWeibo, ShareTypeTencentWeibo, nil]
-                           content:publishContent
-                      statusBarTips:YES
-                    oneKeyShareList:[NSArray defaultOneKeyShareList]
-                           autoAuth:YES
-                        convertUrl:YES
-                     shareViewStyle:ShareViewStyleDefault
-                    shareViewTitle:@"内容分享"
-                            result:^(ShareType type, SSPublishContentState state, id<ISSStatusInfo> statusInfo, id<ICMErrorInfo> error, BOOL end) {
-                                 if (state == SSPublishContentStateSuccess) {
-                                     NSLog(@"成功!"); }
-                                 else if(state == SSPublishContentStateFail) {
-                                     NSLog(@"失败!"); }
-                             }];
+                                                    otherButtonTitles: @"微信好友",@"微信朋友圈", @"新浪微博",@"腾讯微博",@"保存至相册", nil];//@"邮件分享", nil];
+    [actionSheet showInView:[UIApplication sharedApplication].keyWindow];
 }
 
 -(void)goCollect:(id)sender{  
@@ -1211,28 +1185,59 @@
         SDWebImageManager *manager = [SDWebImageManager sharedManager];
         currentImage = [manager imageWithURL:[NSURL URLWithString:largeUrl]];
         
+        //@"微信好友",@"微信朋友圈", @"新浪微博",@"腾讯微博",@"保存至相册"
+        id<ISSPublishContent> publishContent = [ShareSDK publishContent:statusContent
+                                                         defaultContent:statusContent
+                                                                  image:currentImage
+                                                           imageQuality:0.8
+                                                              mediaType:SSPublishContentMediaTypeNews
+                                                                  title:@"有个漂亮发型推荐你看看" //微信
+                                                                    url:shareurl //微信
+                                                           musicFileUrl:nil //微信
+                                                                extInfo:nil //微信
+                                                               fileData:nil]; //微信
+        
         if (buttonIndex == actionSheet.firstOtherButtonIndex) {
-            NSLog(@"custom event share_sina_budong!");
-            /*[MobClick event:@"share_sina_budong"];*/
-            [UMSNSService presentSNSInController:self 
-                                          appkey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey] 
-                                          status:statusContent 
-                                           image:currentImage 
-                                        platform:UMShareToTypeSina];
-            
-            [UMSNSService setDataSendDelegate:self];
-            return;
+            [ShareSDK shareContentWithType:ShareTypeWeixiSession
+                                   content:publishContent
+                       containerController:self
+                             statusBarTips:YES
+                           oneKeyShareList:nil
+                            shareViewStyle:ShareViewStyleSimple
+                            shareViewTitle:@"分享发型"
+                                    result:nil];
         } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
-            NSLog(@"custom event share_sina_haoxiao!");            
-            [UMSNSService presentSNSInController:self 
-                                          appkey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey] 
-                                          status:statusContent 
-                                           image:currentImage 
-                                        platform:UMShareToTypeTenc];
-            
-            [UMSNSService setDataSendDelegate:self];
-            return;
+            [ShareSDK shareContentWithType:ShareTypeWeixiTimeline
+                                   content:publishContent
+                       containerController:self
+                             statusBarTips:YES
+                           oneKeyShareList:nil
+                            shareViewStyle:ShareViewStyleSimple
+                            shareViewTitle:@"分享发型"
+                                    result:nil];
         } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2) {
+            NSLog(@"custom event share_sina_budong!");
+            [ShareSDK shareContentWithType:ShareTypeSinaWeibo
+                                   content:publishContent
+                       containerController:self
+                             statusBarTips:YES
+                           oneKeyShareList:nil
+                            shareViewStyle:ShareViewStyleSimple
+                            shareViewTitle:@"分享发型"
+                                    result:nil];
+            return;
+        } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 3) {
+            NSLog(@"custom event share_sina_haoxiao!");
+            [ShareSDK shareContentWithType:ShareTypeTencentWeibo
+                                   content:publishContent
+                       containerController:self
+                             statusBarTips:YES
+                           oneKeyShareList:nil
+                            shareViewStyle:ShareViewStyleSimple
+                            shareViewTitle:@"分享发型"
+                                    result:nil];
+            return;
+        } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 4) {
             NSLog(@"custom event share_email!");
             [self savePhoto];            
             return;  

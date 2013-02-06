@@ -14,6 +14,7 @@
 #import <Parse/Parse.h>
 #import "FMDatabase.h"
 #import <ShareSDK/ShareSDK.h>
+#import "WXApi.h"
 
 typedef enum {
     UIActionShare  = 0,

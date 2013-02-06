@@ -10,6 +10,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>sinaweibosso.23047618</string>
+				<string>wx8ead7dcbe93e2f7d</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>None</string>

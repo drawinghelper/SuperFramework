@@ -14,6 +14,7 @@
 #import "UMTableViewDemoNew.h"
 #import "MyLogInViewController.h"
 #import "MySignUpViewController.h"
+#import "AGAuthViewController.h"
 @interface NoneAdultSettingViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate>{
     IBOutlet UITableView *tableView;
     
