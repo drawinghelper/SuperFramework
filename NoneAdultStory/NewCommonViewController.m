@@ -125,9 +125,16 @@
     //关闭广告内置浏览器时调用 
 }
 */
+- (void)viewDidAppear:(BOOL)animated
+{
+    [adView continueAdRequest];
+    [super viewDidAppear:animated];
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [adView pauseAdRequest];
     if (shouldExpandContract) {
         [self contract];
     }
@@ -138,6 +145,13 @@
     lianMengViewController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:lianMengViewController animated:YES];
 }
+
+#pragma mark - AdSageDelegate
+- (UIViewController *)viewControllerForPresentingModalView
+{
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -147,17 +161,15 @@
     if (showAdList == nil || showAdList == [NSNull null]  || [showAdList isEqualToString:@""]) {
         showAdList = @"NO";
     }
-    //总：AudioToolbox、CoreLocation、CoreTelephony、MessageUI、SystemConfiguration、QuartzCore、EventKit、MapKit、libxml2
 
-    /*
     if ([showAdList isEqualToString:@"YES"]) {
         //增加广告条显示
-        self.adView = [AdMoGoView requestAdMoGoViewWithDelegate:self AndAdType:AdViewTypeNormalBanner
-                                                    ExpressMode:NO];
-        [adView setFrame:CGRectMake(0, 0, 320, 30)];
+        adView = [AdSageView requestAdSageBannerAdView:self
+                                              sizeType:AdSageBannerAdViewSize_320X50];
+        [adView setFrame:CGRectMake(0, 0, 320, 50)];
         [self.view addSubview:adView];
     }
-      */
+      
     UIButton *btnRefresh = [UIButton buttonWithType:UIButtonTypeCustom]; 
     btnRefresh.frame = CGRectMake(0, 0, 44, 44);
     [btnRefresh addTarget:self action:@selector(performRefresh) forControlEvents:UIControlEventTouchUpInside];
@@ -1179,6 +1191,7 @@
         statusContent = [NSString stringWithString:cuttedContent];
         NSString *largeUrl = [currentDuanZi objectForKey:@"large_url"];
         NSString *shareurl = [currentDuanZi objectForKey:@"shareurl"];
+        NSLog(@"...shareurl: %@", shareurl);
         if (shouldScore) {
             [[NoneAdultAppDelegate sharedAppDelegate] scoreForShareUrlNew:currentDuanZi channel:UIChannelNew action:UIActionShare];
         }

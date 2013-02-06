@@ -13,7 +13,8 @@
 #import "UIImageView+WebCache.h"
 #import "EGORefreshTableHeaderView.h"
 #import "MBProgressHUD.h"
-//#import "AdMoGoView.h"
+#import "AdSageDelegate.h" 
+#import "AdSageView.h"
 #import "NoneAdultDetailViewController.h"
 #import "NSString+HTML.h"
 #import "FGalleryViewController.h"
@@ -34,8 +35,8 @@
 #define HORIZONTAL_PADDING 16.0f
 #define PLAYBUTTON_WIDTH 30.0f
 
-@interface NewCommonViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, EGORefreshTableHeaderDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UMSNSDataSendDelegate, MBProgressHUDDelegate, FGalleryViewControllerDelegate, WaterflowViewDelegate,WaterflowViewDatasource> {
-//    AdMoGoView *adView;
+@interface NewCommonViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, EGORefreshTableHeaderDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UMSNSDataSendDelegate, MBProgressHUDDelegate, FGalleryViewControllerDelegate, WaterflowViewDelegate,WaterflowViewDatasource, AdSageDelegate> {
+    AdSageView *adView;
 
     MBProgressHUD *HUD;
     UIImage *currentImage;
