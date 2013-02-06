@@ -15,6 +15,7 @@
 #import "MBProgressHUD.h"
 #import "AdSageDelegate.h" 
 #import "AdSageView.h"
+#import "MobiSageRecommendSDK.h"
 #import "NoneAdultDetailViewController.h"
 #import "NSString+HTML.h"
 #import "FGalleryViewController.h"
@@ -35,9 +36,10 @@
 #define HORIZONTAL_PADDING 16.0f
 #define PLAYBUTTON_WIDTH 30.0f
 
-@interface NewCommonViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, EGORefreshTableHeaderDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UMSNSDataSendDelegate, MBProgressHUDDelegate, FGalleryViewControllerDelegate, WaterflowViewDelegate,WaterflowViewDatasource, AdSageDelegate> {
+@interface NewCommonViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, EGORefreshTableHeaderDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UMSNSDataSendDelegate, MBProgressHUDDelegate, FGalleryViewControllerDelegate, WaterflowViewDelegate,WaterflowViewDatasource, AdSageDelegate, MobiSageRecommendDelegate> {
     AdSageView *adView;
-
+    MobiSageRecommendView *recmdView;
+    
     MBProgressHUD *HUD;
     UIImage *currentImage;
 

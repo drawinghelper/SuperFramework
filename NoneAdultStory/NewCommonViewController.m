@@ -176,7 +176,7 @@
     UIImage *btnImage = [UIImage imageNamed:@"refresh.png"];
     [btnRefresh setImage:btnImage forState:UIControlStateNormal];
     
-    UIButton *btnLianMeng = [UIButton buttonWithType:UIButtonTypeCustom];
+    /*UIButton *btnLianMeng = [UIButton buttonWithType:UIButtonTypeCustom];
     btnLianMeng.frame = CGRectMake(0, 0, 55, 30);
     [btnLianMeng addTarget:self action:@selector(showLianMeng) forControlEvents:UIControlEventTouchUpInside];
     [btnLianMeng setTitle:@"推荐(1)" forState:UIControlStateNormal];
@@ -187,6 +187,12 @@
     [btnLianMeng.titleLabel setShadowColor:[UIColor darkGrayColor]];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btnLianMeng];
+    */
+    recmdView = [[MobiSageRecommendView
+                  alloc]initWithDelegate:self andImg:nil];
+    recmdView.frame = CGRectMake(10, 10,recmdView.frame.size.width, recmdView.frame.size.height);
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:recmdView];
+
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btnRefresh];
     
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav_bg.png"] 

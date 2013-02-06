@@ -10,9 +10,11 @@
 #import "UIFolderTableView.h"
 #import "NewCommonViewController.h"
 #import "FGalleryViewController.h"
+#import "MobiSageRecommendSDK.h"
 
-@interface CateViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, FGalleryViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate> {
-    
+@interface CateViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, FGalleryViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate, MobiSageRecommendDelegate> {
+    MobiSageRecommendView *recmdView;
+
     FGalleryViewController *networkGallery;
     NSMutableArray *networkCaptions;
     NSMutableArray *networkImages;

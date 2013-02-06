@@ -76,6 +76,7 @@
 
     self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tmall_bg_furley.png"]];
     
+    /*
     UIButton *btnLianMeng = [UIButton buttonWithType:UIButtonTypeCustom];
     btnLianMeng.frame = CGRectMake(0, 0, 55, 30);
     [btnLianMeng addTarget:self action:@selector(showLianMeng) forControlEvents:UIControlEventTouchUpInside];
@@ -87,6 +88,17 @@
     [btnLianMeng.titleLabel setShadowColor:[UIColor darkGrayColor]];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btnLianMeng];
+     */
+    recmdView = [[MobiSageRecommendView
+                  alloc]initWithDelegate:self andImg:nil];
+    recmdView.frame = CGRectMake(10, 10,recmdView.frame.size.width, recmdView.frame.size.height);
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:recmdView];
+}
+
+#pragma mark - AdSageDelegate
+- (UIViewController *)viewControllerForPresentingModalView
+{
+    return self;
 }
 
 - (void)viewDidAppear:(BOOL)animated{
