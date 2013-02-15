@@ -172,6 +172,7 @@
     if ([sender isKindOfClass:[UIButton class]]) {
         UIButton *btn = (UIButton *) sender;
         NSString *text = @"今日最热";
+        NSString *previousType = [NSString stringWithString:type];
         if (btn.tag == 0) {
             text = @"今日最热";
             type = @"day";
@@ -186,8 +187,10 @@
         self.rankBtnv.selected = YES;
         [self.rankBtnv setText:text];
         [self.rankBtnv doArrow];
-        searchDuanZiList = [[NSMutableArray alloc] init];
-        [self requestResultFromServer];
+        if (![type isEqualToString:previousType]) { //排序选择有变化后，才需要刷新
+            searchDuanZiList = [[NSMutableArray alloc] init];
+            [self requestResultFromServer];
+        }
     }
 }
 
