@@ -188,8 +188,7 @@
         [self.rankBtnv setText:text];
         [self.rankBtnv doArrow];
         if (![type isEqualToString:previousType]) { //排序选择有变化后，才需要刷新
-            searchDuanZiList = [[NSMutableArray alloc] init];
-            [self requestResultFromServer];
+            [self performRefresh];
         }
     }
 }
@@ -271,7 +270,6 @@
     //loadOld = NO;
     _reloading = YES;
     
-    currentPage = 0;
     type = @"day";
     [self performRefresh];
     self.tableView.backgroundColor = [UIColor colorWithRed:230.0f/255.0f green:230.0f/255.0f blue:230.0f/255.0f alpha:1];
@@ -454,8 +452,8 @@
 -(void)performRefresh {
     //loadOld = NO;
     searchDuanZiList = [[NSMutableArray alloc] init];
+    currentPage = 0;
     [self performSelector:@selector(requestResultFromServer) withObject:nil];
-    
 }
 
 #pragma mark - The Magic!
@@ -646,12 +644,13 @@
 #pragma mark Data Source Loading / Reloading Methods
 
 - (void)reloadTableViewDataSource{
-    
+    NSLog(@"下拉刷新...");
     //  should be calling your tableviews data source model to reload
     //  put here just for demo
     if (canLoadNew) {
         _reloading = YES;
-        [self requestResultFromServer];
+        [self performRefresh];
+        //[self requestResultFromServer];
     }
 }
 
@@ -917,6 +916,9 @@
 
 -(void)appendTableWith:(NSMutableArray *)data
 {
+    if ([searchDuanZiList count] == 0) {
+        [self.tableView setContentOffset:CGPointZero animated:YES];
+    }
     [self loadCollectedIds];
     [self loadDingIds];
     NSMutableDictionary *dic = nil;
@@ -931,13 +933,6 @@
             continue;
         }
         [searchDuanZiList addObject:dic];
-    }
-    
-    NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:10];
-    for (int ind = 0; ind < [data count]; ind++) {
-        int row = [searchDuanZiList indexOfObject:[data objectAtIndex:ind]];
-        NSIndexPath *newPath =  [NSIndexPath indexPathForRow:row inSection:0];
-        [insertIndexPaths addObject:newPath];
     }
     [self.tableView reloadData];
     [self.flowView reloadData];
