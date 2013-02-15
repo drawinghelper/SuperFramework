@@ -656,7 +656,7 @@
 	_captionContainer.alpha = 0.0;
 	[UIView commitAnimations];
     
-    [self adjustAdSize];
+    //[self adjustAdSize];
 }
 
 
@@ -685,7 +685,7 @@
 	_captionContainer.alpha = 1.0;
 	[UIView commitAnimations];
     
-    [self adjustAdSize];
+    //[self adjustAdSize];
 }
 
 

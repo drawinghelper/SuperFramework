@@ -24,6 +24,8 @@
 #import "WaterflowView.h"
 #import "AsyncImageView.h"
 #import <ShareSDK/ShareSDK.h>
+#import "MenuView.h"
+#import "CustomButtonView.h"
 
 #define NUMBER_OF_COLUMNS 3
 //#define NUMBER_OF_ROWS 20
@@ -90,6 +92,9 @@
 //@property (nonatomic, retain) AdMoGoView *adView;
 @property (nonatomic, retain) NSString *keyword;
 @property (retain, nonatomic) WaterflowView *flowView;
+
+@property(nonatomic, retain) MenuView *rankView;
+@property(nonatomic, retain) CustomButtonView *rankBtnv;
 
 - (void)reloadTableViewDataSource;
 - (void)doneLoadingTableViewData;

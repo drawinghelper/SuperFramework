@@ -152,6 +152,71 @@
     return self;
 }
 
+
+- (void)rankClick:(id)sender {
+    if (self.rankView.isAppeared) {
+        UIButton *rankbtn = (UIButton *) sender;
+        rankbtn.selected = YES;
+        self.rankBtnv.selected = YES;
+        [self.rankBtnv doArrow];
+        [self.rankView disappeared];
+    }
+    else {
+        self.rankBtnv.selected = NO;
+        [self.rankBtnv doArrow];
+        [self.rankView appeared];
+    }
+}
+
+- (void)rankbtnselected:(id)sender {
+    if ([sender isKindOfClass:[UIButton class]]) {
+        UIButton *btn = (UIButton *) sender;
+        NSString *text = @"选择排序";
+        if (btn.tag == 0) {
+            //self.orderField = @"id";
+            //self.orderDirection = @"desc";
+            text = @"今日最热";
+        } else if (btn.tag == 1) {
+            //self.orderField = @"playNum";
+            //self.orderDirection = @"desc";
+            text = @"本周最热";
+        } else if (btn.tag == 2) {
+            //self.orderField = @"playNum";
+            //self.orderDirection = @"desc";
+            text = @"本月最热";
+        }
+        /*ActivityIndicatorMessageView *loadv = [[[ActivityIndicatorMessageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 40, self.view.frame.size.height / 2, 80, 80) Message:@"正在加载"] autorelease];
+        [loadv startAnimating];
+        [self.view addSubview:loadv];
+        [self.view bringSubviewToFront:loadv];
+        self.tableView.hidden = YES;
+        //[self.srpdata clear];
+        [self.tableView reloadData];
+        NSArray *startEnds = [NSArray arrayWithObjects:[NSNumber numberWithInt:0], [NSNumber numberWithInt:10], nil];
+        //[self loadMoreFrom:startEnds];
+         */
+        [self.rankView disappeared];
+        self.rankBtnv.selected = YES;
+        [self.rankBtnv setText:text];
+        [self.rankBtnv doArrow];
+    }
+}
+
+- (void)loadView {
+    [super loadView];
+    if (viewType == 1) {
+        CustomButtonView *btnView = [[CustomButtonView alloc] initWithFrame:CGRectMake(0, 0, 200, 30)];
+        btnView.delegate = self;
+        btnView.buttonClick = @selector(rankClick:);
+        self.navigationItem.titleView = btnView;
+        self.rankBtnv = btnView;
+        
+        MenuView *pop = [[MenuView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 50, 0.0f, 100.0f, 84.0f+34.5f)];
+        self.rankView = pop;
+        [pop addTarget:self action:@selector(rankbtnselected:)];
+        [self.view addSubview:pop];
+    }
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -641,9 +706,9 @@
 - (void)loadUrl {
     //url = [[NSString alloc] initWithFormat:@"%@", recentUrlPrefix];
     if (viewType == 1) { //最热频道
-        url = [NSString stringWithFormat:@"http://118.244.225.185:8080/ToufaApp/toplist_history.jsp?count=%d", numOfPagesize];
+        url = [NSString stringWithFormat:@"http://118.244.225.185:8080/BaguaApp/toplist_history.jsp?count=%d", numOfPagesize];
     } else {
-        url = [NSString stringWithFormat:@"http://118.244.225.185:8080/ToufaApp/recentlist.jsp?pageSize=%d&keyword=%@", numOfPagesize, keyword];
+        url = [NSString stringWithFormat:@"http://118.244.225.185:8080/BaguaApp/recentlist.jsp?pageSize=%d&keyword=%@", numOfPagesize, keyword];
         if (currentPage != 0) {
             url = [url stringByAppendingFormat:@"&max_time=%lld&page=%d", baseTime, currentPage];
         }
