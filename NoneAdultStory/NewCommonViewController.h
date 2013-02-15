@@ -67,6 +67,7 @@
     //0 - 最新； 1 - 最热； 2 - 分类； 3 - 收藏
     int viewType;
     int category; // 非负整数表示类别编号，-1表示拼url时无需此字段
+    NSString *type; // viewType=1即最热时有效，用于表示时间范围。type=0是今日最热，type=1是本周最热，type=2是本月最热
     
     //是否可以分页加载老记录和新记录
     BOOL canLoadOld;

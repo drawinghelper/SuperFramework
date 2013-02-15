@@ -171,34 +171,23 @@
 - (void)rankbtnselected:(id)sender {
     if ([sender isKindOfClass:[UIButton class]]) {
         UIButton *btn = (UIButton *) sender;
-        NSString *text = @"选择排序";
+        NSString *text = @"今日最热";
         if (btn.tag == 0) {
-            //self.orderField = @"id";
-            //self.orderDirection = @"desc";
             text = @"今日最热";
+            type = @"day";
         } else if (btn.tag == 1) {
-            //self.orderField = @"playNum";
-            //self.orderDirection = @"desc";
             text = @"本周最热";
+            type = @"week";
         } else if (btn.tag == 2) {
-            //self.orderField = @"playNum";
-            //self.orderDirection = @"desc";
             text = @"本月最热";
+            type = @"month";
         }
-        /*ActivityIndicatorMessageView *loadv = [[[ActivityIndicatorMessageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 40, self.view.frame.size.height / 2, 80, 80) Message:@"正在加载"] autorelease];
-        [loadv startAnimating];
-        [self.view addSubview:loadv];
-        [self.view bringSubviewToFront:loadv];
-        self.tableView.hidden = YES;
-        //[self.srpdata clear];
-        [self.tableView reloadData];
-        NSArray *startEnds = [NSArray arrayWithObjects:[NSNumber numberWithInt:0], [NSNumber numberWithInt:10], nil];
-        //[self loadMoreFrom:startEnds];
-         */
         [self.rankView disappeared];
         self.rankBtnv.selected = YES;
         [self.rankBtnv setText:text];
         [self.rankBtnv doArrow];
+        searchDuanZiList = [[NSMutableArray alloc] init];
+        [self requestResultFromServer];
     }
 }
 
@@ -280,7 +269,7 @@
     _reloading = YES;
     
     currentPage = 0;
-
+    type = @"day";
     [self performRefresh];
     self.tableView.backgroundColor = [UIColor colorWithRed:230.0f/255.0f green:230.0f/255.0f blue:230.0f/255.0f alpha:1];
     
@@ -706,7 +695,7 @@
 - (void)loadUrl {
     //url = [[NSString alloc] initWithFormat:@"%@", recentUrlPrefix];
     if (viewType == 1) { //最热频道
-        url = [NSString stringWithFormat:@"http://118.244.225.185:8080/BaguaApp/toplist_history.jsp?count=%d", numOfPagesize];
+        url = [NSString stringWithFormat:@"http://118.244.225.185:8080/BaguaApp/toplist_history.jsp?count=%d&type=%@", numOfPagesize, type];
     } else {
         url = [NSString stringWithFormat:@"http://118.244.225.185:8080/BaguaApp/recentlist.jsp?pageSize=%d&keyword=%@", numOfPagesize, keyword];
         if (currentPage != 0) {
