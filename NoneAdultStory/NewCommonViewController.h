@@ -26,6 +26,7 @@
 #import <ShareSDK/ShareSDK.h>
 #import "MenuView.h"
 #import "CustomButtonView.h"
+#import "NoneAdultCommentViewController.h"
 
 #define NUMBER_OF_COLUMNS 3
 //#define NUMBER_OF_ROWS 20

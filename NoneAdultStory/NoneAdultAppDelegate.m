@@ -337,7 +337,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                                  newCommonNavViewController,
                                                  hotCommonNavViewController,
                                                  //newPathNavViewController,
-                                                 collectGalleryNavViewController,
+                                                 //collectGalleryNavViewController,
                                                  
                                                  collectNavViewController,
                                                  settingNavViewController,

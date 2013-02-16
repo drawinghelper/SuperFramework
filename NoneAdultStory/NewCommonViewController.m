@@ -1622,18 +1622,16 @@
 {
 	NSLog(@"didSelectRowAtIndexPath...");
     [self contract];
-    /*
     int row = [indexPath row];
     NSDictionary *duanZi = [searchDuanZiList objectAtIndex:row];
-    NoneAdultDetailViewController *detailViewController = [[NoneAdultDetailViewController alloc]initWithNibName:@"NoneAdultDetailViewController" bundle:nil];
-    detailViewController.title = @"笑话详情";
-    detailViewController.currentDuanZi = duanZi;
-    detailViewController.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:detailViewController animated:YES];
-    detailViewController.hidesBottomBarWhenPushed = NO;//马上设置回NO
-    currentDuanZi = [searchDuanZiList objectAtIndex:row];
-    [self shareDuanZi];
-     */
+    NSString *recordId = [duanZi objectForKey:@"record_id"];
+    
+    NoneAdultCommentViewController *commentViewController = [[NoneAdultCommentViewController alloc] initWithNibName:@"NoneAdultCommentViewController" bundle:nil];
+    commentViewController.title = @"热评列表";
+    commentViewController.recordId = recordId;
+    commentViewController.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:commentViewController animated:YES];
+    commentViewController.hidesBottomBarWhenPushed = NO;//马上设置回NO
 }
 
 - (void)viewDidUnload
