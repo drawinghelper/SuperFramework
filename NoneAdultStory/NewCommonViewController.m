@@ -1268,50 +1268,28 @@
                                                                 extInfo:nil //微信
                                                                fileData:nil]; //微信
         
-        if (buttonIndex == actionSheet.firstOtherButtonIndex) {
-            [ShareSDK shareContentWithType:ShareTypeWeixiSession
-                                   content:publishContent
-                       containerController:self
-                             statusBarTips:YES
-                           oneKeyShareList:nil
-                            shareViewStyle:ShareViewStyleSimple
-                            shareViewTitle:@"分享发型"
-                                    result:nil];
-        } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
-            [ShareSDK shareContentWithType:ShareTypeWeixiTimeline
-                                   content:publishContent
-                       containerController:self
-                             statusBarTips:YES
-                           oneKeyShareList:nil
-                            shareViewStyle:ShareViewStyleSimple
-                            shareViewTitle:@"分享发型"
-                                    result:nil];
-        } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2) {
-            NSLog(@"custom event share_sina_budong!");
-            [ShareSDK shareContentWithType:ShareTypeSinaWeibo
-                                   content:publishContent
-                       containerController:self
-                             statusBarTips:YES
-                           oneKeyShareList:nil
-                            shareViewStyle:ShareViewStyleSimple
-                            shareViewTitle:@"分享发型"
-                                    result:nil];
-            return;
-        } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 3) {
-            NSLog(@"custom event share_sina_haoxiao!");
-            [ShareSDK shareContentWithType:ShareTypeTencentWeibo
-                                   content:publishContent
-                       containerController:self
-                             statusBarTips:YES
-                           oneKeyShareList:nil
-                            shareViewStyle:ShareViewStyleSimple
-                            shareViewTitle:@"分享发型"
-                                    result:nil];
-            return;
-        } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 4) {
+        if (buttonIndex == actionSheet.firstOtherButtonIndex + 4) {
             NSLog(@"custom event share_email!");
-            [self savePhoto];            
-            return;  
+            [self savePhoto];
+        } else {
+            ShareType st = ShareTypeWeixiSession;
+            if (buttonIndex == actionSheet.firstOtherButtonIndex) {
+                st = ShareTypeWeixiSession;
+            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
+                st = ShareTypeWeixiTimeline;
+            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2) {
+                st = ShareTypeSinaWeibo;
+            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 3) {
+                st = ShareTypeTencentWeibo;
+            }
+            [ShareSDK shareContentWithType:st
+                                   content:publishContent
+                       containerController:self
+                             statusBarTips:YES
+                           oneKeyShareList:nil
+                            shareViewStyle:ShareViewStyleSimple
+                            shareViewTitle:@"分享内容"
+                                    result:nil];
         }
     }
 }

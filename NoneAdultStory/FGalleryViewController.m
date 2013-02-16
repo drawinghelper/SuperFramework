@@ -218,7 +218,7 @@
 	[_container addSubview:_thumbsView];
 	
 	[_innerContainer addSubview:_scroller];
-	[_innerContainer addSubview:_toolbar];
+	//[_innerContainer addSubview:_toolbar];
 	
 	[_toolbar addSubview:_captionContainer];
 	[_captionContainer addSubview:_caption];
@@ -776,7 +776,7 @@
     [label setShadowOffset:CGSizeMake(0, -1.0)];
     
     if (!_hideTitle){
-        [label setText:[NSString stringWithFormat:@"%i %@ %i", _currentIndex+1, @"/" , [_photoSource numberOfPhotosForPhotoGallery:self]]];
+        [label setText:[NSString stringWithFormat:@"轻触全屏观看"]];
     }else{
         [label setText:@""];
     }
