@@ -21,6 +21,8 @@
         self.title = NSLocalizedString(title, @"First");
         self.tabBarItem.image = [UIImage imageNamed:@"collect"];
         
+        viewType = 3;
+        
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
         label.backgroundColor = [UIColor clearColor];
         label.font = [UIFont boldSystemFontOfSize:20.0];

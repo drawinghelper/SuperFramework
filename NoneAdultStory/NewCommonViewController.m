@@ -916,7 +916,7 @@
 
 -(void)appendTableWith:(NSMutableArray *)data
 {
-    if ([searchDuanZiList count] == 0) {
+    if (viewType != 3 && [searchDuanZiList count] == 0) {
         [self.tableView setContentOffset:CGPointZero animated:YES];
     }
     [self loadCollectedIds];
