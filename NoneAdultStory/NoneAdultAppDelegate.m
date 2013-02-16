@@ -289,7 +289,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                                  withViewType:1];
     UINavigationController *hotCommonNavViewController = [[UINavigationController alloc] initWithRootViewController:hotCommonViewController];
     
-    UIViewController *collectViewController = [[CollectedViewController alloc] initWithNibName:@"CollectedViewController" bundle:nil withTitle:@"已收藏"];
+    UIViewController *collectViewController = [[CollectedViewController alloc] initWithNibName:@"CollectedViewController" bundle:nil withTitle:@"收藏"];
     UINavigationController *collectNavViewController = [[UINavigationController alloc] initWithRootViewController:collectViewController];
     [collectNavViewController.navigationBar setTintColor:[UIColor darkGrayColor]];
 

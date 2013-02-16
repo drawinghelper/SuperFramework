@@ -251,7 +251,7 @@
 
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btnRefresh];
     
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav_bg.png"] 
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"navigationbarBackground.png"] 
                                                   forBarMetrics:UIBarMetricsDefault];   
     
     if (_refreshHeaderView == nil) {
@@ -276,7 +276,7 @@
     
     //分类页的“返回”按钮定制化
     if (viewType == 2) {
-        UIImage *buttonImage = [UIImage imageNamed:@"custombackbutton.png"];
+        UIImage *buttonImage = [UIImage imageNamed:@"navigationButtonReturn.png"];
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         [button setImage:buttonImage forState:UIControlStateNormal];
         button.frame = CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height);

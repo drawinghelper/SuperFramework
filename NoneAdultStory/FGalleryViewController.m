@@ -248,9 +248,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-     UIImage *buttonImage = [UIImage imageNamed:@"custombackbutton.png"];
-     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-     [button setImage:buttonImage forState:UIControlStateNormal];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIImage *buttonImage = [UIImage imageNamed:@"navigationButtonReturn.png"];
+    [button.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
+    [button setTitle:@"  返回" forState:UIControlStateNormal];
+    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    
      button.frame = CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height);
      [button addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
      UIBarButtonItem *customBarItem = [[UIBarButtonItem alloc] initWithCustomView:button];

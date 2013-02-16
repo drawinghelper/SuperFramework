@@ -26,11 +26,12 @@
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.frame = frame;
         [btn addTarget:self action:@selector(downButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        btn.titleLabel.font = font;
-        btn.titleLabel.textAlignment = NSTextAlignmentCenter;
-        btn.titleLabel.shadowColor = [UIColor grayColor];
-        CGSize s = {-1.0, -1.0};
-        btn.titleLabel.shadowOffset = s;
+        btn.titleLabel.backgroundColor = [UIColor clearColor];
+        btn.titleLabel.font = [UIFont boldSystemFontOfSize:20.0];
+        //btn.titleLabel.shadowColor = [UIColor colorWithRed:70.0f/255 green:70.0f/225 blue:70.0f/255 alpha:1];
+        btn.titleLabel.textAlignment = UITextAlignmentCenter;
+        //btn.titleLabel.textColor = [UIColor colorWithRed:235.0f/255 green:235.0f/225 blue:235.0f/255 alpha:1];
+        [btn.titleLabel setShadowOffset:CGSizeMake(0, 1.0)];
         
         NSString *buttonTitle = @"今日最热";
         CGSize size1 = [[NSString stringWithString:buttonTitle] sizeWithFont:font];
@@ -39,16 +40,16 @@
         UIImageView *arrow = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow_down"]];
         arrow.frame = CGRectMake(frame.size.width / 2 + size1.width / 2, 10.0f, 10, 10);
         [btn setTitle:buttonTitle forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-        [btn setTitleShadowColor:[UIColor grayColor] forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor colorWithRed:235.0f/255 green:235.0f/225 blue:235.0f/255 alpha:1]
+                  forState:UIControlStateHighlighted];
+        [btn setTitleShadowColor:[UIColor colorWithRed:70.0f/255 green:70.0f/225 blue:70.0f/255 alpha:1]
+                        forState:UIControlStateNormal];
         [btn addSubview:arrow];
         self.btn = btn;
         self.arrow = arrow;
         [arrow release];
         self.selected = NO ;
         [self addSubview:btn];
-
-
     }
     return self;
 }

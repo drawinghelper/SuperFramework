@@ -32,9 +32,12 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    UIImage *buttonImage = [UIImage imageNamed:@"custombackbutton.png"];
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setImage:buttonImage forState:UIControlStateNormal];
+    UIImage *buttonImage = [UIImage imageNamed:@"navigationButtonReturn.png"];
+    [button.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
+    [button setTitle:@"  返回" forState:UIControlStateNormal];
+    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    
     button.frame = CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height);
     [button addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *customBarItem = [[UIBarButtonItem alloc] initWithCustomView:button];
