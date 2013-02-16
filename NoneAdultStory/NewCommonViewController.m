@@ -1262,7 +1262,7 @@
                                                                   image:currentImage
                                                            imageQuality:0.8
                                                               mediaType:SSPublishContentMediaTypeNews
-                                                                  title:@"有个漂亮发型推荐你看看" //微信
+                                                                  title:@"推荐你看看这个" //微信
                                                                     url:shareurl //微信
                                                            musicFileUrl:nil //微信
                                                                 extInfo:nil //微信

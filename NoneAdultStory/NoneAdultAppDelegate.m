@@ -234,7 +234,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [ShareSDK registerApp:@"6ed2a3756e"];
-    [WXApi registerApp:@"wx8ead7dcbe93e2f7d"];
+    [WXApi registerApp:@"wx8f64c721bd349a53"];
 
     //appcpa配置
     NSString *appKey = @"5674541a1d6e4bc7b1521a1ba6db7548";

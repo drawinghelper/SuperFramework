@@ -2,6 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>AppStoreShortUrl</key>
+	<string>http://t.cn/zWClY66</string>
+	<key>ParseConfig</key>
+	<dict>
+		<key>applicationId</key>
+		<string>I0ZK27VfSJWLhfztjy3gkxGfXFowWQAYYzb4PCFD</string>
+		<key>clientKey</key>
+		<string>8gcnhS7JtaRHuA6pHqwHc2kml0wcwZQV5FFa8oae</string>
+	</dict>
 	<key>ChannelList</key>
 	<array>
 		<dict>
@@ -29,37 +38,13 @@
 			<string>短</string>
 		</dict>
 	</array>
-	<key>NewTabCid</key>
-	<string>1571</string>
 	<key>UmengAppKey</key>
 	<string>5118f8e3527015166d0000b1</string>
-	<key>ParseConfig</key>
-	<dict>
-		<key>applicationId</key>
-		<string>I0ZK27VfSJWLhfztjy3gkxGfXFowWQAYYzb4PCFD</string>
-		<key>clientKey</key>
-		<string>8gcnhS7JtaRHuA6pHqwHc2kml0wcwZQV5FFa8oae</string>
-	</dict>
 	<key>AlertKeyword</key>
 	<string>时尚发型</string>
 	<key>AppStoreId</key>
 	<string>547954277</string>
-	<key>AppStoreShortUrl</key>
-	<string>http://t.cn/zWClY66</string>
 	<key>AppChannelTag</key>
-	<string>91store</string>
-	<key>MoGoAppKey</key>
-	<string>5102450e0b1148f28ca09d089c46238c</string>
-	<key>AutoLoginWeibo</key>
-	<dict>
-		<key>userName</key>
-		<string>specialbrian1@sogou.com</string>
-		<key>userID</key>
-		<string>1995020473</string>
-		<key>accessToken</key>
-		<string>2.00ZxtALC0mjhYB9ed2e1e7240wkfAK</string>
-		<key>expireTime</key>
-		<real>2344523728.414576</real>
-	</dict>
+	<string>appstore</string>
 </dict>
 </plist>

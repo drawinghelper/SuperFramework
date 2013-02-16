@@ -16,16 +16,16 @@
 #pragma mark - 新浪微博应用配置信息
 //http://open.weibo.com上注册新浪微博开放平台应用，并将相关信息填写到以下字段
 
-NSString *ssSinaAppKey = @"23047618";
-NSString *ssSinaAppSecret = @"7a270c2a948042c4d6740acc5321d374";
+NSString *ssSinaAppKey = @"3740866752";
+NSString *ssSinaAppSecret = @"28c46f2e5fc0150361e36258dd26936e";
 NSString *ssSinaRedirectUri = @"http://sns.whalecloud.com/sina2/callback";
 
 #pragma mark - 腾讯微博应用配置信息
 //http://dev.t.qq.com上注册腾讯微博开放平台应用，并将相关信息填写到以下字段
 
-NSString *ssTecentAppKey = @"801203113";
-NSString *ssTecentAppSecret = @"419a7af3c3b97a04ac63bf8b544a7807";
-NSString *ssTecentRedirectUri = @"http://itunes.apple.com/us/app/bu-zheng-tou-fa-jiu-nao-xin/id547954277?ls=1&mt=8";
+NSString *ssTecentAppKey = @"801315074";
+NSString *ssTecentAppSecret = @"13662ca46755d71a2f83df1263404ff7";
+NSString *ssTecentRedirectUri = @"https://itunes.apple.com/us/app/hai-liang-gao-qing-ying-shi/id593908127?ls=1&mt=8";
 
 
 #pragma mark - QQ空间应用配置信息
