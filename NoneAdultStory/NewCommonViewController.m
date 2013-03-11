@@ -1036,6 +1036,21 @@
     [actionSheet showInView:[UIApplication sharedApplication].keyWindow];
 }
 
+- (void)goComment:(id)sender {
+    [self contract];
+    int i = [sender tag] - 3000;
+    //得到网络图片的实际大小
+    NSDictionary *duanZi = [searchDuanZiList objectAtIndex:i];
+    NSString *recordId = [duanZi objectForKey:@"record_id"];
+    
+    NoneAdultCommentViewController *commentViewController = [[NoneAdultCommentViewController alloc] initWithNibName:@"NoneAdultCommentViewController" bundle:nil];
+    commentViewController.title = @"热评列表";
+    commentViewController.recordId = recordId;
+    commentViewController.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:commentViewController animated:YES];
+    commentViewController.hidesBottomBarWhenPushed = NO;//马上设置回NO
+}
+
 -(void)goCollect:(id)sender{  
     //这个sender其实就是UIButton，因此通过sender.tag就可以拿到刚才的参数  
     int i = [sender tag] - 2000;
@@ -1517,14 +1532,15 @@
 
     UILabel *pingLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     NSDecimalNumber *commentsCount = (NSDecimalNumber *)[duanZi objectForKey:@"comments_count"];
-    pingLabel.text = [NSString stringWithFormat:@"评: %@",[commentsCount stringValue]];
+    pingLabel.text = [NSString stringWithFormat:@"%@",[commentsCount stringValue]];
     //pingLabel.textAlignment = UITextAlignmentRight;
     pingLabel.font = [UIFont fontWithName:@"Helvetica" size:14];
     [pingLabel setBackgroundColor:[UIColor clearColor]];
     pingLabel.textColor = [UIColor colorWithRed:0.5f green:0.5f blue:0.5f alpha:1];
-    [cell.contentView addSubview:pingLabel];
+    //[cell.contentView addSubview:pingLabel];
     pingLabel.tag = 4;
     
+
     //content图片内容自适应
     CGRect imageDisplayRect = [self getImageDisplayRect:duanZi];    
     imageDisplayRect.origin.y = imageDisplayRect.origin.y + 5;
@@ -1557,12 +1573,25 @@
 
     
     dingLabel = (UILabel *)[cell viewWithTag:2];
-    [dingLabel setFrame:CGRectMake(17, cellFrame.size.height + TOP_SECTION_HEIGHT - 3 + imageDisplayRect.size.height, 60, BOTTOM_SECTION_HEIGHT)];
+    [dingLabel setFrame:CGRectMake(17, cellFrame.size.height + TOP_SECTION_HEIGHT - 3 + imageDisplayRect.size.height, 70, BOTTOM_SECTION_HEIGHT)];
     caiLabel = (UILabel *)[cell viewWithTag:3];
-    [caiLabel setFrame:CGRectMake(77, cellFrame.size.height + TOP_SECTION_HEIGHT - 3 + imageDisplayRect.size.height, 60, BOTTOM_SECTION_HEIGHT)];
+    [caiLabel setFrame:CGRectMake(87, cellFrame.size.height + TOP_SECTION_HEIGHT - 3 + imageDisplayRect.size.height, 70, BOTTOM_SECTION_HEIGHT)];
     pingLabel = (UILabel *)[cell viewWithTag:4];
-    [pingLabel setFrame:CGRectMake(135, cellFrame.size.height + TOP_SECTION_HEIGHT - 3 + imageDisplayRect.size.height, 60, BOTTOM_SECTION_HEIGHT)];
+    [pingLabel setFrame:CGRectMake(155, cellFrame.size.height + TOP_SECTION_HEIGHT - 3 + imageDisplayRect.size.height, 70, BOTTOM_SECTION_HEIGHT)];
     
+    //评论按钮
+    UIButton *btnComment = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btnComment setTitle:[NSString stringWithFormat:@"  %@",[commentsCount stringValue]]
+             forState:UIControlStateNormal];
+    [btnComment.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:14]];
+    [btnComment setTitleColor:[UIColor colorWithRed:0.5f green:0.5f blue:0.5f alpha:1] forState:UIControlStateNormal];
+    [btnComment setTag:(row + 3000)];
+    [btnComment addTarget:self action:@selector(goComment:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.contentView addSubview:btnComment];
+    UIImage *btnCommentImage = [UIImage imageNamed:@"comment.png"];
+    [btnComment setBackgroundImage:btnCommentImage forState:UIControlStateNormal];
+    [btnComment setFrame:CGRectMake(155, cellFrame.size.height + TOP_SECTION_HEIGHT - 3 + imageDisplayRect.size.height+8, 70, 18)];
+
     //收藏按钮（审核最热）
     UIButton *btnStar = [UIButton buttonWithType:UIButtonTypeCustom]; 
     [btnStar setTitle:@"" forState:UIControlStateNormal];
@@ -1599,6 +1628,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	NSLog(@"didSelectRowAtIndexPath...");
+    /*
     [self contract];
     int row = [indexPath row];
     NSDictionary *duanZi = [searchDuanZiList objectAtIndex:row];
@@ -1610,6 +1640,7 @@
     commentViewController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:commentViewController animated:YES];
     commentViewController.hidesBottomBarWhenPushed = NO;//马上设置回NO
+     */
 }
 
 - (void)viewDidUnload
