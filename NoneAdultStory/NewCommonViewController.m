@@ -550,7 +550,22 @@
 
 //处理应用内消息
 - (void)processPullMessage {
-    NSString *pullmessage = [MobClick getConfigParams:@"pullmessage"];
+    PFQuery *query = [PFQuery queryWithClassName:@"Config"];
+    [query whereKey:@"key" equalTo:@"pullmessage"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *configArray, NSError *error) {
+        if (!error) {
+            // The find succeeded.
+            if ([configArray count] == 1) {
+                PFObject *configPFObject = [configArray objectAtIndex:0];
+                NSString *pullmessageStr = [configPFObject objectForKey:@"value"];
+                NSLog(@"pullmessage = %@", pullmessageStr);
+                [self processPullMessageAction:pullmessageStr];
+            }
+        }
+    }];
+}
+
+- (void)processPullMessageAction: (NSString *)pullmessage {
     if (pullmessage != nil 
         && pullmessage != [NSNull null]
         && ![pullmessage isEqualToString:@""]) {
