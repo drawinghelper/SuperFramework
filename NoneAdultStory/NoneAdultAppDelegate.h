@@ -42,7 +42,6 @@ typedef enum {
 - (NSString *)getUmengAppKey;
 - (NSString *)getAppStoreId;
 - (NSString *)getAppStoreShortUrl;
-- (NSString *)getAppChannelTag;
 - (NSArray *)getChannelList;
 - (void)scoreForShareUrl:(NSString *)shareurl channel:(UIChannel)channel action:(UIAction)action;
 - (void)scoreForShareUrlNew:(NSDictionary *)currentDuanZi channel:(UIChannel)channel action:(UIAction)action;

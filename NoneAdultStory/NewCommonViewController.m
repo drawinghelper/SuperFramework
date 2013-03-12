@@ -583,21 +583,9 @@
         
         //是否匹配渠道与版本号
         NSString *currentAppVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString*)kCFBundleVersionKey];
-        NSString *channelId = [[NoneAdultAppDelegate sharedAppDelegate] getAppChannelTag];
-        NSString *pullmessageChannelIdList = [pullmessageInfo objectForKey:@"channelId"];
         NSString *pullmessageAppversionList = [pullmessageInfo objectForKey:@"appversion"];
-        BOOL channelTargeted = NO;
-        if ([pullmessageChannelIdList isEqualToString:@""]
-            ||[pullmessageChannelIdList rangeOfString:channelId].length > 0 ) {
-            channelTargeted = YES;
-        }
-        BOOL versionTargeted = NO;
         if ([pullmessageAppversionList isEqualToString:@""]
             ||[pullmessageAppversionList rangeOfString:currentAppVersion].length > 0 ) {
-            versionTargeted = YES;
-        }
-        
-        if (versionTargeted && channelTargeted) {
             //3. 无匹配项，则显示此消息
             if (!showedTag) {
                 pullmessageAlertView = [[UIAlertView alloc] initWithTitle:[pullmessageInfo objectForKey:@"title"]
@@ -610,8 +598,7 @@
                 [showedMessageTimestampArray addObject:pullmessageTimestamp];
                 [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:showedMessageTimestampArray] forKey:@"showedMessageTimestampArray"];
             }
-        }
-        
+        }        
     }
 }
 

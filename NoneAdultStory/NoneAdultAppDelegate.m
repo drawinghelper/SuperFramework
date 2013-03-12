@@ -192,11 +192,6 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                [[NSBundle mainBundle] pathForResource:@"AppConfig" ofType:@"plist"]];
     return [appConfig objectForKey:@"AppStoreShortUrl"];
 }
-- (NSString *)getAppChannelTag {
-    NSDictionary *appConfig = [[NSDictionary alloc] initWithContentsOfFile:
-                               [[NSBundle mainBundle] pathForResource:@"AppConfig" ofType:@"plist"]];
-    return [appConfig objectForKey:@"AppChannelTag"];
-}
 
 - (NSString *)getAlertKeyword {
     NSDictionary *appConfig = [[NSDictionary alloc] initWithContentsOfFile:
@@ -266,7 +261,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
                                          UIRemoteNotificationTypeSound |
                                          UIRemoteNotificationTypeAlert)];
     
-    [MobClick startWithAppkey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey] reportPolicy:REALTIME channelId:[[NoneAdultAppDelegate sharedAppDelegate] getAppChannelTag]];
+    [MobClick startWithAppkey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey] reportPolicy:REALTIME channelId:nil];
     [MobClick checkUpdate];
     [MobClick updateOnlineConfig];
     
