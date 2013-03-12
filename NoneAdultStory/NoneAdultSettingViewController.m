@@ -71,7 +71,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return starCommentVisible ? 5 : 3;
+    return 3;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -113,38 +113,14 @@
     
     // Configure the cell...
     NSUInteger row = [indexPath row];
-    PFUser *user = [PFUser currentUser];
-
     switch (row) {
         case 0:
-            cell.text = starCommentVisible ? @"评五星鼓励我" : @"用着不爽提意见";
+            cell.text = @"帮我们评分";
             break;
         case 1:
-            if (starCommentVisible) {
-                cell.text = @"用着不爽提意见";
-            } else {
-                if (user) {
-                    cell.text = [NSString stringWithFormat:@"%@ 已登录", user.username];
-                } else {
-                    cell.text = @"登录";
-                }
-            }
+            cell.text = @"用着不爽提意见";
             break;
         case 2:
-            if (starCommentVisible) {
-                cell.text = @"精彩应用推荐";
-            } else {
-                cell.text = [NSString stringWithFormat:@"清空缓存: 已占%@",[self getCacheFolderSizeStr]];
-            }
-            break;
-        case 3:
-            if (user) {
-                cell.text = [NSString stringWithFormat:@"%@ 已登入", user.username];
-            } else {
-                cell.text = @"登录";
-            }
-            break;
-        case 4:
             cell.text = [NSString stringWithFormat:@"清空缓存: 已占%@",[self getCacheFolderSizeStr]];
             break;
         default:
@@ -217,38 +193,13 @@
 	//UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     
 	NSUInteger row = [indexPath row];
-    PFUser *user = [PFUser currentUser];
 
 	if(row == 0){
-        if (starCommentVisible) {
-            NSString *str = [NSString stringWithFormat:@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@", [[NoneAdultAppDelegate sharedAppDelegate] getAppStoreId]];  
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
-        } else {
-            [self umengFeedback];
-        }
+        NSString *str = [NSString stringWithFormat:@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@", [[NoneAdultAppDelegate sharedAppDelegate] getAppStoreId]];  
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
     } else if (row == 1) {
-        if (starCommentVisible) {
-            [self umengFeedback];
-        } else {
-            if (user) {
-                [self showLogOut];
-            } else {
-                [self showLogin];
-            }
-        }
+        [self umengFeedback];
     } else if (row == 2){
-        if (starCommentVisible) {
-            [self showLianMeng];
-        } else {
-            [self confirmClearCache];
-        }
-    } else if (row == 3){
-        if (user) {
-            [self showLogOut];
-        } else {
-            [self showLogin];
-        }    
-    } else {
         [self confirmClearCache];
     }
 	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];

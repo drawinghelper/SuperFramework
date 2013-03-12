@@ -356,57 +356,6 @@
     [actionSheet showInView:[UIApplication sharedApplication].keyWindow];
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (buttonIndex != actionSheet.cancelButtonIndex) {
-        NSString *statusContent = nil;
-        NSString *appstoreurl = [[NoneAdultAppDelegate sharedAppDelegate] getAppStoreShortUrl];
-        int currentImageIndex = [networkGallery currentIndex];
-        //情况一：网络收藏图片的分享，默认
-        NSString *shareurl = [networkShareUrl objectAtIndex:currentImageIndex];
-        currentImage = networkGallery.currentPhoto.fullsize;
-        currentImage = [self getCropImage:currentImage];
-        
-        //分享网络图片时需要记分
-        [[NoneAdultAppDelegate sharedAppDelegate]
-         scoreForShareUrl:shareurl channel:UIChannelMagzine action:UIActionShare];
-        
-        if (buttonIndex == actionSheet.firstOtherButtonIndex) {
-            NSLog(@"custom event share_sina_budong!");
-            statusContent = [NSString stringWithFormat:@"今儿偶然在网上发现了一个超喜欢的新发型[爱你]￼，看看，编起来还挺简单的 %@ [兔子]。O(∩_∩)O还有很多更漂亮的，都是从这个神器中找到的￼ %@ [good]。",
-                             shareurl, //微博详情页
-                             appstoreurl]; //appstore下载页
-            
-            /*[MobClick event:@"share_sina_budong"];*/
-            [UMSNSService presentSNSInController:self
-                                          appkey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey]
-                                          status:statusContent
-                                           image:currentImage
-                                        platform:UMShareToTypeSina];
-            
-            [UMSNSService setDataSendDelegate:self];
-            return;
-        } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
-            NSLog(@"custom event share_sina_haoxiao!");
-            statusContent = [NSString stringWithFormat:@"今儿偶然在网上发现了一个超喜欢的新发型 /爱心￼，看看，编起来还挺简单的 %@ /猪头。O(∩_∩)O还有很多更漂亮的，都是从这个神器中找到的￼ %@ /强。",
-                             shareurl, //微博详情页
-                             appstoreurl]; //appstore下载页
-            
-            [UMSNSService presentSNSInController:self
-                                          appkey:[[NoneAdultAppDelegate sharedAppDelegate] getUmengAppKey]
-                                          status:statusContent
-                                           image:currentImage
-                                        platform:UMShareToTypeTenc];
-            
-            [UMSNSService setDataSendDelegate:self];
-            return;
-        } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2) {
-            NSLog(@"custom event share_email!");
-            [self savePhoto];
-            
-            return;
-        }
-    }
-}
 //截取编发图解的正方形缩略图
 - (UIImage *)getCropImage:(UIImage *)networkImage {
     int width = networkImage.size.width;

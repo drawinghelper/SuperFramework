@@ -1360,12 +1360,6 @@
     //[self showProgressHUDCompleteMessage: error ? NSLocalizedString(@"Failed", @"Informing the user a process has failed") : NSLocalizedString(@"Saved", @"Informing the user an item has been saved")];
 }
 
-
-#pragma mark - Action Sheet Delegate
-- (void)dataSendDidFinish:(UIViewController *)viewController andReturnStatus:(UMReturnStatusType)returnStatus andPlatformType:(UMShareToType)platfrom {
-    [viewController dismissModalViewControllerAnimated:YES];
-}
-
 //时间线模式中适应屏幕的图片尺寸
 - (CGRect)getImageDisplayRect:(NSDictionary *)duanZi {
     CGRect rect;
