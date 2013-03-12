@@ -17,6 +17,11 @@
 
 @synthesize window = _window;
 
+-(void)showStarComment {
+    NSString *str = [NSString stringWithFormat:@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@", [[NoneAdultAppDelegate sharedAppDelegate] getAppStoreId]];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
+}
+
 - (void) animateSplashScreen
 {
     

@@ -89,6 +89,9 @@
     int currentPage;
     
     WaterflowView *flowView;
+    
+    UIAlertView *forcedStarredAlertView;
+    UIAlertView *pullmessageAlertView;
 }
 @property(nonatomic, retain) UITableView *tableView;
 //@property (nonatomic, retain) AdMoGoView *adView;

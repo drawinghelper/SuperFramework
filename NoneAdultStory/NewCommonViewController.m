@@ -600,7 +600,7 @@
         if (versionTargeted && channelTargeted) {
             //3. 无匹配项，则显示此消息
             if (!showedTag) {
-                UIAlertView *pullmessageAlertView = [[UIAlertView alloc] initWithTitle:[pullmessageInfo objectForKey:@"title"]
+                pullmessageAlertView = [[UIAlertView alloc] initWithTitle:[pullmessageInfo objectForKey:@"title"]
                                                                   message:[pullmessageInfo objectForKey:@"message"]
                                                                  delegate:self
                                                         cancelButtonTitle:[pullmessageInfo objectForKey:@"oktitle"]
@@ -616,28 +616,50 @@
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    switch (buttonIndex) {
-        case 0:
-        {          
-            NSString *okUrl = [pullmessageInfo objectForKey:@"okurl"];
-            if (![okUrl isEqualToString:@""]) {
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:okUrl]];
+    if (alertView == pullmessageAlertView) {//拉取消息
+        switch (buttonIndex) {
+            case 0:
+            {
+                NSString *okUrl = [pullmessageInfo objectForKey:@"okurl"];
+                if (![okUrl isEqualToString:@""]) {
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:okUrl]];
+                }
+                break;
             }
-            break;
-        }
-        case 1:
-        {
-            // they want to rate it
-            NSString *cancelUrl = [pullmessageInfo objectForKey:@"cancelurl"];
-            if (![cancelUrl isEqualToString:@""]) {
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:cancelUrl]];
+            case 1:
+            {
+                // they want to rate it
+                NSString *cancelUrl = [pullmessageInfo objectForKey:@"cancelurl"];
+                if (![cancelUrl isEqualToString:@""]) {
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:cancelUrl]];
+                }
+                break;
             }
-            break;
+            default:
+                break;
         }
-        default:
-            break;
+    } else if (alertView == forcedStarredAlertView) {
+        //评论前评星
+        switch (buttonIndex) {
+            case 0:
+            {
+                NSLog(@"不评");
+                break;
+            }
+            case 1:
+            {
+                // they want to rate it
+                NSLog(@"去评价");
+                [[NoneAdultAppDelegate sharedAppDelegate] showStarComment];
+                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                [defaults setObject:@"YES" forKey:@"forcedStarred"];
+                [defaults synchronize];
+                break;
+            }
+            default:
+                break;
+        }
     }
-
 }
 
 #pragma mark -
@@ -1037,21 +1059,33 @@
 }
 
 - (void)goComment:(id)sender {
-    [self contract];
-    int i = [sender tag] - 3000;
-    //得到网络图片的实际大小
-    NSDictionary *duanZi = [searchDuanZiList objectAtIndex:i];
-    NSString *recordId = [duanZi objectForKey:@"record_id"];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *forcedStarred = [defaults objectForKey:@"forcedStarred"];
     
-    NoneAdultCommentViewController *commentViewController = [[NoneAdultCommentViewController alloc] initWithNibName:@"NoneAdultCommentViewController" bundle:nil];
-    commentViewController.title = @"热评列表";
-    commentViewController.recordId = recordId;
-    commentViewController.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:commentViewController animated:YES];
-    commentViewController.hidesBottomBarWhenPushed = NO;//马上设置回NO
+    if (forcedStarred == nil || [forcedStarred isEqualToString:@""]) {
+        forcedStarredAlertView = [[UIAlertView alloc] initWithTitle:@"亲,给姐5星评价,再看评论哦"
+                                                        message:nil
+                                                       delegate:self
+                                              cancelButtonTitle:@"不评"
+                                              otherButtonTitles:@"去评价",nil];
+		[forcedStarredAlertView show];
+    } else {
+        [self contract];
+        int i = [sender tag] - 3000;
+        //得到网络图片的实际大小
+        NSDictionary *duanZi = [searchDuanZiList objectAtIndex:i];
+        NSString *recordId = [duanZi objectForKey:@"record_id"];
+        
+        NoneAdultCommentViewController *commentViewController = [[NoneAdultCommentViewController alloc] initWithNibName:@"NoneAdultCommentViewController" bundle:nil];
+        commentViewController.title = @"热评列表";
+        commentViewController.recordId = recordId;
+        commentViewController.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:commentViewController animated:YES];
+        commentViewController.hidesBottomBarWhenPushed = NO;//马上设置回NO
+    }
 }
 
--(void)goCollect:(id)sender{  
+-(void)goCollect:(id)sender{
     //这个sender其实就是UIButton，因此通过sender.tag就可以拿到刚才的参数  
     int i = [sender tag] - 2000;
     
