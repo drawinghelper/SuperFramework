@@ -720,10 +720,11 @@
 
 - (void)loadUrl {
     //url = [[NSString alloc] initWithFormat:@"%@", recentUrlPrefix];
+    NSString *webAppPrefix = [[NoneAdultAppDelegate sharedAppDelegate] getWebAppPrefix];
     if (viewType == 1) { //最热频道
-        url = [NSString stringWithFormat:@"http://118.244.225.185:8080/BaguaApp/toplist_history.jsp?count=%d&type=%@", numOfPagesize, type];
+        url = [NSString stringWithFormat:@"%@/toplist_history.jsp?count=%d&type=%@", webAppPrefix, numOfPagesize, type];
     } else {
-        url = [NSString stringWithFormat:@"http://118.244.225.185:8080/BaguaApp/recentlist.jsp?pageSize=%d&keyword=%@", numOfPagesize, keyword];
+        url = [NSString stringWithFormat:@"%@/recentlist.jsp?pageSize=%d&keyword=%@", webAppPrefix, numOfPagesize, keyword];
         if (currentPage != 0) {
             url = [url stringByAppendingFormat:@"&max_time=%lld&page=%d", baseTime, currentPage];
         }
@@ -1507,9 +1508,10 @@
     
     //微博图
     UIImageView *coverImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"defaultCover.png"]];
+    /*UIImageView *coverImageView = [[OLImageView alloc] initWithImage:[UIImage imageNamed:@"defaultCover.png"]];*/
     NSString *largeUrl = [duanZi objectForKey:@"large_url"];
     if ( largeUrl != nil && ![largeUrl isEqualToString:@""]) {
-        [coverImageView setImageWithURL:[NSURL URLWithString:largeUrl] 
+        [coverImageView setImageWithURL:[NSURL URLWithString:largeUrl]
                        placeholderImage:[UIImage imageNamed:@"defaultCover.png"] 
                                 success:^(UIImage *image) {
                                     // do something with image
@@ -1522,6 +1524,8 @@
                                 failure:nil
          ];
         
+        //coverImageView.image = [OLImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:largeUrl]]];
+
         [cell.contentView addSubview:coverImageView];
         
         [coverImageView setTag:(row + 5000)];

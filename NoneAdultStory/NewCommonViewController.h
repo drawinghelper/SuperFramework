@@ -26,6 +26,8 @@
 #import "MenuView.h"
 #import "CustomButtonView.h"
 #import "NoneAdultCommentViewController.h"
+#import "OLImageView.h"
+#import "OLImage.h"
 
 #define NUMBER_OF_COLUMNS 3
 //#define NUMBER_OF_ROWS 20

@@ -12,7 +12,7 @@
 #import "UMSNSStringJson.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UIImageView+WebCache.h"
-
+#import "NoneAdultAppDelegate.h"
 @interface NoneAdultCommentViewController : UITableViewController{
     NSString *recordId;
     

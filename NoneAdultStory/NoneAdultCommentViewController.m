@@ -79,7 +79,8 @@
 }
 
 - (void)loadUrl {
-    url = [NSString stringWithFormat:@"http://118.244.225.185:8080/BaguaApp/getcomments.jsp?record_id=%@", recordId];
+    NSString *webAppPrefix = [[NoneAdultAppDelegate sharedAppDelegate] getWebAppPrefix];
+    url = [NSString stringWithFormat:@"%@/getcomments.jsp?record_id=%@", webAppPrefix, recordId];
     NSLog(@"loadUrl: %@", url);
 }
 

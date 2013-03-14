@@ -176,6 +176,12 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     return [appConfig objectForKey:@"UmengAppKey"];
 }
 
+- (NSString *)getWebAppPrefix {
+    NSDictionary *appConfig = [[NSDictionary alloc] initWithContentsOfFile:
+                               [[NSBundle mainBundle] pathForResource:@"AppConfig" ofType:@"plist"]];
+    return [appConfig objectForKey:@"WebAppPrefix"];
+}
+
 - (NSString *)getNewTabCid {
     NSDictionary *appConfig = [[NSDictionary alloc] initWithContentsOfFile:
                                [[NSBundle mainBundle] pathForResource:@"AppConfig" ofType:@"plist"]];
