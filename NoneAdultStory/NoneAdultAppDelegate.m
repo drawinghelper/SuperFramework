@@ -250,11 +250,13 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     NSURLConnection *connection = [ NSURLConnection connectionWithRequest :[NSMutableURLRequest requestWithURL:[NSURL URLWithString :url]] delegate : self];
     
     //parse配置
-    NSDictionary *appConfig = [[NSDictionary alloc] initWithContentsOfFile:
+    /*NSDictionary *appConfig = [[NSDictionary alloc] initWithContentsOfFile:
                                [[NSBundle mainBundle] pathForResource:@"AppConfig" ofType:@"plist"]];
-    NSDictionary *parseConfig = [appConfig objectForKey:@"ParseConfig"]; 
+    NSDictionary *parseConfig = [appConfig objectForKey:@"ParseConfig"];
     [Parse setApplicationId:[parseConfig objectForKey:@"applicationId"]
-                  clientKey:[parseConfig objectForKey:@"clientKey"]];
+                  clientKey:[parseConfig objectForKey:@"clientKey"]];*/
+    [Parse setApplicationId:@"rVXXcYVVBhBeFwBRRlHo7q0RGjbTGAegxUARJ6Ot"
+                  clientKey:@"AOlpD6h4w0GTDPOTww1EzXJMq5Efr5QfHSxOPao2"];
     
     // Set defualt ACLs
     PFACL *defaultACL = [PFACL ACL];

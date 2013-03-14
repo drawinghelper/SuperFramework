@@ -4,45 +4,11 @@
 <dict>
 	<key>WebAppPrefix</key>
 	<string>http://118.244.224.123:8080/gezhongmengApp</string>
-	<key>ParseConfig</key>
-	<dict>
-		<key>applicationId</key>
-		<string>rVXXcYVVBhBeFwBRRlHo7q0RGjbTGAegxUARJ6Ot</string>
-		<key>clientKey</key>
-		<string>AOlpD6h4w0GTDPOTww1EzXJMq5Efr5QfHSxOPao2</string>
-	</dict>
 	<key>UmengAppKey</key>
-	<string>5118f8e3527015166d0000b1</string>
+	<string>5141415756240b3078003c98</string>
 	<key>AlertKeyword</key>
-	<string>八卦消息</string>
+	<string>小萌萌</string>
 	<key>AppStoreId</key>
-	<string>595359949</string>
-	<key>ChannelList</key>
-	<array>
-		<dict>
-			<key>title</key>
-			<string>中长发型</string>
-			<key>keyword</key>
-			<string>长发</string>
-		</dict>
-		<dict>
-			<key>title</key>
-			<string>盘发DIY</string>
-			<key>keyword</key>
-			<string>辫</string>
-		</dict>
-		<dict>
-			<key>title</key>
-			<string>男生发型</string>
-			<key>keyword</key>
-			<string>男</string>
-		</dict>
-		<dict>
-			<key>title</key>
-			<string>短发发型</string>
-			<key>keyword</key>
-			<string>短</string>
-		</dict>
-	</array>
+	<string>620394300</string>
 </dict>
 </plist>
