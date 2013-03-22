@@ -28,8 +28,9 @@ typedef enum {
     UIChannelHistory  = 2,
 } UIChannel;
 
-@interface NoneAdultAppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate, NSURLConnectionDelegate>{
+@interface NoneAdultAppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>{
     NSArray *channelList;
+    NSString *versionForReview;
 }
 
 @property (strong, nonatomic) UIWindow *window;
@@ -47,4 +48,5 @@ typedef enum {
 - (void)scoreForShareUrl:(NSString *)shareurl channel:(UIChannel)channel action:(UIAction)action;
 - (void)scoreForShareUrlNew:(NSDictionary *)currentDuanZi channel:(UIChannel)channel action:(UIAction)action;
 -(void)showStarComment;
+- (BOOL)isInReview;
 @end

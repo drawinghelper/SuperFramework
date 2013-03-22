@@ -44,17 +44,6 @@
                                                   forBarMetrics:UIBarMetricsDefault];   
     
     // Do any additional setup after loading the view from its nib.
-    currentAppVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString*)kCFBundleVersionKey];
-    NSString *versionForReview = [MobClick getConfigParams:@"versionForReview"];
-
-    starCommentVisible = YES;
-    if ([currentAppVersion isEqualToString:versionForReview]) {
-        starCommentVisible = NO;
-    }
-    
-    if (versionForReview == nil || versionForReview == [NSNull null]  || [versionForReview isEqualToString:@""]) {
-        starCommentVisible = NO;
-    }
 }
 
 #pragma mark -
@@ -89,6 +78,7 @@
 	headerLabel.font = [UIFont systemFontOfSize:16];
     //headerLabel.text = [[NSString alloc]initWithFormat:@"%@ v%@", @"高清热播剧", currentVersionStr];
     NSString *displayNameKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+    NSString *currentAppVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString*)kCFBundleVersionKey];
 
     headerLabel.text = [[NSString alloc]initWithFormat:@"%@ v%@", displayNameKey, currentAppVersion];
 	
@@ -115,7 +105,11 @@
     NSUInteger row = [indexPath row];
     switch (row) {
         case 0:
-            cell.text = @"帮我们评分";
+            if ([[NoneAdultAppDelegate sharedAppDelegate] isInReview]) {
+                cell.text = @"帮我们评分";
+            } else {
+                cell.text = @"评五星鼓励我们";                
+            }
             break;
         case 1:
             cell.text = @"用着不爽提意见";

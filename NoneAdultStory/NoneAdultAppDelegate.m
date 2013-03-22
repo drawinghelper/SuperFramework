@@ -214,20 +214,19 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
     return channelList;
 }
 
-- ( void)connection:( NSURLConnection *)connection
- didReceiveResponse:(NSURLResponse *)response {
-    if ([( NSHTTPURLResponse*)response statusCode] == 200 ) {
-        // 成功，返回200
-        NSLog(@"成功，返回200");
-    } else {
-        // 失败，错误处理
-        NSLog(@"失败，错误处理");
+//是否处于审核模式
+- (BOOL)isInReview {
+    NSString *currentAppVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString*)kCFBundleVersionKey];
+    
+    BOOL inReview = NO;
+    if ([currentAppVersion isEqualToString:versionForReview]) {
+        inReview = YES;
     }
-}
-- ( void)connection:( NSURLConnection *)connection
-   didFailWithError:(NSError *)error {
-    // 失败，错误处理
-    NSLog(@"失败，错误处理");
+    
+    if (versionForReview == nil || versionForReview == [NSNull null]  || [versionForReview isEqualToString:@""]) {
+        inReview = YES;
+    }
+    return inReview;
 }
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
@@ -241,22 +240,23 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
 {
     [ShareSDK registerApp:@"6ed2a3756e"];
     [WXApi registerApp:@"wx8f64c721bd349a53"];
-
-    //appcpa配置
-    NSString *appKey = @"5674541a1d6e4bc7b1521a1ba6db7548";
-    NSString *deviceName = [[[UIDevice currentDevice ] name]
-                            stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding ];
-    NSString *url = [ NSString stringWithFormat : @"http://c.appcpa.co/e?appkey=%@&deviceName=%@", appKey, deviceName];
-    NSURLConnection *connection = [ NSURLConnection connectionWithRequest :[NSMutableURLRequest requestWithURL:[NSURL URLWithString :url]] delegate : self];
     
     //parse配置
-    /*NSDictionary *appConfig = [[NSDictionary alloc] initWithContentsOfFile:
+    NSDictionary *appConfig = [[NSDictionary alloc] initWithContentsOfFile:
                                [[NSBundle mainBundle] pathForResource:@"AppConfig" ofType:@"plist"]];
     NSDictionary *parseConfig = [appConfig objectForKey:@"ParseConfig"];
     [Parse setApplicationId:[parseConfig objectForKey:@"applicationId"]
-                  clientKey:[parseConfig objectForKey:@"clientKey"]];*/
-    [Parse setApplicationId:@"rVXXcYVVBhBeFwBRRlHo7q0RGjbTGAegxUARJ6Ot"
-                  clientKey:@"AOlpD6h4w0GTDPOTww1EzXJMq5Efr5QfHSxOPao2"];
+                  clientKey:[parseConfig objectForKey:@"clientKey"]];
+    
+    //获取正在审核版本的版本号
+    PFQuery *query = [PFQuery queryWithClassName:@"Config"];
+    [query whereKey:@"key" equalTo:@"versionForReview"];
+    NSArray *configArray = [query findObjects];
+    if ([configArray count] == 1) {
+        PFObject *pullmessagePFObject = [configArray objectAtIndex:0];
+        versionForReview = [pullmessagePFObject objectForKey:@"value"];
+        NSLog(@"versionForReview = %@", versionForReview);
+    }
     
     // Set defualt ACLs
     PFACL *defaultACL = [PFACL ACL];

@@ -18,9 +18,7 @@
 @interface NoneAdultSettingViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate>{
     IBOutlet UITableView *tableView;
     
-    NSString *versionForReview;
-    NSString *currentAppVersion;
-    BOOL starCommentVisible;
+    //NSString *versionForReview;
 }
 @property(nonatomic, retain) UITableView *tableView;
 

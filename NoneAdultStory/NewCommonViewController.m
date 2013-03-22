@@ -1549,17 +1549,32 @@
     [cell.contentView addSubview:caiLabel];
     caiLabel.tag = 3;
 
+    //评论标签
     UILabel *pingLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     NSDecimalNumber *commentsCount = (NSDecimalNumber *)[duanZi objectForKey:@"comments_count"];
-    pingLabel.text = [NSString stringWithFormat:@"%@",[commentsCount stringValue]];
+    pingLabel.text = [NSString stringWithFormat:@"评: %@",[commentsCount stringValue]];
     //pingLabel.textAlignment = UITextAlignmentRight;
     pingLabel.font = [UIFont fontWithName:@"Helvetica" size:14];
     [pingLabel setBackgroundColor:[UIColor clearColor]];
     pingLabel.textColor = [UIColor colorWithRed:0.5f green:0.5f blue:0.5f alpha:1];
-    //[cell.contentView addSubview:pingLabel];
     pingLabel.tag = 4;
+        
+    //评论按钮
+    UIButton *btnComment = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btnComment setTitle:[NSString stringWithFormat:@"  %@",[commentsCount stringValue]]
+                forState:UIControlStateNormal];
+    [btnComment.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:14]];
+    [btnComment setTitleColor:[UIColor colorWithRed:0.5f green:0.5f blue:0.5f alpha:1] forState:UIControlStateNormal];
+    [btnComment setTag:(row + 3000)];
+    [btnComment addTarget:self action:@selector(goComment:) forControlEvents:UIControlEventTouchUpInside];
+    UIImage *btnCommentImage = [UIImage imageNamed:@"comment.png"];
+    [btnComment setBackgroundImage:btnCommentImage forState:UIControlStateNormal];
     
-
+    if ([[NoneAdultAppDelegate sharedAppDelegate] isInReview]) {
+        [cell.contentView addSubview:pingLabel];
+    } else {
+        [cell.contentView addSubview:btnComment];
+    }
     //content图片内容自适应
     CGRect imageDisplayRect = [self getImageDisplayRect:duanZi];    
     imageDisplayRect.origin.y = imageDisplayRect.origin.y + 5;
@@ -1597,20 +1612,9 @@
     [caiLabel setFrame:CGRectMake(87, cellFrame.size.height + TOP_SECTION_HEIGHT - 3 + imageDisplayRect.size.height, 70, BOTTOM_SECTION_HEIGHT)];
     pingLabel = (UILabel *)[cell viewWithTag:4];
     [pingLabel setFrame:CGRectMake(155, cellFrame.size.height + TOP_SECTION_HEIGHT - 3 + imageDisplayRect.size.height, 70, BOTTOM_SECTION_HEIGHT)];
-    
-    //评论按钮
-    UIButton *btnComment = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btnComment setTitle:[NSString stringWithFormat:@"  %@",[commentsCount stringValue]]
-             forState:UIControlStateNormal];
-    [btnComment.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:14]];
-    [btnComment setTitleColor:[UIColor colorWithRed:0.5f green:0.5f blue:0.5f alpha:1] forState:UIControlStateNormal];
-    [btnComment setTag:(row + 3000)];
-    [btnComment addTarget:self action:@selector(goComment:) forControlEvents:UIControlEventTouchUpInside];
-    [cell.contentView addSubview:btnComment];
-    UIImage *btnCommentImage = [UIImage imageNamed:@"comment.png"];
-    [btnComment setBackgroundImage:btnCommentImage forState:UIControlStateNormal];
-    [btnComment setFrame:CGRectMake(155, cellFrame.size.height + TOP_SECTION_HEIGHT - 3 + imageDisplayRect.size.height+8, 70, 18)];
 
+    [btnComment setFrame:CGRectMake(155, cellFrame.size.height + TOP_SECTION_HEIGHT - 3 + imageDisplayRect.size.height+8, 70, 18)];
+    
     //收藏按钮（审核最热）
     UIButton *btnStar = [UIButton buttonWithType:UIButtonTypeCustom]; 
     [btnStar setTitle:@"" forState:UIControlStateNormal];

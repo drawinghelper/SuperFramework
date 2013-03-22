@@ -10,5 +10,12 @@
 	<string>小萌萌</string>
 	<key>AppStoreId</key>
 	<string>620394300</string>
+	<key>ParseConfig</key>
+	<dict>
+		<key>applicationId</key>
+		<string>EhlL0t5axWR1eYPYA175uIQt5wT7FSOtd8WeTsjA</string>
+		<key>clientKey</key>
+		<string>p4V5e20sU5Unw3AyCJOweCVln8wwB2FtdYVkCLhv</string>
+	</dict>
 </dict>
 </plist>
